@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Temporary Properties</comment>
+<entry key="send.confirm">入力されたメールアドレスに確認メールを送信しました。メールを確認し処理を継続してください。</entry>
+<entry key="email.Required">メールアドレスを入力してください。</entry>
+</properties>
