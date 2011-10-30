@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<meta charset="utf-8">
+<wicket:remove>
+  <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
+  <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+</wicket:remove>
+<title>Profile_jquery</title>
+</head>
+<body>
+  <div data-role="page">
+    <div data-role="header">
+      <a href="#" data-role="button" data-icon="home"></a> <a href="#" data-role="button">ログアウト</a>
+      <h1>Profile_jquery</h1>
+    </div>
+    <div data-role="content">
+      <wicket:panel>
+        <span wicket:id="feedback">feedback</span>
+        <form data-ajax="false" wicket:id="profile.form">
+          <div data-role="fieldcontain">
+            <label for="id">ID</label><input type="text" id="id" wicket:id="id">
+          </div>
+          <div data-role="fieldcontain">
+            <label for="name">名前</label><input type="text" id="name" wicket:id="name">
+          </div>
+          <div data-role="fieldcontain">
+            <label for="password">パスワード</label><input type="password" id="password" wicket:id="password">
+          </div>
+          <div data-role="fieldcontain">
+            <label for="confirm">パスワード(確認用)</label><input type="password" id="confirm" wicket:id="confirm">
+          </div>
+          <div data-role="fieldcontain">
+            <label for="email">メールアドレス</label><input type="email" id="email" wicket:id="email">
+          </div>
+          <div class="ui-grid-a">
+            <span class="ui-block-a"><input type="submit" value="登録" data-theme="b"></span> <span
+              class="ui-block-b"><input type="reset" value="リセット"></span>
+          </div>
+        </form>
+      </wicket:panel>
+    </div>
+    <div data-role="footer">
+      <h1>lunch</h1>
+    </div>
+  </div>
+</body>
+</html>

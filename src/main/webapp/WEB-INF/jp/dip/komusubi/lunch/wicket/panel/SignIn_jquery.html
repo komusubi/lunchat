@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<wicket:remove>
+  <meta charset="utf-8">
+  <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
+  <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+</wicket:remove>
+<title>Signin_jquery</title>
+</head>
+<body>
+<div data-role="page">
+  <div data-role="header">
+    <h1>Sigin_jquery</h1>
+  </div>
+  <div data-role="content">
+  <wicket:panel>
+    <span wicket:id="feedback">feedback</span>
+    <form wicket:id="signInForm">
+      
+        <div data-role="fieldcontain">
+            <label for="account.id">ID</label><input type="text" wicket:id="username" id="account.id">
+          </div>
+        <div data-role="fieldcontain">
+            <label for="pass">パスワード</label><input type="password" wicket:id="password" id="pass">
+          </div>
+        <div wicket:id="rememberMeRow">
+            <input type="checkbox" wicket:id="rememberMe" id="rememberMe"> <label for="rememberMe">ログイン状態を記憶する</label>
+          </div>
+
+      <div class="ui-grid-a">
+      <span class="ui-block-a"><input type="submit" value="ログイン" data-theme="b"></span>
+      <span class="ui-block-b"><input type="reset" value="リセット"></span>
+      </div>
+    </form>
+  </wicket:panel>
+  </div>
+  <div data-role="footer">
+    <h1>フッター</h1>
+  </div>
+</div>  
+</body>
+</html>

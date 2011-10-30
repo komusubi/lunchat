@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<meta charset="utf-8">
+<wicket:remove>
+  <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
+  <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+</wicket:remove>
+</head>
+<body>
+  <div data-role="page">
+    <wicket:remove>
+      <div data-role="header">
+        <h1 wicket:id="header.title">メニュー一覧</h1>
+        <a href="#" data-icon="home" data-iconpos="notext" title="Home" data-theme="f" wicket:id="link.home">home</a> <a
+          href="#" wicket:id="auth"><span wicket:id="auth.label">ログイン</span> </a>
+        <div data-role="navbar" wicket:id="nav">
+          <ul>
+            <li><a href="#" wicket:id="nav.new">新規</a></li>
+            <li><a href="#" wicket:id="nav.history">履歴</a></li>
+            <li><a href="#" wicket:id="nav.config">設定</a></li>
+          </ul>
+        </div>
+      </div>
+    </wicket:remove>
+    <div data-role="content">
+      <wicket:panel>
+      <h4>
+        <span wicket:id="greeting">XXさん、グループに参加してください。</span>
+      </h4>
+      <div data-role="collapsible" data-collapsed="true">
+        <h3>グループ参加</h3>
+        <form method="post" data-ajax="false" data-transition="slide" wicket:id="add.group">
+          <ul data-role="listview" data-inset="true">
+            <li data-role="list-divider" wicket:id="list.group.id">グループ名</li>
+            <li><a href="#">AAC<span class="ui-li-aside">500円</span>
+            </a>
+            </li>
+            <li><a href="#">friend<span class="ui-li-aside">500円</span>
+            </a>
+            </li>
+            <li><a href="#">XXX<span class="ui-li-aside">400円</span>
+            </a>
+            </li>
+          </ul>
+        </form>
+      </div>
+      <div data-role="collapsible" data-collapsed="true">
+        <h3>新規登録</h3>
+        <form method="post" data-ajax="false" data-transitino="slide" wicket:id="new.group">
+          <h5>新しいグループを作成します。IDと名称を決定してください。</h5>
+          <div data-role="fieldcontain">
+            <label for="group.id">ID</label> <input type="text" wicket:id="group.id" id="group.id">
+          </div>
+          <div data-role="fieldcontain">
+            <label for="group.id">NAME</label> <input type="text" wicket:id="group.id" id="group.id">
+          </div>
+          <input type="submit" value="登録" data-theme="b">
+        </form>
+      </div>
+      </wicket:panel>
+    </div>
+    <div data-role="footer">
+      <h1>lunchat</h1>
+    </div>
+  </div>
+</body>
+</html>

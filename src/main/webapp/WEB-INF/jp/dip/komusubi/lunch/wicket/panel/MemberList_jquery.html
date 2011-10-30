@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<meta charset="utf-8">
+<wicket:remove>
+  <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
+  <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+</wicket:remove>
+</head>
+<body>
+  <div data-role="page">
+    <wicket:remove>
+      <div data-role="header">
+        <h1 wicket:id="header.title">メニュー一覧</h1>
+        <a href="#" data-icon="home" data-iconpos="notext" title="Home" data-theme="f" wicket:id="link.home">home</a> <a
+          href="#" wicket:id="auth"><span wicket:id="auth.label">ログイン</span> </a>
+        <div data-role="navbar" wicket:id="nav">
+          <ul>
+            <li><a href="#" wicket:id="nav.new">新規</a>
+            </li>
+            <li><a href="#" wicket:id="nav.history">履歴</a>
+            </li>
+            <li><a href="#" wicket:id="nav.config">設定</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </wicket:remove>
+    <div data-role="content">
+      <wicket:panel>
+        <h4 wicket:id="item.name">XXXグループメンバーリスト</h4>
+        <ul data-role="listview" data-inset="true">
+          <li data-role="list-divider" wicket:id="list.item.id">リスト</li>
+          <li><a href="#"><span wicket:id="item.id">komusubi</span><span wicket:id="item.name">こむすび</span>
+          </a></li>
+          <li><a href="#"><span>friend</span><span>やまだ たろう</span> </a></li>
+          <li><a href="#"><span>XXX</span><span>やまだ じろう</span> </a></li>
+        </ul>
+      </wicket:panel>
+    </div>
+    <div data-role="footer">
+      <h1>lunchat</h1>
+    </div>
+  </div>
+</body>
+</html>

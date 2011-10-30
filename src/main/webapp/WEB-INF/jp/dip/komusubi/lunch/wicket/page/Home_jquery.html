@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<meta charset="utf-8">
+<wicket:remove>
+  <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
+  <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+</wicket:remove>
+</head>
+<body>
+  <div data-role="page">
+    <wicket:remove>
+    <div data-role="header">
+      <a href="#" data-role="button">ログアウト</a>
+      <a href="#" data-role="button" data-icon="home"></a>
+      <span>username</span>
+      <h1>ランチ！</h1>
+    </div>
+    </wicket:remove>
+    <div wicket:id="header">
+    </div>
+    <div data-role="content">
+      <h4>
+        <span wicket:id="greeting">XXさん、いらっしゃいませ。</span>
+      </h4>
+      <p>注文するお店のボタンを押して注文を決定してください。</p>
+      <span wicket:id="shop.list">お店一覧</span>
+      <wicket:remove>
+        <form method="post" data-transition="slide">
+          <ul data-role="listview">
+            <li><input type="submit" value="玉子屋"></li>
+            <li><input type="submit" value="フレッシュランチ"></li>
+          </ul>
+        </form>
+      </wicket:remove>
+    </div>
+    <div data-role="footer">
+      <h1>komusubi</h1>
+    </div>
+  </div>
+</body>
+</html>

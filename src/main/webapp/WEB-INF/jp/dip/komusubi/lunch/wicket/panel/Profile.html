@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+<wicket:panel>
+<span wicket:id="feedback">feedback</span>
+<form wicket:id="profile.form">
+  <ul>
+  <li>ID:<input type="text" wicket:id="id"></li>
+  <li>Name:<input type="text" wicket:id="name"></li>
+  <li>Password:<input type="password" wicket:id="password"></li>
+  <li>Confirm:<input type="password" wicket:id="confirm"></li>
+  <li>Email:<input type="email" wicket:id="email"></li>
+  </ul>
+  <input type="submit" value="登録">
+  <input type="reset" value="リセット">
+</form>
+</wicket:panel>
+</body>
+</html>

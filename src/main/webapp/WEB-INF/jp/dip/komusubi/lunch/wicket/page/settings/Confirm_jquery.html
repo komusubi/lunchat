@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<meta charset="utf-8">
+<wicket:remove>
+  <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
+  <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+</wicket:remove>
+<title>Confirm_jquery</title>
+</head>
+<body>
+  <div data-role="page">
+    <wicket:remove>
+    <div data-role="header">
+      <h1>ランチ！</h1>
+      <a href="#" data-role="button" data-icon="home"></a>
+      <a href="#" data-role="button">ログアウト</a>
+    </div>
+    </wicket:remove>
+      <div wicket:id="header">
+    </div>
+    <div data-role="content">
+      <p>ユーザー情報を入力してください。</p>
+      <span wicket:id="profile"></span>
+      <wicket:remove>
+        <form method="post" data-transition="slide">
+          <ul data-role="listview">
+            <li><a href="#">玉子屋"</a></li>
+            <li><a href="#">フレッシュランチ</a></li>
+          </ul>
+        </form>
+      </wicket:remove>
+    </div>
+    <div data-role="footer">
+      <h1>footer</h1>
+    </div>
+  </div>
+</body>
+</html>
