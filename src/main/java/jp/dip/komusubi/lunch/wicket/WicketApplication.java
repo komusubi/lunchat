@@ -19,6 +19,7 @@
 package jp.dip.komusubi.lunch.wicket;
 
 import jp.dip.komusubi.lunch.wicket.page.CompleteOrder;
+import jp.dip.komusubi.lunch.wicket.page.Grouping;
 import jp.dip.komusubi.lunch.wicket.page.Home;
 import jp.dip.komusubi.lunch.wicket.page.Login;
 import jp.dip.komusubi.lunch.wicket.page.Receipt;
@@ -92,10 +93,11 @@ public class WicketApplication extends AuthenticatedWebApplication {
 	private void mount() {
 		mountPage("/login", Login.class);
 		mountPage("/receipt", Receipt.class);
+		mountPage("/order", CompleteOrder.class);
+		mountPage("/grouping", Grouping.class);
+		mountPage("/postback", BrowserInfoPage.class);
 		mountPage("/confirm/${segment}", Confirm.class);
 		mountPage("/settings/account", Account.class);
-		mountPage("/order", CompleteOrder.class);
-		mountPage("/postback", BrowserInfoPage.class);
 		// error page
 		mountPage("/error", ErrorPage.class);
 		mountPage("/error/internal", InternalServerError.class);

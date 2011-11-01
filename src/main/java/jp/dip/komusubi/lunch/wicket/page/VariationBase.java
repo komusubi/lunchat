@@ -23,8 +23,8 @@ import jp.dip.komusubi.lunch.wicket.WicketSession;
 import org.apache.log4j.MDC;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,11 +39,13 @@ public class VariationBase extends WebPage {
 		
 	}
 	public VariationBase() {
+		ServletWebRequest request = (ServletWebRequest) getRequestCycle().getRequest();
+//		MDC.put("ipaddr", clientInfo.getProperties().getRemoteAddress());
+		MDC.put("ipaddr", request.getContainerRequest().getRemoteAddr());
+		MDC.put("sessionId", request.getContainerRequest().getSession().getId());
 		if (logger.isDebugEnabled()) {
 			logger.debug("user agent is {} ", clientInfo.getUserAgent());
 		}
-		MDC.put("ipaddr", clientInfo.getProperties().getRemoteAddress());
-//		MDC.put("sessionId", WebSession.get().get)
 	}
 	
 	public boolean isJQuery() {

@@ -18,6 +18,7 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 
 public class Footer extends Panel {
@@ -26,8 +27,7 @@ public class Footer extends Panel {
 	
 	public Footer(String id) {
 		super(id);
+		add(new Label("footer.label", "launch"));
 	}
-
-
 	
 }
