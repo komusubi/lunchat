@@ -40,6 +40,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +70,21 @@ public class ChoiceShop extends Panel {
 		private transient Shopping shopping = Configuration.getInstance(Shopping.class);
 		@Inject
 		private transient ShopDao shopDao;
+		private LoadableDetachableModel<List<Object>> ldmodel = new LoadableDetachableModel<List<Object>>() {
+			private static final long serialVersionUID = 3385439610274972123L;
 
+			@Override
+			public List<Object> load() {
+				List<Object> itemValues = new ArrayList<Object>();
+				for (Shop shop: shopDao.findAll()) {
+					itemValues.add(shop);
+					for (Product product: shopping.getProducts(shop.getId())) {
+						itemValues.add(product);
+					}
+				}
+				return itemValues;
+			}
+		};
 		
 		public Choice(String id) {
 			super(id);
@@ -81,26 +96,10 @@ public class ChoiceShop extends Panel {
 			this(id);
 			this.shopDao = shopDao;
 		}
-		
-		@Override
-		public void onBeforeRender() {
-			if (WicketSession.VARIATION_JQUERY_MOBILE.equals(getVariation())) 
-				add(new AttributeModifier("data-ajax", false));
-			
-			super.onBeforeRender();
-		}
-		
+
 		private ListView<Object> getProductList(String id) {
-			// TODO load method ? 確認
-			List<Object> itemValues = new ArrayList<Object>();
-			for (Shop shop: shopDao.findAll()) {
-				itemValues.add(shop);
-				for (Product product: shopping.getProducts(shop.getId())) {
-					itemValues.add(product);
-				}
-			}
 			
-			return new ListView<Object>(id, itemValues) {
+			return new ListView<Object>(id, ldmodel) {
 
 				private static final long serialVersionUID = -502489393499906175L;
 

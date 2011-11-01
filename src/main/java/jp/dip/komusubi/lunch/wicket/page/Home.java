@@ -37,7 +37,8 @@ public class Home extends VariationBase {
 	private String pageTitle = "メニュー一覧";
 	
     public Home() {
-    	add(new Header("header", new Model<Home>(this)));
+//    	add(new Header("header", new Model<Home>(this)));
+    	add(new Header("header"));
     	add(new ChoiceShop("shop.list"));
     	add(new AuthenticatedLabel("greeting", getLocalizer().getString("greeting", this, new Model<Home>(this))));
     }

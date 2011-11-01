@@ -16,18 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.wicket.panel;
+package jp.dip.komusubi.lunch.module.dao;
 
-import org.apache.wicket.markup.html.panel.Panel;
+import jp.dip.komusubi.common.persistence.GenericDao;
+import jp.dip.komusubi.lunch.model.Group;
 
-public class Footer extends Panel {
+public interface GroupDao extends GenericDao<String, Group>{
 
-	private static final long serialVersionUID = -7550329091356140738L;
-	
-	public Footer(String id) {
-		super(id);
-	}
-
-
-	
 }

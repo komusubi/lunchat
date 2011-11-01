@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<meta charset="utf-8">
+<wicket:remove>
+  <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
+  <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+</wicket:remove>
+</head>
+<body>
+  <div data-role="page">
+      <div data-role="header">
+        <h1>メニュー一覧</h1>
+        <a href="#" data-icon="home" data-iconpos="notext" title="Home" data-theme="f">home</a> <a
+          href="#" wicket:id="auth"><span>ログイン</span> </a>
+        <div data-role="navbar">
+          <ul>
+            <li><a href="#">新規</a></li>
+            <li><a href="#">履歴</a></li>
+            <li><a href="#">設定</a></li>
+          </ul>
+        </div>
+      </div>
+    <div data-role="content">
+      <h4>
+        <span>XXさん、グループに参加してください。</span>
+      </h4>
+      <wicket:panel>
+      <div data-role="collapsible" data-collapsed="true">
+        <h3 wicket:id="list.title">グループ参加</h3>
+        <ul data-role="listview" data-inset="true">
+          <li data-role="list-divider">グループ名</li>
+          <li wicket:id="list.item"><a href="#" data-ajax="false" wicket:id="item.link">AAC</a></li>
+        </ul>
+      </div>
+      </wicket:panel>
+      <div data-role="collapsible" data-collapsed="true">
+        <h3>新規登録</h3>
+        <form method="post" data-ajax="false" data-transitino="slide" wicket:id="new.group">
+          <h5>新しいグループを作成します。IDと名称を決定してください。</h5>
+          <div data-role="fieldcontain">
+            <label for="group.id">ID</label> <input type="text" wicket:id="group.id" id="group.id">
+          </div>
+          <div data-role="fieldcontain">
+            <label for="group.id">NAME</label> <input type="text" wicket:id="group.id" id="group.id">
+          </div>
+          <input type="submit" value="登録" data-theme="b">
+        </form>
+      </div>
+    </div>
+    <div data-role="footer">
+      <h1>lunchat</h1>
+    </div>
+  </div>
+</body>
+</html>

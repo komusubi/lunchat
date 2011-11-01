@@ -11,14 +11,13 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 
 public class Header extends Panel {
 
 	private static final long serialVersionUID = -467641882462547658L;
 
-	public Header(String id, IModel<?> model) {
-		super(id, model);
+	public Header(String id) {
+		super(id);
 		add(new Label("pageTitle", "メニュー一覧"));
 		add(new BookmarkablePageLink<WebPage>("link.home", WicketApplication.get().getHomePage(), null));
 		add(getAuthLink("auth"));
