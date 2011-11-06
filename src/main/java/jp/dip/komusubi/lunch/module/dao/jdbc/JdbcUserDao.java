@@ -32,28 +32,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcDaoSupport;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
-public class JdbcUserDao extends SimpleJdbcDaoSupport implements UserDao {
+public class JdbcUserDao implements UserDao {
 	private static final Logger logger = LoggerFactory.getLogger(JdbcUserDao.class);
-	private static final String SELECT_RECORD_QUERY = 
-			"select id, password, name, email from user where id = ?";
-	private static final String INSERT_RECORD_QUERY = 
-			"insert into user (id, name, password, email) values (?, ?, ?, ?)";
-	private static final String UPDATE_RECORD_QUERY = 
-			"update user set password = ?, name = ?, email = ? where id = ?";
+	private static String COLUMNS = "id, groupId, password, name, email";
+	private static final String SELECT_RECORD_QUERY = "select " + COLUMNS + " from user where id = ?";
+	private static final String INSERT_RECORD_QUERY = "insert into user (" + COLUMNS + ") values (?, ?, ?, ?, ?)";
+	private static final String UPDATE_RECORD_QUERY = "update user set password = ?, name = ?, email = ? where id = ?";
+	private static final String SELECT_RECORD_BY_EMAIL = "select " + COLUMNS + " from user where email = ?"; 
 	private HealthDao healthDao;
+	private SimpleJdbcTemplate template;
 	
 	@Inject
 	public JdbcUserDao(DataSource dataSource, HealthDao healthDao) {
-		setDataSource(dataSource);
+		template = new SimpleJdbcTemplate(dataSource);
 		this.healthDao = healthDao;
 	}
 	
 	public User find(String pk) {
 		User user = null;
 		try {
-			user = getSimpleJdbcTemplate().queryForObject(SELECT_RECORD_QUERY, userRowMapper, pk);
+			user = template.queryForObject(SELECT_RECORD_QUERY, userRowMapper, pk);
 		} catch (EmptyResultDataAccessException e) {
 			logger.info("not found user is {}", pk);
 		}
@@ -67,7 +67,7 @@ public class JdbcUserDao extends SimpleJdbcDaoSupport implements UserDao {
 	public String persist(User instance) {
 		if (instance == null || instance.getId() == null)
 			throw new IllegalArgumentException("user: wrong instance " + instance);
-		getSimpleJdbcTemplate().update(INSERT_RECORD_QUERY, 
+		template.update(INSERT_RECORD_QUERY, 
 				instance.getId(), instance.getName(),	
 				instance.getPassword(), instance.getEmail());
 		healthDao.persist(instance.getHealth());
@@ -79,7 +79,7 @@ public class JdbcUserDao extends SimpleJdbcDaoSupport implements UserDao {
 	}
 
 	public void update(User instance) {
-		getSimpleJdbcTemplate().update(UPDATE_RECORD_QUERY, 
+		template.update(UPDATE_RECORD_QUERY, 
 				instance.getPassword(), instance.getName(),
 				instance.getEmail(), instance.getId());
 	}
@@ -88,13 +88,20 @@ public class JdbcUserDao extends SimpleJdbcDaoSupport implements UserDao {
 		healthDao.update(instance);
 	}
 	
-	public List<User> findByEmail(String email) {
-		throw new UnsupportedOperationException("findByEmail");
+	public User readByEmail(String email) {
+		User user = null;
+		try {
+			user = template.queryForObject(SELECT_RECORD_BY_EMAIL, userRowMapper, email);
+		} catch (EmptyResultDataAccessException e) {
+			logger.info("not found user email is {}", email);
+		}
+		return user;
 	}
 
 	private RowMapper<User> userRowMapper = new RowMapper<User>() {
 		public User mapRow(ResultSet rs, int rowNum) throws SQLException {
 			User user = new User(rs.getString("id"))
+							.setGroupId(rs.getString("groupId"))
 							.setHealth(healthDao.find(rs.getString("id")))
 							.setPassword(rs.getString("password"))
 							.setName(rs.getString("name"))

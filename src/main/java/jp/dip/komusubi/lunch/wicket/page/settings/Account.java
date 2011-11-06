@@ -20,16 +20,19 @@ package jp.dip.komusubi.lunch.wicket.page.settings;
 
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.page.Login;
+import jp.dip.komusubi.lunch.wicket.page.VariationBase;
+import jp.dip.komusubi.lunch.wicket.panel.Footer;
+import jp.dip.komusubi.lunch.wicket.panel.Header;
 import jp.dip.komusubi.lunch.wicket.panel.Profile;
 
-import org.apache.wicket.markup.html.WebPage;
-
-public class Account extends WebPage {
+public class Account extends VariationBase {
 
 	private static final long serialVersionUID = 5109190494409699152L;
 
 	public Account() {
+		add(new Header("header"));
 		add(new Profile("profile"));
+		add(new Footer("footer"));
 	}
 
 	// check login 
@@ -37,5 +40,7 @@ public class Account extends WebPage {
 	public void onBeforeRender() {
 		if (!WicketSession.get().isSignedIn())
 			setResponsePage(Login.class);
+		
+		super.onBeforeRender();
 	}
 }

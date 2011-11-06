@@ -18,19 +18,20 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
-import java.util.regex.Pattern;
+import java.text.MessageFormat;
 
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
+import jp.dip.komusubi.lunch.wicket.page.Reminder;
+import jp.dip.komusubi.lunch.wicket.panel.util.SpecificBehavior;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.authroles.authentication.panel.SignInPanel;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.validation.validator.PatternValidator;
-import org.apache.wicket.validation.validator.StringValidator;
+import org.apache.wicket.protocol.http.RequestUtils;
+import org.apache.wicket.util.string.UrlUtils;
 
 public class SignIn extends SignInPanel {
 
@@ -51,11 +52,8 @@ public class SignIn extends SignInPanel {
 		FormComponent<String> text = (FormComponent<String>) getForm().get("username");
 		FormComponent<String> password = (FormComponent<String>) getForm().get("password");
 		
-		text.add(StringValidator.lengthBetween(3, 64))
-				.add(new PatternValidator(Pattern.compile("[a-zA-Z0-9\\.']+")))
-				.setRequired(true);
-		password.add(StringValidator.minimumLength(8))
-				.setRequired(true);
+		SpecificBehavior.behaveIdField(text);
+		SpecificBehavior.behavePasswordField(password);
 		
 		super.onBeforeRender();
 	}
@@ -67,7 +65,11 @@ public class SignIn extends SignInPanel {
 		if (user != null && !user.getHealth().isActive()) {
 			get("feedback").setEscapeModelStrings(false);
 			
-			error(getString("user.not.active", new Model<User>(user)));
+			String u = getRequest().getClientUrl().toAbsoluteString();
+			String path = urlFor(Reminder.class, null).toString();
+			String urlBase = getRequestCycle().getUrlRenderer().renderFullUrl(getRequest().getClientUrl());
+			String url = RequestUtils.toAbsolutePath(urlBase, path);
+			error(MessageFormat.format(getString("user.not.active"), user.getName(), url));
 		} else {
 			super.onSignInFailed();
 		}

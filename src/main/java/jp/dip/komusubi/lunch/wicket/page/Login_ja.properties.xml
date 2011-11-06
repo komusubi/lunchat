@@ -2,4 +2,5 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Login Page Properties</comment>
+<entry key="page.title">ログイン</entry>
 </properties>

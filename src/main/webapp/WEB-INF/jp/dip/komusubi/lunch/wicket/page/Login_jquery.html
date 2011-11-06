@@ -5,17 +5,23 @@
 <title>ログイン</title>
 </head>
 <body>
-  <div data-role="page" id="login">
+  <div data-role="page" id="login" data-theme="a">
+    <span wicket:id="header"></span>
+    <wicket:remove>
     <div data-role="header">
       <h1>ログイン</h1>
     </div>
+    </wicket:remove>
     <div data-role="content">
       <span wicket:id="signInPanel">sign in panel</span>
       <span wicket:id="registry">新規登録</span>
     </div>
+    <span wicket:id="footer"></span>
+    <wicket:remove>
     <div data-role="footer">
       <h1>by komusubi</h1>
     </div>
+    </wicket:remove>
   </div>
 </body>
 </html>

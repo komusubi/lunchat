@@ -47,6 +47,11 @@ public class Registry extends Panel {
 		add(new RegistryForm("registryForm"));
 	}
 	
+	@Override
+	public boolean isVisible() {
+		return !WicketSession.get().isSignedIn();
+	}
+	
 	private class RegistryForm extends Form<Void> {
 		private static final long serialVersionUID = -2271065049710327798L;
 		

@@ -18,26 +18,17 @@
       <h1>ランチ！</h1>
     </div>
     </wicket:remove>
-    <div wicket:id="header">
-    </div>
+    <span wicket:id="header"></span>
     <div data-role="content">
-      <h4>
-        <span wicket:id="greeting">XXさん、いらっしゃいませ。</span>
-      </h4>
-      <p>注文するお店のボタンを押して注文を決定してください。</p>
-      <span wicket:id="shop.list">お店一覧</span>
-      <wicket:remove>
-        <form method="post" data-transition="slide">
-          <ul data-role="listview">
-            <li><input type="submit" value="玉子屋"></li>
-            <li><input type="submit" value="フレッシュランチ"></li>
-          </ul>
-        </form>
-      </wicket:remove>
+    <span wicket:id="feedback"></span>
+    <span wicket:id="email.reminder">email form here.</span>
     </div>
+    <span wicket:id="footer"></span>
+    <wicket:remove>
     <div data-role="footer">
       <h1>komusubi</h1>
     </div>
+    </wicket:remove>
   </div>
 </body>
 </html>

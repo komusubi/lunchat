@@ -11,17 +11,28 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 
 public class Header extends Panel {
 
 	private static final long serialVersionUID = -467641882462547658L;
 
-	public Header(String id) {
-		super(id);
-		add(new Label("pageTitle", "メニュー一覧"));
+	public Header(String id, Model<String> model) {
+		super(id, model);
+		Label label;
+		if (model != null)
+			label = new Label("pageTitle", model);
+		else
+			label = new Label("pageTitle", "メニュー一覧");
+		add(label);
+		// FIXME bookmarkable page link not nice url
 		add(new BookmarkablePageLink<WebPage>("link.home", WicketApplication.get().getHomePage(), null));
 		add(getAuthLink("auth"));
 		add(getWebMarkupContainer("nav"));
+	}
+	
+	public Header(String id) {
+		this(id, null);
 	}
 
 	private Link<Void> getAuthLink(String id) {

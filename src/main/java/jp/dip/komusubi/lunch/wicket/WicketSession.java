@@ -34,7 +34,6 @@ public class WicketSession extends AuthenticatedWebSession {
 	public static final String VARIATION_JQUERY_MOBILE = "jquery";
 	private static final long serialVersionUID = 2537313227105289690L;
 	private static final Logger logger = LoggerFactory.getLogger(WicketSession.class);
-	private transient AccountService accountService = Configuration.getInstance(AccountService.class);
 	private User loggedInUser;
 
 	public static WicketSession get() {
@@ -46,8 +45,14 @@ public class WicketSession extends AuthenticatedWebSession {
 	}
 
 	@Override
-	public boolean authenticate(final String username, final String password) {
-		return accountService.signIn(username, password);
+	public boolean authenticate(final String userId, final String password) {
+		AccountService accountService = Configuration.getInstance(AccountService.class);
+		if (accountService.signIn(userId, password)) {
+			loggedInUser = accountService.find(userId);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -63,13 +68,7 @@ public class WicketSession extends AuthenticatedWebSession {
 			if (logger.isDebugEnabled())
 				logger.debug("user didn't login yet.");
 			loggedInUser = null;
-			return loggedInUser;
 		}
-		if (loggedInUser != null)
-			return loggedInUser;
-		String[] values = getApplication().getSecuritySettings()
-							.getAuthenticationStrategy().load();
-		loggedInUser = accountService.find(values[0]);
 		return loggedInUser;
 	}
 

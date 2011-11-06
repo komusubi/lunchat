@@ -16,7 +16,6 @@ create table if not exists user (
 	password varchar(64),
 	name varchar(256),
 	email varchar(255) unique,
-	role varchar(256)
 );
 
 drop table if exists health;

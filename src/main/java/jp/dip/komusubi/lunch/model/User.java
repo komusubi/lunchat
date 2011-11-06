@@ -87,8 +87,9 @@ public class User implements Serializable, Destination {
 		return this;
 	}
 
-	public void setGroupId(String groupId) {
+	public User setGroupId(String groupId) {
 		this.groupId = groupId;
+		return this;
 	}
 
 	public User setHealth(Health health) {

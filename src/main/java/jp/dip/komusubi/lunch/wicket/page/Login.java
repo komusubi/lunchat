@@ -18,24 +18,22 @@
  */
 package jp.dip.komusubi.lunch.wicket.page;
 
-import jp.dip.komusubi.lunch.wicket.WicketSession;
+import jp.dip.komusubi.lunch.wicket.panel.Footer;
+import jp.dip.komusubi.lunch.wicket.panel.Header;
 import jp.dip.komusubi.lunch.wicket.panel.Registry;
 import jp.dip.komusubi.lunch.wicket.panel.SignIn;
+
+import org.apache.wicket.model.Model;
 
 public class Login extends VariationBase {
 
 	private static final long serialVersionUID = -5101224283988545642L;
+	private String pageTitle = getString("page.title");
 	
 	public Login() {
+		add(new Header("header", Model.of(pageTitle)));
 		add(new SignIn("signInPanel"));
-		add(new Registry("registry") {
-			private static final long serialVersionUID = -1437339500436115956L;
-
-			@Override
-			public boolean isVisible() {
-				// login 後は非表示
-				return !WicketSession.get().isSignedIn();
-			}
-		});
+		add(new Registry("registry"));
+		add(new Footer("footer"));
 	}
 }

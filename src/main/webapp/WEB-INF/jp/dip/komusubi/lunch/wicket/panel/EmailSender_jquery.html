@@ -1,0 +1,33 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<meta charset="utf-8">
+<wicket:remove>
+  <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
+  <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+</wicket:remove>
+</head>
+<body>
+  <div data-role="page">
+    <div data-role="header">
+      <h1>header</h1>
+    </div>
+    <div data-role="content">
+        <div data-role="collapsible" data-collapsed="true">
+        <wicket:panel>
+          <h3 wicket:id="message">タイトル</h3>
+          <form wicket:id="email.form" data-ajax="false">
+            <div data-role="fieldcontain">
+              <label for="email">メールアドレス</label> <input type="email" wicket:id="email" id="email" required>
+            </div>
+            <input type="submit" wicket:id="submit">
+          </form>
+        </wicket:panel>
+      </div>
+    </div>
+    <div data-role="footer">
+      <h1>footer</h1>
+    </div>
+  </div>
+</body>
+</html>

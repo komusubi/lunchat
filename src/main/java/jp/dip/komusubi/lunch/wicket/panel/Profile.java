@@ -18,15 +18,13 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
-import java.util.regex.Pattern;
-
-import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.page.error.ErrorPage;
+import jp.dip.komusubi.lunch.wicket.panel.util.SpecificBehavior;
 
 import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.Form;
@@ -39,7 +37,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.validation.validator.PatternValidator;
 import org.apache.wicket.validation.validator.StringValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,17 +50,22 @@ public class Profile extends Panel {
 	@Inject 
 	private transient AccountService account;
 	private String segment;
-	private boolean modify = false;
 	
 	public Profile(String id) {
-		this(id, null);
-		modify = true;
+		this(id, null, true);
 	}
-
+	
 	public Profile(String id, String segment) {
+		this(id, segment, false);
+	}
+	
+	public Profile(String id, String segment, boolean modify) {
 		super(id);
 		this.segment = segment;
-		add(new ProfileForm("profile.form"));
+		if (modify)
+			add(new ModificationProfileForm("profile.form"));
+		else
+			add(new RegistryProfileForm("profile.form"));
 		add(new FeedbackPanel("feedback"));
 	}
 
@@ -71,18 +73,20 @@ public class Profile extends Panel {
 	 * profile form. 
 	 * @author jun.ozeki
 	 */
-	private class ProfileForm extends Form<Void> {
+	private abstract class ProfileForm extends Form<Void> {
 		private static final long serialVersionUID = -752103310649689060L;
 		private String confirmPassword;
 		private PasswordTextField password;
 		private PasswordTextField confirm;
 		private EmailTextField email;
-		private User user = new User();
-				
+		private User user;
+		
+		// user initialize decide subclass.
+		protected abstract User loadUser();
+		
 		public ProfileForm(String id) {
 			super(id);
-			if (user == null)
-				throw new LunchException("user is null");
+			user = loadUser();
 			this.setDefaultModel(new CompoundPropertyModel<User>(user));
 			add(behaveId(new TextField<String>("id")));
 			add(behaveName(new TextField<String>("name")));
@@ -91,15 +95,11 @@ public class Profile extends Panel {
 											new PropertyModel<String>(this, "confirmPassword"))));
 			add(behaveEmail(email = new EmailTextField("email")));
 			add(passwordMatchValidator());
-			if (!modify)
-				add(confirmDigestValidator());
 		}
 
 		private FormComponent<String> behaveId(TextField<String> text) {
 //			new FormComponentFeedbackBorder(text)
-			text.add(StringValidator.lengthBetween(3, 64))
-				.add(new PatternValidator(Pattern.compile("[a-zA-Z0-9\\.']+")))
-				.setRequired(true);
+			text = SpecificBehavior.behaveIdField(text);
 			return text;
 		}
 		private TextField<String> behaveName(TextField<String> name) {
@@ -108,18 +108,18 @@ public class Profile extends Panel {
 			return name;
 		}
 		private PasswordTextField behavePassword(PasswordTextField password) {
-			password.add(StringValidator.minimumLength(8))
-				.setRequired(true);
+			password = SpecificBehavior.behavePasswordField(password);
 			return password;
 		}
 		private EmailTextField behaveEmail(EmailTextField email) {
 			email.setRequired(true);
 			return email;
 		}
+
 		private AbstractFormValidator passwordMatchValidator() {
 			return new AbstractFormValidator() {
-				private static final long serialVersionUID = 1L;
-
+				private static final long serialVersionUID = 7808853607014331335L;
+				
 				public FormComponent<?>[] getDependentFormComponents() {
 					return new FormComponent[]{password, confirm};					
 				}
@@ -134,6 +134,7 @@ public class Profile extends Panel {
 				}
 			};
 		}
+/*
 		private AbstractFormValidator confirmDigestValidator() {
 			return new AbstractFormValidator() {
 
@@ -165,15 +166,108 @@ public class Profile extends Panel {
 			};
 			// TODO profile 修正時のValidatorを別途作成
 //			private AbstractFormValidator confirm
+//			protected 
+		}
+ */			
+		protected User getUser() {
+			return user;
+		}
+		protected AccountService getAccountService() {
+			return account;
+		}
+		protected String getConfirmPassword() {
+			return confirmPassword;
+		}
+	}
+	
+	/**
+	 * registry profile form. 
+	 * @author jun.ozeki
+	 * @since 2011/11/03
+	 */
+	private class RegistryProfileForm extends ProfileForm {
+		
+		private static final long serialVersionUID = 6156893782920074142L;
+		
+		public RegistryProfileForm(String id) {
+			super(id);
+			add(confirmDigestValidator());
+		}
+
+		protected User loadUser() {
+			return new User();
+		}
+		
+		@SuppressWarnings("unchecked")
+		private AbstractFormValidator confirmDigestValidator() {
+			
+			return new AbstractFormValidator() {
+				
+				private static final long serialVersionUID = 7983637295986009346L;
+				// get email field. 
+				FormComponent<String> emailField = (FormComponent<String>) get("email");
+
+				public FormComponent<?>[] getDependentFormComponents() {
+					return new FormComponent[]{emailField};
+				}
+
+				public void validate(Form<?> form) {
+					Nonce nonce = (Nonce) WicketSession.get().getAttribute(Nonce.class.getName());
+					if (nonce == null) { // over session time.
+						logger.info("nonce is null session time over");
+//						error(email);
+						setResponsePage(new ErrorPage("session time over"));
+						return;
+					}
+					if (!segment.equals(nonce.get(emailField.getInput()))) {
+						if (logger.isDebugEnabled())
+							logger.debug("segment is {}, nonce is {}", 
+									segment, nonce.get(emailField.getInput()));
+						error(emailField);	
+					}
+				}
+				@Override
+				public String resourceKey() {
+					return "unmatched.digest";
+				}
+			};
 		}
 		@Override
 		public void onSubmit() {
+			User user = getUser();
 			user.getHealth().setActive(true);
 			//TODO  Hash値はここで設定する。saltはどうする？
-			user.setPassword(new DigestResolver().resolve(confirmPassword));
-			account.create(user);
+			user.setPassword(new DigestResolver().resolve(getConfirmPassword()));
+			getAccountService().create(user);
 			info(getString("registry.completed", new Model<User>(user)));
 		}
+	}
+	
+	/**
+	 * modification profile form. 
+	 * @author jun.ozeki
+	 * @since 2011/11/03
+	 */
+	private class ModificationProfileForm extends ProfileForm {
+
+		private static final long serialVersionUID = -7126417537628446596L;
 		
+		public ModificationProfileForm(String id) {
+			super(id);
+			get("id").setEnabled(false);
+		}
+	
+		protected User loadUser() {
+			User user = WicketSession.get().getLoggedInUser();
+			if (user == null)
+				user = new User();
+			return user;
+		}
+		
+		@Override
+		public void onSubmit() {
+			
+			logger.info("modification form {}", getUser());
+		}
 	}
 }

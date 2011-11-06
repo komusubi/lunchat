@@ -36,7 +36,8 @@ public class JdbcHealthDao implements HealthDao {
 //	private static final Logger logger = LoggerFactory.getLogger(JdbcHealthDao.class);
 	private static final String COLUMNS = "userId, login, lastLogin, loginFail, active"; 
 	private static final String SELECT_QUERY_PK = "select " + COLUMNS + " from health where userId = ?";
-	private static final String UPDATE_QUERY = "update health set login = ?, lastLogin = ?, loginFail = ? where userId = ?";
+	private static final String UPDATE_QUERY = "update health set login = ?, lastLogin = ?, loginFail = ?,"
+														+ " active = ? where userId = ?";
 	private static final String INSERT_QUERY = "insert into health (" + COLUMNS + ") values (?, ?, ?, ?, ?)";
 	private SimpleJdbcTemplate template;
 
@@ -76,6 +77,7 @@ public class JdbcHealthDao implements HealthDao {
 		template.update(UPDATE_QUERY, instance.getLogin(),
 											instance.getLastLogin(),
 											instance.getLoginFail(),
+											instance.isActive(),
 											instance.getUserId());
 	}
 

@@ -20,10 +20,10 @@
     <form wicket:id="signInForm">
       
         <div data-role="fieldcontain">
-            <label for="account.id">ID</label><input type="text" wicket:id="username" id="account.id">
+            <label for="account.id">ID</label><input type="text" wicket:id="username" id="account.id" required>
           </div>
         <div data-role="fieldcontain">
-            <label for="pass">パスワード</label><input type="password" wicket:id="password" id="pass">
+            <label for="pass">パスワード</label><input type="password" wicket:id="password" id="pass" required>
           </div>
         <div wicket:id="rememberMeRow">
             <input type="checkbox" wicket:id="rememberMe" id="rememberMe"> <label for="rememberMe">ログイン状態を記憶する</label>

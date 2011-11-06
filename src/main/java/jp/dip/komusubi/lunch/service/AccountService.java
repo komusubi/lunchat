@@ -32,6 +32,7 @@ import jp.dip.komusubi.common.util.Resolver;
 import jp.dip.komusubi.common.util.XmlResourceBundle;
 import jp.dip.komusubi.common.util.XmlResourceBundleControl;
 import jp.dip.komusubi.lunch.Configuration;
+import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.Transactional;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
@@ -64,6 +65,7 @@ public class AccountService implements Serializable {
 	@Inject
 	@Named("date")
 	private transient Resolver<Date> dateResolver;
+	private User authedUser;
 	
 	@Inject
 	public AccountService(UserDao userDao, 
@@ -86,7 +88,12 @@ public class AccountService implements Serializable {
 	}
 	
 	public User find(String id) {
-		return userDao.find(id);
+		User user = null;
+		if (authedUser != null && authedUser.getId().equals(id))
+			user = authedUser;
+		else
+			user = userDao.find(id);
+		return user;
 	}
 	
 	@Transactional
@@ -121,6 +128,7 @@ public class AccountService implements Serializable {
 			user.getHealth().incrementLoginFail();
 		}
 		userDao.update(user.getHealth());
+		authedUser = user;
 		return evaluate;
 	}
 	
@@ -146,6 +154,29 @@ public class AccountService implements Serializable {
 			return nonce;
 		} catch (Exception e) {
 			throw new IllegalStateException(e);
+		}
+	}
+	
+	public void remind(String email, String url) {
+		User to = userDao.readByEmail(email);
+		if (to == null) 
+			throw new LunchException("not found email " + email); 
+		try {
+			MailContent content = new MailContent();
+			User from = new User();
+			from.setName(getString("remind.mail.from.name"))
+				.setEmail(getString("remind.mail.from.address"));
+			content.setSubject(getString("remind.mail.title"));
+			content.setBody(format("remind.mail.body", to.getName(), url));
+			MailMessage mail = new MailMessage();
+			mail.setContent(content);
+			mail.setFrom(from);
+			mail.addToRecipient(to);
+			smtp.send(mail);
+			logger.info("send to {}, subject is {}", to.getEmail(), getString("remind.email.title"));
+			return ;
+		} catch (Exception e) {
+			throw new LunchException(e);
 		}
 	}
 	

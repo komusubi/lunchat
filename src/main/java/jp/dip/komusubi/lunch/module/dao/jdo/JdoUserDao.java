@@ -60,4 +60,10 @@ public class JdoUserDao implements UserDao {
 		
 	}
 
+	@Override
+	public User readByEmail(String email) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
