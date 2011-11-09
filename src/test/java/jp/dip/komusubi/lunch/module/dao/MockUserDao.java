@@ -64,4 +64,10 @@ public class MockUserDao implements UserDao {
 		return null;
 	}
 
+	@Override
+	public List<User> findByGroupId(String groupId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

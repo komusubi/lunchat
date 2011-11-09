@@ -18,47 +18,59 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
-
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 
 public class Approval extends Panel {
 
 	private static final long serialVersionUID = -4176824939454988839L;
 
-	public Approval(String id) {
+	public static abstract class ApprovalBean {
+		public String noticeLabel;
+		public String applyMessage;
+		public String applyButton;
+		public String cancelButton;
+		public abstract void onApply(); 
+		public abstract void onCancel();
+	};
+	
+	public Approval(String id, IModel<ApprovalBean> model) {
 		super(id);
-		add(new ApprovalForm("approval.form"));
+		add(new ApprovalForm("approval.form", model));
 	}
 	
-	private static class ApprovalForm extends Form<Void> {
+	private static class ApprovalForm extends Form<ApprovalBean> {
 
 		private static final long serialVersionUID = 4010463474401119716L;
 		
-		public ApprovalForm(String id) {
-			super(id);
-			add(getApplyButton("apply"));
-			add(getCancelButton("cancel"));
+		public ApprovalForm(String id, IModel<ApprovalBean> model) {
+			super(id, model);
+			add(getApplyButton("apply", model));
+			add(getCancelButton("cancel", model));
 		}
 		
-		private Button getApplyButton(String id) {
+		private Button getApplyButton(String id, final IModel<ApprovalBean> model) {
+//			return new Button(id, Model.of(model.getObject().applyButton)) {
 			return new Button(id) {
+				
 				private static final long serialVersionUID = 7138884209309510709L;
 				@Override
 				public void onSubmit() {
 					// 承認通知(各ユーザー別の通知方法で)行う。hash値利用のこと。
+					model.getObject().onApply();
 				}
 			};
 		}
 		
-		private Button getCancelButton(String id) {
+		private Button getCancelButton(String id, final IModel<ApprovalBean> model) {
+//			return new Button(id, Model.of(model.getObject().cancelButton)) {
 			return new Button(id) {
 				private static final long serialVersionUID = 3491917688221911493L;
 				@Override
 				public void onSubmit() {
-//					setResponsePage()
-					// page に参照したくないんだけど。event? 
+					model.getObject().onCancel();
 				}
 			};
 		}

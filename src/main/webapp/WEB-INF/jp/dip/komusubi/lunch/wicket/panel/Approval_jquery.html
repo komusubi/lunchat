@@ -24,14 +24,14 @@
     </div>
     <div data-role="content">
       <wicket:panel>
-        <h4 wicket:id="panel.message">XXXさんに承認依頼の通知を送付します。</h4>
+        <h4 wicket:id="noticeLabel">XXXさんに承認依頼の通知を送付します。</h4>
         <form data-ajax="false" wicket:id="approval.form">
           <div data-role="fieldcontain">
-            <label for="apply.message">依頼メッセージ</label><input type="text" wicket:id="message" id='apply.message'>
+            <label for="apply.message">依頼メッセージ</label><input type="text" wicket:id="applyMessage" id='apply.message'>
           </div>
           <div class="ui-grid-a">
-            <span class="ui-block-a"><input type="submit" value="承認依頼" data-theme="b" wicket:id="apply"></span> <span
-              class="ui-block-b"><input type="submit" value="戻る" wicket:id="cancel"></span>
+            <span class="ui-block-a"><input type="submit" value="承認依頼" wicket:id="applyButton"></span> <span
+              class="ui-block-b"><input type="submit" value="戻る" wicket:id="cancelButton"></span>
           </div>
         </form>
       </wicket:panel>

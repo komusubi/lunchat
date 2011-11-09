@@ -40,7 +40,6 @@ public class GroupList extends Panel {
 	
 	public GroupList(String id) {
 		super(id);
-		add(new Label("list.title", "リストタイトル"));
 		add(getGroupList("list.item"));
 	}
 
@@ -67,9 +66,14 @@ public class GroupList extends Panel {
 			
 			private Link<String> getGroupLink(final String id, final Group group) {
 				return new Link<String>(id) {
-
 					private static final long serialVersionUID = 6166112156309130232L;
-
+					
+					@Override
+					protected void onInitialize() {
+						add(new Label("link.label", group.getName()));
+						super.onInitialize();
+					}
+					
 					@Override
 					public void onClick() {
 						logger.info("onClick to {}", group);
@@ -78,7 +82,4 @@ public class GroupList extends Panel {
 			}
 		};
 	}
-
-	
-	
 }

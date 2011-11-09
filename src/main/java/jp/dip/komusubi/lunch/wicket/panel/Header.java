@@ -12,18 +12,23 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Header extends Panel {
 
 	private static final long serialVersionUID = -467641882462547658L;
-
+	private static final Logger logger = LoggerFactory.getLogger(Header.class);
+	
 	public Header(String id, Model<String> model) {
 		super(id, model);
 		Label label;
-		if (model != null)
+		if (model != null) {
 			label = new Label("pageTitle", model);
-		else
+		} else {
+			logger.error("ヘッダーパネルがmodelを引数にしてないケースで呼び出されました！");
 			label = new Label("pageTitle", "メニュー一覧");
+		}
 		add(label);
 		// FIXME bookmarkable page link not nice url
 		add(new BookmarkablePageLink<WebPage>("link.home", WicketApplication.get().getHomePage(), null));

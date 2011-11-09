@@ -40,7 +40,8 @@ public class JdbcUserDao implements UserDao {
 	private static final String SELECT_RECORD_QUERY = "select " + COLUMNS + " from user where id = ?";
 	private static final String INSERT_RECORD_QUERY = "insert into user (" + COLUMNS + ") values (?, ?, ?, ?, ?)";
 	private static final String UPDATE_RECORD_QUERY = "update user set password = ?, name = ?, email = ? where id = ?";
-	private static final String SELECT_RECORD_BY_EMAIL = "select " + COLUMNS + " from user where email = ?"; 
+	private static final String SELECT_RECORD_BY_EMAIL = "select " + COLUMNS + " from user where email = ?";
+	private static final String SELECT_RECORD_BY_GROUPID = "select " + COLUMNS + " from user where groupId = ?";
 	private HealthDao healthDao;
 	private SimpleJdbcTemplate template;
 	
@@ -98,6 +99,13 @@ public class JdbcUserDao implements UserDao {
 		return user;
 	}
 
+	public List<User> findByGroupId(String groupId) {
+		List<User> list;
+		list = template.query(SELECT_RECORD_BY_GROUPID, userRowMapper, groupId);
+		logger.info("findByGroupId find: {}", list.size());
+		return list;
+	}
+	
 	private RowMapper<User> userRowMapper = new RowMapper<User>() {
 		public User mapRow(ResultSet rs, int rowNum) throws SQLException {
 			User user = new User(rs.getString("id"))
