@@ -43,6 +43,7 @@ public class VariationBase extends WebPage {
 //		MDC.put("ipaddr", clientInfo.getProperties().getRemoteAddress());
 		MDC.put("ipaddr", request.getContainerRequest().getRemoteAddr());
 		MDC.put("sessionId", request.getContainerRequest().getSession().getId());
+		logger.info("request start for lunchat {}", request.getClientUrl().toAbsoluteString());
 		if (logger.isDebugEnabled()) {
 			logger.debug("user agent is {} ", clientInfo.getUserAgent());
 		}
@@ -81,9 +82,9 @@ public class VariationBase extends WebPage {
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
 		if (isJQuery()) {
-			response.renderCSSReference("http://code.jquery.com/mobile/latest/jquery.mobile.min.css");
-			response.renderJavaScriptReference("http://code.jquery.com/jquery-1.6.2.min.js");
-			response.renderJavaScriptReference("http://code.jquery.com/mobile/latest/jquery.mobile.min.js");
+			response.renderCSSReference("/css/jquery.mobile.min.css");
+			response.renderJavaScriptReference("/js/jquery-1.6.4.min.js");
+			response.renderJavaScriptReference("/js/jquery.mobile.min.js");
 		}
 		response.renderJavaScript(analytics, null);
 	}
