@@ -3,7 +3,6 @@ package jp.dip.komusubi.lunch.wicket.panel;
 import jp.dip.komusubi.lunch.wicket.WicketApplication;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.page.Home;
-import jp.dip.komusubi.lunch.wicket.page.Login;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -21,6 +20,10 @@ public class Header extends Panel {
 	private static final Logger logger = LoggerFactory.getLogger(Header.class);
 	
 	public Header(String id, Model<String> model) {
+		this(id, model, true);
+	}
+	
+	public Header(String id, Model<String> model, boolean authVisible) {
 		super(id, model);
 		Label label;
 		if (model != null) {
@@ -32,7 +35,8 @@ public class Header extends Panel {
 		add(label);
 		// FIXME bookmarkable page link not nice url
 		add(new BookmarkablePageLink<WebPage>("link.home", WicketApplication.get().getHomePage(), null));
-		add(getAuthLink("auth"));
+		
+		add(getAuthLink("auth").setVisible(authVisible));
 		add(getWebMarkupContainer("nav"));
 	}
 	
@@ -65,7 +69,7 @@ public class Header extends Panel {
 
 				@Override
 				public void onClick() {
-					setResponsePage(new Login());
+					setResponsePage(WicketApplication.get().getSignInPageClass());
 				}
 			};
 			label = "ログイン";

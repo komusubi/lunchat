@@ -22,6 +22,7 @@ import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.component.AuthenticatedLabel;
 import jp.dip.komusubi.lunch.wicket.panel.ChoiceShop;
+import jp.dip.komusubi.lunch.wicket.panel.Footer;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
 
 import org.apache.wicket.model.Model;
@@ -34,13 +35,13 @@ public class Home extends VariationBase {
 	private static final Logger logger = LoggerFactory.getLogger(Home.class);
 	private User user = WicketSession.get().getLoggedInUser();
 	private String username = user == null ? "" : user.getName();
-	private String pageTitle = "メニュー一覧";
+	private String pageTitle = getString("page.title");
 	
     public Home() {
-//    	add(new Header("header", new Model<Home>(this)));
-    	add(new Header("header"));
+    	add(new Header("header", Model.of(pageTitle)));
     	add(new ChoiceShop("shop.list"));
     	add(new AuthenticatedLabel("greeting", getLocalizer().getString("greeting", this, new Model<Home>(this))));
+    	add(new Footer("footer"));
     }
     
 }

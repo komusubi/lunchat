@@ -124,7 +124,7 @@ public class AccountService implements Serializable {
 								.setLoginFail(0);
 			evaluate = true;
 		} else {
-			logger.info("password unmatch: id:{}, password:{}", id, password);
+			logger.info("password unmatch, id:{}, password:{}", id, password);
 			user.getHealth().incrementLoginFail();
 		}
 		userDao.update(user.getHealth());
@@ -157,30 +157,54 @@ public class AccountService implements Serializable {
 		}
 	}
 	
-	public void remind(String email, String url) {
+	public Nonce remind(String email, String url) {
 		User to = userDao.readByEmail(email);
 		if (to == null) 
-			throw new LunchException("not found email " + email); 
+			throw new NotFoundEmailException("not found email: " + email);
+		StringBuilder urlBuilder = new StringBuilder(url);
+		if (!url.endsWith("?"))
+			urlBuilder.append("?");
+		Nonce nonce = Configuration.getInstance(Nonce.class);
+		urlBuilder.append("activate=")
+					.append(nonce.get(email));
 		try {
 			MailContent content = new MailContent();
 			User from = new User();
 			from.setName(getString("remind.mail.from.name"))
 				.setEmail(getString("remind.mail.from.address"));
 			content.setSubject(getString("remind.mail.title"));
-			content.setBody(format("remind.mail.body", to.getName(), url));
+			content.setBody(format("remind.mail.body", to.getName(), urlBuilder.toString()));
 			MailMessage mail = new MailMessage();
 			mail.setContent(content);
 			mail.setFrom(from);
 			mail.addToRecipient(to);
 			smtp.send(mail);
-			logger.info("send to {}, subject is {}", to.getEmail(), getString("remind.email.title"));
-			return ;
+			logger.info("send to {}, subject is {}", to.getEmail(), getString("remind.mail.title"));
+			return nonce;
 		} catch (Exception e) {
 			throw new LunchException(e);
 		}
 	}
 	
-	public Nonce activate(User user, String url) {
-		return null;
+	@Transactional
+	public boolean activate(String id, Nonce nonce, String requestedNonce) {
+		boolean result = false;
+		if (id == null || nonce == null || requestedNonce == null) {
+			logger.info("can't activate again, id is:{}, nonce:{}, requested:{}", 
+					new Object[]{id, nonce, requestedNonce});
+			return result;
+		}
+		User user = userDao.find(id);
+		if (user == null)
+			return result;
+		
+		if (requestedNonce.equals(nonce.get(user.getEmail()))) {
+			user.getHealth().setActive(true)
+								.setLoginFail(0);
+			userDao.update(user.getHealth());
+			result = true;
+			logger.info("activate again success:{}", user);
+		}
+		return result;
 	}
 }

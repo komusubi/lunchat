@@ -37,6 +37,7 @@ import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.guice.GuiceComponentInjector;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
+import org.apache.wicket.protocol.http.WebApplication;
 
 import com.google.inject.Injector;
 
@@ -116,6 +117,10 @@ public class WicketApplication extends AuthenticatedWebApplication {
 	@Override
 	public Class<? extends WebPage> getSignInPageClass() {
 		return Login.class;
+	}
+	
+	public static WicketApplication get() {
+		return (WicketApplication) WebApplication.get();
 	}
 	
 }

@@ -24,6 +24,8 @@ import jp.dip.komusubi.lunch.wicket.panel.Registry;
 import jp.dip.komusubi.lunch.wicket.panel.SignIn;
 
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.StringValue;
 
 public class Login extends VariationBase {
 
@@ -31,8 +33,19 @@ public class Login extends VariationBase {
 	private String pageTitle = getString("page.title");
 	
 	public Login() {
-		add(new Header("header", Model.of(pageTitle)));
-		add(new SignIn("signInPanel"));
+		this(new PageParameters());
+	}
+	
+	public Login(PageParameters params) {
+		StringValue activateValue = params.get("activate");
+		SignIn signIn;
+		if (!activateValue.isEmpty())
+			signIn = new SignIn("signInPanel", activateValue.toString());
+		else
+			signIn = new SignIn("signInPanel");
+		
+		add(signIn);
+		add(new Header("header", Model.of(pageTitle), false));
 		add(new Registry("registry"));
 		add(new Footer("footer"));
 	}

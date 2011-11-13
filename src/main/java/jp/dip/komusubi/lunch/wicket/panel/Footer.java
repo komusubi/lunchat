@@ -27,7 +27,7 @@ public class Footer extends Panel {
 	
 	public Footer(String id) {
 		super(id);
-		add(new Label("footer.label", "launch"));
+		add(new Label("footer.label", "lunch"));
 	}
 	
 }

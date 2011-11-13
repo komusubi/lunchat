@@ -23,27 +23,44 @@ import java.text.MessageFormat;
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.service.AccountService;
+import jp.dip.komusubi.lunch.util.Nonce;
+import jp.dip.komusubi.lunch.wicket.WicketApplication;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
+import jp.dip.komusubi.lunch.wicket.page.Login;
 import jp.dip.komusubi.lunch.wicket.page.Reminder;
 import jp.dip.komusubi.lunch.wicket.panel.util.SpecificBehavior;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.authroles.authentication.panel.SignInPanel;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.protocol.http.RequestUtils;
-import org.apache.wicket.util.string.UrlUtils;
+import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.validator.AbstractValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SignIn extends SignInPanel {
 
 	private static final long serialVersionUID = 4834818596146852372L;
+	private static final Logger logger = LoggerFactory.getLogger(SignIn.class);
+	private String requestedNonce;
+	private boolean activate;
 	
 	public SignIn(String id) {
 		super(id);
 	}
 	
+	public SignIn(String id, String requestedNonce) {
+		this(id);
+		Validate.notEmpty(requestedNonce);
+		this.requestedNonce = requestedNonce;
+		this.activate = true;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public void onBeforeRender() {
+	public void onInitialize() {
 		SignInForm form = getForm();
 		if (WicketSession.VARIATION_JQUERY_MOBILE.equals(getVariation())) {
 			form.add(new AttributeModifier("data-ajax", false));
@@ -54,25 +71,59 @@ public class SignIn extends SignInPanel {
 		
 		SpecificBehavior.behaveIdField(text);
 		SpecificBehavior.behavePasswordField(password);
+		// activate again ?
+		if (activate) {
+			text.add(new ActivateValidator(requestedNonce));
+		} 
+		super.onInitialize();
+	}
+	
+	/**
+	 * activate validator.
+	 * @author jun.ozeki
+	 * @since 2011/11/12
+	 */
+	private static class ActivateValidator extends AbstractValidator<String> {
+
+		private static final long serialVersionUID = 2006243876877470070L;
+
+		private String requestedNonce;
+		public ActivateValidator(String requestedNonce) {
+			this.requestedNonce = requestedNonce;
+		}
 		
-		super.onBeforeRender();
+		@Override
+		protected void onValidate(IValidatable<String> validatable) {
+			AccountService accountService = Configuration.getInstance(AccountService.class);
+			Nonce nonce = (Nonce) WicketSession.get().getAttribute(Nonce.class.getName());
+			String value = validatable.getValue();
+			if (!accountService.activate(value, nonce, requestedNonce)) {
+				error(validatable);
+			}
+			// clear nonce object in session. prevent for replay attacks.
+			WicketSession.get().setAttribute(Nonce.class.getName(), null);
+		}
+		@Override
+		protected String resourceKey() {
+			return "activate.failed";
+		}
 	}
 	
 	@Override
-	public void onSignInFailed() {
+	protected void onSignInFailed() {
 		AccountService accountService = Configuration.getInstance(AccountService.class);
 		User user = accountService.find(getUsername());
 		if (user != null && !user.getHealth().isActive()) {
 			get("feedback").setEscapeModelStrings(false);
 			
-			String u = getRequest().getClientUrl().toAbsoluteString();
 			String path = urlFor(Reminder.class, null).toString();
 			String urlBase = getRequestCycle().getUrlRenderer().renderFullUrl(getRequest().getClientUrl());
 			String url = RequestUtils.toAbsolutePath(urlBase, path);
 			error(MessageFormat.format(getString("user.not.active"), user.getName(), url));
+		} else if (activate) {
+			error(getLocalizer().getString("login.failed.after.activate.sccessed", SignIn.this));
 		} else {
 			super.onSignInFailed();
 		}
-			
 	}
 }

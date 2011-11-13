@@ -11,6 +11,8 @@
 <entry key="signInFailed">ログインエラーが発生しました。</entry>
 <entry key="user.not.active">{0} さんのアカウントは既にロックされています。&lt;a href="{1}"&gt;こちら&lt;/a&gt;よりロック解除を行なってください。</entry>
 <entry key="username.PatternValidator">IDは半角英数字で入力してください。</entry>
+<entry key="activate.failed">アカウントのロック解除でエラーが発生しました。再度やり直してください。</entry>
+<entry key="login.failed.after.activate.sccessed">アカウントのロック解除は完了しましたが、ログインでエラーが発生しました。</entry>
 <!-- 
 <entry key="null">入力エラーが発生しています。</entry>
 -->

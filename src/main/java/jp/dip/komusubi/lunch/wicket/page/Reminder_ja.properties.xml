@@ -2,9 +2,9 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Reminder Page Properties</comment>
-<entry key="message">パスワードを忘れた方</entry>
-<entry key="page.title">タイトル</entry>
+<entry key="message">ロックを解除します。登録されているメールアドレスを入力してください。</entry>
+<entry key="page.title">アカウントロック解除</entry>
 <entry key="submit.label">送信</entry>
-<entry key="send.mail.complete">メールを送信しました。</entry>
+<entry key="send.mail.complete">メールを確認し、処理を継続してください。</entry>
 <entry key="send.mail.error">メール送信中にエラーが発生しました。しばらくお待ちください。</entry>
 </properties>

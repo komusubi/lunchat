@@ -21,12 +21,14 @@ package jp.dip.komusubi.lunch.wicket.page;
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.service.AccountService;
+import jp.dip.komusubi.lunch.service.NotFoundEmailException;
+import jp.dip.komusubi.lunch.util.Nonce;
+import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.panel.EmailSender;
 import jp.dip.komusubi.lunch.wicket.panel.EmailSender.EmailSenderBean;
 import jp.dip.komusubi.lunch.wicket.panel.Footer;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
 
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.RequestUtils;
@@ -40,8 +42,7 @@ public class Reminder extends VariationBase {
 	private String pageTitle = getString("page.title");
 	
 	public Reminder() {
-		add(new Header("header", new Model<String>(pageTitle)));
-		add(new FeedbackPanel("feedback"));
+		add(new Header("header", Model.of(pageTitle)));
 		add(new EmailSender("email.reminder", new CompoundPropertyModel<EmailSenderBean>(getEmailSenderBean())));
 		add(new Footer("footer"));
 	}
@@ -52,16 +53,23 @@ public class Reminder extends VariationBase {
 			private static final long serialVersionUID = 4984027733469660821L;
 
 			public void onSubmit() {
-				String targetPath = getRequestCycle().urlFor(Reminder.class, null).toString();
+				String targetPath = getRequestCycle().urlFor(Login.class, null).toString();
 				String ownUrl = getRequestCycle().getUrlRenderer().renderFullUrl(getRequest().getClientUrl());
 				String url = RequestUtils.toAbsolutePath(ownUrl, targetPath);
 				try {
 					AccountService account = Configuration.getInstance(AccountService.class);
-					account.remind(email, url);
-					info(getLocalizer().getString("send.mail.complete", Reminder.this));
+					Nonce nonce = account.remind(email, url);
+					// save nonce in session 
+					WicketSession.get().setAttribute(Nonce.class.getName(), nonce);
+					
+				} catch (NotFoundEmailException e) {
+					// sniffing mail address ? or just wrong ?
+					logger.info("user might be suspect? wrong input email address: {}", email);
 				} catch (LunchException e) {
 					error(getLocalizer().getString("send.mail.error", Reminder.this));
+					return;
 				}
+				info(getLocalizer().getString("send.mail.complete", Reminder.this));
 			}
 			
 		};

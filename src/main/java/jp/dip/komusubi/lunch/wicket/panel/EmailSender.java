@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -56,6 +57,7 @@ public class EmailSender extends Panel {
 	
 	public EmailSender(String id, IModel<EmailSenderBean> model) {
 		super(id, model);
+		add(new FeedbackPanel("feedback"));
 		add(new EmailSenderForm("email.form", model));
 		add(new Label("message"));
 	}
