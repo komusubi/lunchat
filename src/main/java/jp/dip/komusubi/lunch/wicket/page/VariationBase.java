@@ -43,7 +43,7 @@ public class VariationBase extends WebPage {
 //		MDC.put("ipaddr", clientInfo.getProperties().getRemoteAddress());
 		MDC.put("ipaddr", request.getContainerRequest().getRemoteAddr());
 		MDC.put("sessionId", request.getContainerRequest().getSession().getId());
-		logger.info("request start for lunchat {}", request.getClientUrl().toAbsoluteString());
+		logger.info("[start] lunchat {}", request.getClientUrl().toAbsoluteString());
 		if (logger.isDebugEnabled()) {
 			logger.debug("user agent is {} ", clientInfo.getUserAgent());
 		}

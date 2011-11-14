@@ -83,8 +83,14 @@ public class AccountService implements Serializable {
 		return id;
 	}
 
+	@Transactional
 	public void remove(String id) {
 		userDao.remove(new User(id));
+	}
+	
+	@Transactional
+	public void modify(User user) {
+		userDao.update(user);
 	}
 	
 	public User find(String id) {

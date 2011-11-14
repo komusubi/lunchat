@@ -21,6 +21,7 @@ import jp.dip.komusubi.lunch.wicket.page.error.ErrorPage;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
 import jp.dip.komusubi.lunch.wicket.panel.Profile;
 
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,19 +35,16 @@ public class Confirm extends VariationBase {
 	
 	public Confirm(PageParameters params) {
 		this.params = params;
-//		add(new Header("header", new Model<Confirm>(this)));
-		add(new Header("header"));
+		add(new Header("header", new Model<String>(pageTitle)));
 		add(new Profile("profile", params.get("segment").toString()));
 	}
 
 	@Override
-//	protected void onInitialize() {
-	protected void onBeforeRender() {
-//		super.onInitialize();
+	protected void onInitialize() {
 		if (params.get("segment").isEmpty()) {
 			logger.info("malformed url {}", getRequest().getClientUrl().toAbsoluteString());
 			setResponsePage(new ErrorPage("不正なURLです。"));
 		}
-		super.onBeforeRender();
+		super.onInitialize();
 	}
 }

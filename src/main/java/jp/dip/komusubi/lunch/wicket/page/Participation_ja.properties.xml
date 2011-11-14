@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Reminder Page Properties</comment>
+<entry key="message">{0}さんに{1}グループ参加の承認依頼を送付します。</entry>
+<entry key="page.title">グループ参加</entry>
+<entry key="apply.label">承認依頼</entry>
+<entry key="send.mail.complete">メールを送信しました。</entry>
+<entry key="send.mail.error">メール送信中にエラーが発生しました。しばらくお待ちください。</entry>
+</properties>

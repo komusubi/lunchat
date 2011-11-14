@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<meta charset="utf-8">
+<wicket:remove>
+  <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
+  <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+</wicket:remove>
+<title>Profile2_jquery</title>
+</head>
+<body>
+  <div data-role="page" data-theme="a">
+    <span wicket:id="header"></span>
+    <wicket:remove>
+      <div data-role="header">
+        <a href="#" data-role="button" data-icon="home"></a> <a href="#" data-role="button">ログアウト</a>
+        <h1>Profile_jquery</h1>
+      </div>
+    </wicket:remove>
+    <div data-role="content">
+      <wicket:remove>
+        <div data-role="collapsible" data-collapsed="true">
+          <h3>プロファイル</h3>
+          <form data-ajax="false">
+            <div data-role="fieldcontain">
+              <label for="id">ID</label><input type="text" id="id" required>
+            </div>
+            <div data-role="fieldcontain">
+              <label for="name">名前</label><input type="text" id="name" required>
+            </div>
+            <div data-role="fieldcontain">
+              <label for="email">メールアドレス</label><input type="email" id="email" required>
+            </div>
+            <div data-role="fieldcontain">
+              <fieldset data-role="controlgroup">
+                <legend>自動注文</legend>
+                <label for="everyday">毎日、玉子屋に注文する</label><input type="checkbox" name="everyday" id="everyday">
+              </fieldset>
+            </div>
+            <div data-role="fieldcontain">
+              <label for="select.group" class="select">所属グループ</label> <select id="select.group" name="select.group"
+                data-native-menu="false">
+                <option value="xxx">XXX</option>
+                <option value="abc">abc</option>
+              </select>
+            </div>
+            <div class="ui-grid-a">
+              <span class="ui-block-a"><input type="submit" value="更新"></span> <span class="ui-block-b"><input
+                type="reset" value="リセット"></span>
+            </div>
+          </form>
+        </div>
+        <div data-role="collapsible" data-collapsed="true">
+          <h3>アカウント</h3>
+          <div data-role="fieldcontain">
+            <label for="delete">このアカウントを削除します</label><input type="checkbox" value="delete" id="delete">
+          </div>
+          <input type="submit" value="OK">
+        </div>
+        <div data-role="collapsible" data-collapsed="true">
+          <h3>グループ</h3>
+          <form data-ajax="false">
+            <div data-role="fieldcontain">
+              <label for="group">ID</label><input type="text" id="group" required>
+            </div>
+            <div data-role="fieldcontain">
+              <label for="groupname">名前</label><input type="text" id="groupname" required>
+            </div>
+            <div data-role="fieldcontain">
+              <fieldset data-role="controlgroup">
+                <legend>利用店舗</legend>
+                <label for="tamagoya">玉子屋</label> <input type="checkbox" id="tamagoya" value="tamagoya"> <label
+                  for="fresh">フレッシュランチ</label><input type="checkbox" id="fresh" value="fresh">
+              </fieldset>
+            </div>
+            <div data-role="fieldcontain">
+              <fieldset data-role="controlgroup">
+                <legend>通知</legend>
+                <label for="notice">修正内容をグループメンバーに通知する</label><input type="checkbox" id="notice" value="notice"
+                  checked="checked">
+              </fieldset>
+            </div>
+            <input type="submit" value="登録">
+          </form>
+        </div>
+        <div data-role="collapsible" data-collapsed="true">
+          <h3>パスワード</h3>
+          <div data-role="fieldcontain">
+            <label for="password">現在のパスワード</label><input type="password" id="password">
+          </div>
+          <div data-role="fieldcontain">
+            <label for="password">新しいパスワード</label><input type="password" id="password">
+          </div>
+          <div data-role="fieldcontain">
+            <label for="confirm">パスワード(確認用)</label><input type="password" id="confirm">
+          </div>
+          <input type="submit" value="更新">
+        </div>
+      </wicket:remove>
+    </div>
+    <span wicket:id="change.password"></span>
+    <span wicket:id="footer"></span>
+    <wicket:remove>
+      <div data-role="footer">
+        <h1>lunch</h1>
+      </div>
+    </wicket:remove>
+  </div>
+</body>
+</html>
