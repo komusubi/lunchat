@@ -15,7 +15,7 @@ create table if not exists user (
 	groupId varchar(128),
 	password varchar(64),
 	name varchar(256),
-	email varchar(255) unique,
+	email varchar(255) unique
 );
 
 drop table if exists health;
@@ -61,7 +61,7 @@ create table if not exists product (
 	foreign key (shopId) references shop(id) on delete cascade 
 );
 
-insert into product values ( 'Oct24Lunch', null, 'tamagoya', '10/24 ランチ', 430, '2011-10-01 00:00:00', '2011-10-24 12:00:00.0' );
+insert into product values ( 'Oct24Lunch', null, 'tamagoya', '10/24 ランチ', 430, '2011-10-01 00:00:00', '2011-12-24 12:00:00.0' );
 
 
 drop table if exists receiving;

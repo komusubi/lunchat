@@ -39,10 +39,9 @@ public class Reminder extends VariationBase {
 
 	private static final long serialVersionUID = -6010319871215878007L;
 	private static final Logger logger = LoggerFactory.getLogger(Reminder.class);
-	private String pageTitle = getString("page.title");
 	
 	public Reminder() {
-		add(new Header("header", Model.of(pageTitle)));
+		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
 		add(new EmailSender("email.reminder", new CompoundPropertyModel<EmailSenderBean>(getEmailSenderBean())));
 		add(new Footer("footer"));
 	}

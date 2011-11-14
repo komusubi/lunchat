@@ -27,10 +27,9 @@ import org.apache.wicket.model.Model;
 public class Member extends VariationBase {
 
 	private static final long serialVersionUID = 4784071743684739829L;
-	private static final String pageTitle = "メンバー選択";
 	
 	public Member() {
-		add(new Header("header", Model.of(pageTitle)));
+		add(new Header("header", Model.of(getDefaultHeaderBean("メンバー選択"))));
 		add(new MemberList("member.list"));
 		add(new Footer("footer"));
 	}

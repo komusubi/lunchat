@@ -24,6 +24,7 @@ import jp.dip.komusubi.lunch.wicket.component.AuthenticatedLabel;
 import jp.dip.komusubi.lunch.wicket.panel.ChoiceShop;
 import jp.dip.komusubi.lunch.wicket.panel.Footer;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
+import jp.dip.komusubi.lunch.wicket.panel.Header.HeaderBean;
 
 import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
@@ -38,10 +39,12 @@ public class Home extends VariationBase {
 	private String pageTitle = getString("page.title");
 	
     public Home() {
-    	add(new Header("header", Model.of(pageTitle)));
+    	HeaderBean bean = getDefaultHeaderBean(getString("page.title"));
+    	add(new Header("header", Model.of(bean), true));
     	add(new ChoiceShop("shop.list"));
     	add(new AuthenticatedLabel("greeting", getLocalizer().getString("greeting", this, new Model<Home>(this))));
     	add(new Footer("footer"));
     }
+    
     
 }

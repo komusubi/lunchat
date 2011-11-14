@@ -19,6 +19,7 @@
 package jp.dip.komusubi.lunch.wicket.page;
 
 import jp.dip.komusubi.lunch.wicket.WicketSession;
+import jp.dip.komusubi.lunch.wicket.panel.Header.HeaderBean;
 
 import org.apache.log4j.MDC;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -87,5 +88,15 @@ public class VariationBase extends WebPage {
 			response.renderJavaScriptReference("/js/jquery.mobile.min.js");
 		}
 		response.renderJavaScript(analytics, null);
+	}
+	
+	protected HeaderBean getDefaultHeaderBean(String pageTitle) {
+		HeaderBean bean = new HeaderBean();
+		bean.config = Setting.class;
+		bean.pageTitle = pageTitle;
+		// FIXME navigation panel link address.
+		bean.order = null;
+		bean.history = null;
+		return bean;
 	}
 }

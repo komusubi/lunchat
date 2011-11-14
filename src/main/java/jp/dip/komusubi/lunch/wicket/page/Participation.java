@@ -32,12 +32,11 @@ import org.apache.wicket.model.Model;
 public class Participation extends VariationBase {
 
 	private static final long serialVersionUID = 1242588429737776047L;
-	private String pageTitle = getString("page.title");
 	private final User applyTo;
 	
 	public Participation(User applyTo) {
 		this.applyTo = applyTo;
-		add(new Header("header", Model.of(pageTitle)));
+		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
 		add(new Approval("approval", new CompoundPropertyModel<ApprovalBean>(getApprovalBean())));
 		add(new Footer("footer"));
 	}

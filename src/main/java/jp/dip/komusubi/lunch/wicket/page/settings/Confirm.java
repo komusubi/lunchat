@@ -31,11 +31,10 @@ public class Confirm extends VariationBase {
 	private static final long serialVersionUID = -7502193205773677682L;
 	private static final Logger logger = LoggerFactory.getLogger(Confirm.class);
 	private PageParameters params;
-	private String pageTitle = "ユーザー登録";
 	
 	public Confirm(PageParameters params) {
 		this.params = params;
-		add(new Header("header", new Model<String>(pageTitle)));
+		add(new Header("header", Model.of(getDefaultHeaderBean("ユーザー登録"))));
 		add(new Profile("profile", params.get("segment").toString()));
 	}
 

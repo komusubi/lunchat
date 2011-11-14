@@ -24,13 +24,14 @@ import jp.dip.komusubi.lunch.wicket.panel.GroupRegistry;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
 
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.Model;
 
 public class Grouping extends VariationBase {
 
 	private static final long serialVersionUID = -8681405849328505396L;
-
+	
 	public Grouping() {
-		add(new Header("header"));
+		add(new Header("header", Model.of(getDefaultHeaderBean("グループ"))));
 		add(new Label("page.message", "後でメッセージ設定する"));
 		add(new GroupList("group.list"));
 		add(new GroupRegistry("group.registry"));

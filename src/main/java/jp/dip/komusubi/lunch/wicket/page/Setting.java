@@ -21,18 +21,18 @@ package jp.dip.komusubi.lunch.wicket.page;
 import jp.dip.komusubi.lunch.wicket.panel.ChangePassword;
 import jp.dip.komusubi.lunch.wicket.panel.Footer;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
+import jp.dip.komusubi.lunch.wicket.panel.Header.HeaderBean;
 
 import org.apache.wicket.model.Model;
 
 public class Setting extends VariationBase {
 
 	private static final long serialVersionUID = 3235692022909765328L;
-	private String pageTitle = getString("page.title");
 	
 	public Setting() {
-		add(new Header("header", Model.of(pageTitle)));
+		HeaderBean bean = getDefaultHeaderBean(getString("page.title"));
+		add(new Header("header", Model.of(bean), true));
 		add(new ChangePassword("change.password"));
 		add(new Footer("footer"));
 	}
-	
 }

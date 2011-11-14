@@ -30,7 +30,6 @@ import org.apache.wicket.util.string.StringValue;
 public class Login extends VariationBase {
 
 	private static final long serialVersionUID = -5101224283988545642L;
-	private String pageTitle = getString("page.title");
 	
 	public Login() {
 		this(new PageParameters());
@@ -45,7 +44,7 @@ public class Login extends VariationBase {
 			signIn = new SignIn("signInPanel");
 		
 		add(signIn);
-		add(new Header("header", Model.of(pageTitle), false));
+		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title"))), false));
 		add(new Registry("registry"));
 		add(new Footer("footer"));
 	}

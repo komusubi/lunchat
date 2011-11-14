@@ -18,6 +18,7 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
+import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
 import jp.dip.komusubi.lunch.service.AccountService;
@@ -238,7 +239,12 @@ public class Profile extends Panel {
 			user.getHealth().setActive(true);
 			//TODO  Hash値はここで設定する。saltはどうする？
 			user.setPassword(new DigestResolver().resolve(getConfirmPassword()));
-			getAccountService().create(user);
+			try {
+				getAccountService().create(user);
+			} catch (LunchException e) {
+				error(getString("registry.failed"));
+				return;
+			}
 			info(getString("registry.completed", new Model<User>(user)));
 		}
 	}

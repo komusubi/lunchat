@@ -23,6 +23,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Health;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.dao.HealthDao;
@@ -30,6 +31,7 @@ import jp.dip.komusubi.lunch.module.dao.UserDao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
@@ -68,10 +70,17 @@ public class JdbcUserDao implements UserDao {
 	public String persist(User instance) {
 		if (instance == null || instance.getId() == null)
 			throw new IllegalArgumentException("user: wrong instance " + instance);
-		template.update(INSERT_RECORD_QUERY, 
-				instance.getId(), instance.getName(),	
-				instance.getPassword(), instance.getEmail());
-		healthDao.persist(instance.getHealth());
+		try {
+			template.update(INSERT_RECORD_QUERY, 
+					instance.getId(), 
+					instance.getGroupId(),
+					instance.getPassword(),
+					instance.getName(),	
+					instance.getEmail());
+			healthDao.persist(instance.getHealth());
+		} catch (DataAccessException e) {
+			throw new LunchException(e);
+		}
 		return instance.getId();
 	}
 

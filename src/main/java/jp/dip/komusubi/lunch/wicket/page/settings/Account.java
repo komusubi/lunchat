@@ -25,12 +25,14 @@ import jp.dip.komusubi.lunch.wicket.panel.Footer;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
 import jp.dip.komusubi.lunch.wicket.panel.Profile;
 
+import org.apache.wicket.model.Model;
+
 public class Account extends VariationBase {
 
 	private static final long serialVersionUID = 5109190494409699152L;
-
+	
 	public Account() {
-		add(new Header("header"));
+		add(new Header("header", Model.of(getDefaultHeaderBean("ダミー"))));
 		add(new Profile("profile"));
 		add(new Footer("footer"));
 	}
