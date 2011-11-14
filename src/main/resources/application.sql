@@ -2,7 +2,7 @@ use lunchat;
 
 drop table if exists user;
 drop table if exists health;
-drop table if exists userGroup;
+drop table if exists groups;
 drop table if exists userRole;
 drop table if exists shop;
 drop table if exists product;
@@ -10,12 +10,21 @@ drop table if exists receiving;
 drop table if exists shipping;
 drop table if exists ordered;
 
+drop table if exists groups;
+create table if not exists groups (
+	id varchar(64) primary key,
+	name varchar(128) not null,
+	lastOrder time
+);
+
+drop table if exists user;
 create table if not exists user (
 	id varchar(64) primary key,
 	groupId varchar(128),
 	password varchar(64),
 	name varchar(256),
-	email varchar(255) unique
+	email varchar(255) unique,
+	foreign key (groupId) references groups(id) on delete cascade
 );
 
 drop table if exists health;
@@ -27,15 +36,6 @@ create table if not exists health (
 	active boolean,
 	foreign key (userId) references user(id) on delete cascade
 );
-
-drop table if exists groups;
-create table if not exists groups (
-	id varchar(64) primary key,
-	name varchar(128) not null,
-	lastOreder time,
-	foreign key (id) references user(id) on delete cascade
-);
-
 
 drop table if exists shop;
 create table if not exists shop (

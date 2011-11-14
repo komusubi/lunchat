@@ -18,6 +18,9 @@
  */
 package jp.dip.komusubi.lunch.wicket.page.settings;
 
+import jp.dip.komusubi.lunch.Configuration;
+import jp.dip.komusubi.lunch.model.User;
+import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.page.Login;
 import jp.dip.komusubi.lunch.wicket.page.VariationBase;
@@ -26,17 +29,22 @@ import jp.dip.komusubi.lunch.wicket.panel.Header;
 import jp.dip.komusubi.lunch.wicket.panel.Profile;
 
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class Account extends VariationBase {
 
 	private static final long serialVersionUID = 5109190494409699152L;
 	
-	public Account() {
+	public Account(PageParameters params) {
 		add(new Header("header", Model.of(getDefaultHeaderBean("ダミー"))));
 		add(new Profile("profile"));
 		add(new Footer("footer"));
 	}
 
+	@Override
+	protected void onInitialize() {
+		
+	}
 	// check login 
 	@Override
 	public void onBeforeRender() {

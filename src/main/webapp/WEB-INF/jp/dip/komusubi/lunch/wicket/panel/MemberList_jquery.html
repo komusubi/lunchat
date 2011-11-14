@@ -9,7 +9,7 @@
 </wicket:remove>
 </head>
 <body>
-  <div data-role="page">
+  <div data-role="page" data-theme="a">
     <wicket:remove>
       <div data-role="header">
         <h1>メニュー一覧</h1>
@@ -29,8 +29,9 @@
     </wicket:remove>
     <div data-role="content">
       <wicket:panel>
-       <span wicket:id="feedback">feedback</span>
        <h4 wicket:id="list.name">xxxグループメンバー</h4>
+       <h5>下記よりグループ参加の承認を依頼する方を選択して下さい。</h5>
+       <span wicket:id="feedback"></span>
         <ul data-role="listview" data-inset="true" data-filter="true" data-filter-placeholder="検索" wicket:id="list">
           <li><a href="#" wicket:id="list.item"><p wicket:id="id">komusubi</p><h4 wicket:id="name">こむすび</h4>
           </a></li>

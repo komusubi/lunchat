@@ -29,6 +29,7 @@ import jp.dip.komusubi.lunch.wicket.page.Setting;
 import jp.dip.komusubi.lunch.wicket.page.error.ErrorPage;
 import jp.dip.komusubi.lunch.wicket.page.error.ExpiredError;
 import jp.dip.komusubi.lunch.wicket.page.error.InternalServerError;
+import jp.dip.komusubi.lunch.wicket.page.settings.Account;
 import jp.dip.komusubi.lunch.wicket.page.settings.Confirm;
 
 import org.apache.wicket.RuntimeConfigurationType;
@@ -98,11 +99,12 @@ public class WicketApplication extends AuthenticatedWebApplication {
 		mountPage("/receipt", Receipt.class);
 		mountPage("/order", CompleteOrder.class);
 		mountPage("/grouping", Grouping.class);
-		mountPage("/member", Member.class);
+		mountPage("/members", Member.class);
 		mountPage("/postback", BrowserInfoPage.class);
 		mountPage("/reminder", Reminder.class);
 		mountPage("/confirm/${segment}", Confirm.class);
 		mountPage("/setting", Setting.class);
+//		mountPage("/account/${id}", Account.class);
 		// error page
 		mountPage("/error", ErrorPage.class);
 		mountPage("/error/internal", InternalServerError.class);

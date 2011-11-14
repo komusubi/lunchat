@@ -21,6 +21,7 @@ package jp.dip.komusubi.lunch.wicket.panel;
 import java.util.List;
 
 import jp.dip.komusubi.lunch.Configuration;
+import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
 
@@ -33,29 +34,31 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.Model;
 
 public class MemberList extends Panel {
 
 	private static final long serialVersionUID = 695094056051480395L;
 
-	public MemberList(String id) { // IModel<Group> model) {
-//		super(id, model);
+	public MemberList(String id, Group group) { // IModel<Group> model) {
 		super(id);
 		add(new FeedbackPanel("feedback"));
-		add(new Label("list.name", "XXグループメンバー"));
-		add(new GroupListView("list", ldmodel));
+		add(new Label("list.name", getString("label.title", Model.of(group))));
+		add(new GroupListView("list", getLoadableDetachableModel(group.getId())));
 	}
 
-	private LoadableDetachableModel<List<User>> ldmodel = new LoadableDetachableModel<List<User>>() {
+	private LoadableDetachableModel<List<User>> getLoadableDetachableModel(final String groupId) {
+		return new LoadableDetachableModel<List<User>>() {
 		
-		private static final long serialVersionUID = 342639502330434200L;
-
-		@Override
-		public List<User> load() {
-			UserDao userDao = Configuration.getInstance(UserDao.class);
-			return userDao.findByGroupId("default");
-		}
-	};
+			private static final long serialVersionUID = 342639502330434200L;
+	
+			@Override
+			public List<User> load() {
+				UserDao userDao = Configuration.getInstance(UserDao.class);
+				return userDao.findByGroupId(groupId);
+			}
+		};
+	}
 	
 	private static class GroupListView extends ListView<User> {
 

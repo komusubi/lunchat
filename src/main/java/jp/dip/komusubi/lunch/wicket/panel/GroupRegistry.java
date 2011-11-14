@@ -21,14 +21,17 @@ package jp.dip.komusubi.lunch.wicket.panel;
 import java.util.Calendar;
 
 import jp.dip.komusubi.lunch.Configuration;
+import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Group;
-import jp.dip.komusubi.lunch.module.dao.GroupDao;
+import jp.dip.komusubi.lunch.model.User;
+import jp.dip.komusubi.lunch.service.AccountService;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.AbstractValidator;
 import org.apache.wicket.validation.validator.StringValidator;
@@ -42,6 +45,7 @@ public class GroupRegistry extends Panel {
 	
 	public GroupRegistry(String id) {
 		super(id);
+		add(new FeedbackPanel("feedback"));
 		add(new GroupRegistryForm("group.form"));
 	}
 
@@ -82,18 +86,32 @@ public class GroupRegistry extends Panel {
 					if ("default".equals(validatable.getValue()))
 						error(validatable);
 				}
+				@Override
+				public String resourceKey() {
+					return "wrong.value";
+				}
 			};
 		}
 		
 		@Override
 		public void onSubmit() {
 			if (group.getLastOrder() == null) {
-				// FIXME set last order date(time)				
-//				group.setLastOrder();
+				// FIXME set last order date(time)
+				Calendar cal = Calendar.getInstance();
+				cal.set(Calendar.HOUR_OF_DAY, 10);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MILLISECOND, 0);
+				group.setLastOrder(cal.getTime());
 			}
-			GroupDao groupDao = Configuration.getInstance(GroupDao.class);
-			groupDao.persist(group);
-			logger.info("group: {}", group);
+			try {
+				AccountService accountService = Configuration.getInstance(AccountService.class);
+				accountService.create(new User(""), group);
+			} catch (LunchException e) {
+				error("registry.failed");
+				return;
+			}
+			info(getString("registry.completed", Model.of(group)));
 		}
 	}
 

@@ -36,15 +36,16 @@
       <wicket:panel>
       <div data-role="collapsible" data-collapsed="true">
         <h3>新規登録</h3>
+        <h4>新しいグループを作成します。IDと名称を決定してください。</h4>
+        <span wicket:id="feedback">feedback</span>
         <form method="post" data-ajax="false" data-transitino="slide" wicket:id="group.form">
-          <h5>新しいグループを作成します。IDと名称を決定してください。</h5>
           <div data-role="fieldcontain">
             <label for="group.id">ID</label> <input type="text" wicket:id="id" id="group.id">
           </div>
           <div data-role="fieldcontain">
             <label for="name">名前</label> <input type="text" wicket:id="name" id="name">
           </div>
-          <input type="submit" value="登録" data-theme="b">
+          <input type="submit" value="登録">
         </form>
       </div>
       </wicket:panel>

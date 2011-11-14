@@ -27,11 +27,13 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
@@ -73,9 +75,13 @@ public class JdbcGroupDao implements GroupDao {
 
 	@Override
 	public String persist(Group instance) {
-		template.update(INSERT_RECORD, instance.getId(),
-											instance.getName(),
-											instance.getLastOrder());
+		try {
+			template.update(INSERT_RECORD, instance.getId(),
+												instance.getName(),
+												instance.getLastOrder());
+		} catch (DataAccessException e) {
+			throw new LunchException(e);
+		}
 		return instance.getId();
 	}
 

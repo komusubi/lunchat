@@ -33,8 +33,10 @@ import jp.dip.komusubi.common.util.XmlResourceBundle;
 import jp.dip.komusubi.common.util.XmlResourceBundleControl;
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.LunchException;
+import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.Transactional;
+import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.util.Nonce;
 
@@ -66,6 +68,8 @@ public class AccountService implements Serializable {
 	@Named("date")
 	private transient Resolver<Date> dateResolver;
 	private User authedUser;
+	@Inject
+	private GroupDao groupDao;
 	
 	@Inject
 	public AccountService(UserDao userDao, 
@@ -83,6 +87,14 @@ public class AccountService implements Serializable {
 		return id;
 	}
 
+	@Transactional
+	public String create(User user, Group group) {
+		String id = groupDao.persist(group);
+		// relation to groupId
+		userDao.update(user.setGroupId(group.getId()));
+		return id;
+	}
+	
 	@Transactional
 	public void remove(String id) {
 		userDao.remove(new User(id));

@@ -18,20 +18,25 @@
  */
 package jp.dip.komusubi.lunch.wicket.page;
 
+import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.wicket.panel.Footer;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
 import jp.dip.komusubi.lunch.wicket.panel.MemberList;
 
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class Member extends VariationBase {
 
 	private static final long serialVersionUID = 4784071743684739829L;
 	
-	public Member() {
-		add(new Header("header", Model.of(getDefaultHeaderBean("メンバー選択"))));
-		add(new MemberList("member.list"));
+	public Member(Group group) {
+		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
+		add(new MemberList("member.list", group));
 		add(new Footer("footer"));
 	}
 
+	public Member(PageParameters params) {
+		
+	}
 }

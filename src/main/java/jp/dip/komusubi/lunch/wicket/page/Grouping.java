@@ -23,17 +23,19 @@ import jp.dip.komusubi.lunch.wicket.panel.GroupList;
 import jp.dip.komusubi.lunch.wicket.panel.GroupRegistry;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
 
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 
+@AuthorizeInstantiation
 public class Grouping extends VariationBase {
 
 	private static final long serialVersionUID = -8681405849328505396L;
 	
 	public Grouping() {
-		add(new Header("header", Model.of(getDefaultHeaderBean("グループ"))));
+		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
 		add(new Label("page.message", "後でメッセージ設定する"));
-		add(new GroupList("group.list"));
+		add(new GroupList("group.list", Member.class));
 		add(new GroupRegistry("group.registry"));
 		add(new Footer("footer"));
 	}

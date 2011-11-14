@@ -23,13 +23,16 @@ import java.util.List;
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
+import jp.dip.komusubi.lunch.wicket.page.Member;
 
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,9 +41,9 @@ public class GroupList extends Panel {
 	private static final long serialVersionUID = -728544767659111573L;
 	private static final Logger logger = LoggerFactory.getLogger(GroupList.class);
 	
-	public GroupList(String id) {
+	public GroupList(String id, Class<? extends WebPage> nextPage) {
 		super(id);
-		add(getGroupList("list.item"));
+		add(getGroupList("list.item", nextPage));
 	}
 
 	private LoadableDetachableModel<List<Group>> ldmodel = new LoadableDetachableModel<List<Group>>() {
@@ -53,7 +56,7 @@ public class GroupList extends Panel {
 		}
 	};
 	
-	private ListView<Group> getGroupList(String id) {
+	private ListView<Group> getGroupList(String id, final Class<? extends WebPage> page) {
 		return new ListView<Group>(id, ldmodel) {
 
 			private static final long serialVersionUID = -423055326223010011L;
@@ -73,10 +76,12 @@ public class GroupList extends Panel {
 						add(new Label("link.label", group.getName()));
 						super.onInitialize();
 					}
-					
 					@Override
 					public void onClick() {
 						logger.info("onClick to {}", group);
+//						setResponsePage(page);
+						// FIXME reference to page pacakage.
+						setResponsePage(new Member(group));
 					}
 				};
 			}

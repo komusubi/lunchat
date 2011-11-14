@@ -24,14 +24,11 @@ import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.util.Nonce;
-import jp.dip.komusubi.lunch.wicket.WicketApplication;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
-import jp.dip.komusubi.lunch.wicket.page.Login;
 import jp.dip.komusubi.lunch.wicket.page.Reminder;
 import jp.dip.komusubi.lunch.wicket.panel.util.SpecificBehavior;
 
 import org.apache.commons.lang3.Validate;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.authroles.authentication.panel.SignInPanel;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.protocol.http.RequestUtils;
@@ -48,7 +45,7 @@ public class SignIn extends SignInPanel {
 	private boolean activate;
 	
 	public SignIn(String id) {
-		super(id);
+		super(id, false);
 	}
 	
 	public SignIn(String id, String requestedNonce) {
@@ -61,10 +58,10 @@ public class SignIn extends SignInPanel {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onInitialize() {
-		SignInForm form = getForm();
-		if (WicketSession.VARIATION_JQUERY_MOBILE.equals(getVariation())) {
-			form.add(new AttributeModifier("data-ajax", false));
-		}
+//		SignInForm form = getForm();
+//		if (WicketSession.VARIATION_JQUERY_MOBILE.equals(getVariation())) {
+//			form.add(new AttributeModifier("data-ajax", false));
+//		}
 		
 		FormComponent<String> text = (FormComponent<String>) getForm().get("username");
 		FormComponent<String> password = (FormComponent<String>) getForm().get("password");
