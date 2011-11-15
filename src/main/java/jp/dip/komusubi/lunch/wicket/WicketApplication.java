@@ -1,23 +1,22 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.    
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package jp.dip.komusubi.lunch.wicket;
 
+import jp.dip.komusubi.lunch.wicket.page.AuthorizedPage;
 import jp.dip.komusubi.lunch.wicket.page.CompleteOrder;
 import jp.dip.komusubi.lunch.wicket.page.Grouping;
 import jp.dip.komusubi.lunch.wicket.page.Home;
@@ -29,10 +28,10 @@ import jp.dip.komusubi.lunch.wicket.page.Setting;
 import jp.dip.komusubi.lunch.wicket.page.error.ErrorPage;
 import jp.dip.komusubi.lunch.wicket.page.error.ExpiredError;
 import jp.dip.komusubi.lunch.wicket.page.error.InternalServerError;
-import jp.dip.komusubi.lunch.wicket.page.settings.Account;
 import jp.dip.komusubi.lunch.wicket.page.settings.Confirm;
 
 import org.apache.wicket.RuntimeConfigurationType;
+import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.guice.GuiceComponentInjector;
@@ -64,10 +63,18 @@ public class WicketApplication extends AuthenticatedWebApplication {
 	public void init() {
 		super.init();
 		// guice injector
-		getComponentInstantiationListeners().add(new GuiceComponentInjector(this,
-				(Injector) getServletContext().getAttribute(Injector.class.getName()), false));
+		getComponentInstantiationListeners().add(
+				new GuiceComponentInjector(this, (Injector) getServletContext().getAttribute(
+						Injector.class.getName()), false));
 		// security
 		getSecuritySettings().setEnforceMounts(true);
+		getSecuritySettings().setAuthorizationStrategy(new SimplePageAuthorizationStrategy(AuthorizedPage.class, Login.class) {
+			
+			@Override
+			protected boolean isAuthorized() {
+				return WicketSession.get().isSignedIn();
+			}
+		});
 		// markup
 		getMarkupSettings().setDefaultMarkupEncoding("utf-8");
 		getMarkupSettings().setCompressWhitespace(true);
@@ -75,11 +82,11 @@ public class WicketApplication extends AuthenticatedWebApplication {
 		// resource
 		getResourceSettings().addResourceFolder("WEB-INF");
 		// application
-		getApplicationSettings().setPageExpiredErrorPage(ExpiredError.class); 
+		getApplicationSettings().setPageExpiredErrorPage(ExpiredError.class);
 		getApplicationSettings().setInternalErrorPage(InternalServerError.class);
-//		getApplicationSettings().setAccessDeniedPage(accessDeniedPage)
+		// getApplicationSettings().setAccessDeniedPage(accessDeniedPage)
 		// request cycle
-		getRequestCycleSettings().setGatherExtendedBrowserInfo(true);	
+		getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
 		getRequestCycleSettings().setResponseRequestEncoding("utf-8");
 		// logger
 		getRequestLoggerSettings().setRequestLoggerEnabled(true);
@@ -93,7 +100,7 @@ public class WicketApplication extends AuthenticatedWebApplication {
 			getDebugSettings().setLinePreciseReportingOnNewComponentEnabled(true);
 		}
 	}
-	
+
 	private void mount() {
 		mountPage("/login", Login.class);
 		mountPage("/receipt", Receipt.class);
@@ -104,13 +111,13 @@ public class WicketApplication extends AuthenticatedWebApplication {
 		mountPage("/reminder", Reminder.class);
 		mountPage("/confirm/${segment}", Confirm.class);
 		mountPage("/setting", Setting.class);
-//		mountPage("/account/${id}", Account.class);
+		// mountPage("/account/${id}", Account.class);
 		// error page
 		mountPage("/error", ErrorPage.class);
 		mountPage("/error/internal", InternalServerError.class);
 		mountPage("/error/expired", ExpiredError.class);
 	}
-	
+
 	@Override
 	protected Class<? extends AbstractAuthenticatedWebSession> getWebSessionClass() {
 		return WicketSession.class;
@@ -120,9 +127,8 @@ public class WicketApplication extends AuthenticatedWebApplication {
 	public Class<? extends WebPage> getSignInPageClass() {
 		return Login.class;
 	}
-	
+
 	public static WicketApplication get() {
 		return (WicketApplication) WebApplication.get();
 	}
-	
 }

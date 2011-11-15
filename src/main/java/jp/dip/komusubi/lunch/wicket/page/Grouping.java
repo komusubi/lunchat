@@ -23,12 +23,15 @@ import jp.dip.komusubi.lunch.wicket.panel.GroupList;
 import jp.dip.komusubi.lunch.wicket.panel.GroupRegistry;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
 
-import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 
-@AuthorizeInstantiation
-public class Grouping extends VariationBase {
+/**
+ * choice group. 
+ * @author jun.ozeki
+ * @since 2011/11/16
+ */
+public class Grouping extends AuthorizedPage { 
 
 	private static final long serialVersionUID = -8681405849328505396L;
 	

@@ -25,7 +25,12 @@ import jp.dip.komusubi.lunch.wicket.panel.Header.HeaderBean;
 
 import org.apache.wicket.model.Model;
 
-public class Setting extends VariationBase {
+/**
+ * setting page. 
+ * @author jun.ozeki
+ * @since 2011/11/16
+ */
+public class Setting extends AuthorizedPage {
 
 	private static final long serialVersionUID = 3235692022909765328L;
 	
