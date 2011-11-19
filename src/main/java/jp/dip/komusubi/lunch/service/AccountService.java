@@ -114,6 +114,10 @@ public class AccountService implements Serializable {
 		return user;
 	}
 	
+	public User readByEmail(String email) {
+		return userDao.readByEmail(email);
+	}
+	
 	@Transactional
 	public boolean signIn(String id, String password) {
 		boolean evaluate = false;

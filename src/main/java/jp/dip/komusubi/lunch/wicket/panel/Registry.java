@@ -24,7 +24,6 @@ import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.page.settings.Confirm;
 
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -35,6 +34,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
+/**
+ * registry panel. 
+ * @author jun.ozeki
+ * @since 2011/11/19
+ */
 public class Registry extends Panel {
 	private static final long serialVersionUID = 3071722265831129774L;
 	private static final Logger logger = LoggerFactory.getLogger(Registry.class);
@@ -63,22 +67,20 @@ public class Registry extends Panel {
 		@Override
 		public void onSubmit() {
 			// confirm page の absolute URLを取得
+			// FIXME refer page package from panel.(Confirm) 
 			String targetPath = getRequestCycle().urlFor(Confirm.class, null).toString();
 			String ownUrl = getRequestCycle().getUrlRenderer().renderFullUrl(getRequest().getClientUrl());
 			String url = RequestUtils.toAbsolutePath(ownUrl, targetPath);
 			
-			Nonce nonce = account.apply(user, url);
-			// session に Nonceを保持
-			WicketSession.get().setAttribute(Nonce.class.getName(), nonce);
-			info(getLocalizer().getString("send.confirm", this, "send confirm email."));
-		}
-		@Override
-		public void onBeforeRender() {
-			if (WicketSession.VARIATION_JQUERY_MOBILE.equals(getVariation())) {
-				add(new AttributeModifier("data-ajax", false));
+			// already exist email ?  
+			if (account.readByEmail(user.getEmail()) != null) {
+				error(getLocalizer().getString("already.exist.email", this, "email address already exist."));
+			} else {
+				Nonce nonce = account.apply(user, url);
+				// session に Nonceを保持
+				WicketSession.get().setAttribute(Nonce.class.getName(), nonce);
+				info(getLocalizer().getString("send.confirm", this, "send confirm email."));
 			}
-			
-			super.onBeforeRender();
 		}
 	}
 }
