@@ -1,5 +1,5 @@
 /*
-* jQuery Mobile Framework Git Build: SHA1: 3af9d83e51cc80ceb34ca3bf0d8bae03425d2c77 <> Date: Thu Nov 10 23:32:06 2011 -0500
+* jQuery Mobile Framework Git Build: SHA1: e918442bbbebce9cedfc9a5ce3b15f37c62bdb4f <> Date: Fri Nov 18 19:16:35 2011 -0800
 * http://jquerymobile.com
 *
 * Copyright 2011 (c) jQuery Project
@@ -1713,9 +1713,11 @@ Built by David Kaneda and maintained by Jonathan Stark.
 
 
 .ui-select .ui-btn { opacity: 1; }
+
 /* Fixes #2588 — When Windows Phone 7.5 (Mango) tries to calculate a numeric opacity for a select—including “inherit”—without explicitly specifying an opacity on the parent to give it context, a bug appears where clicking elsewhere on the page after opening the select will open the select again. */
 .ui-select .ui-btn select { cursor: pointer; -webkit-appearance: button; left: 0; top:0; width: 100%;  min-height: 1.5em; min-height: 100%; height: 3em; max-height: 100%; opacity: 0; -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; filter: alpha(opacity=0); z-index: 2; }
 
+.ui-select .ui-disabled { opacity: .3; }
 
 @-moz-document url-prefix() {.ui-select .ui-btn select { opacity: 0.0001; }}
 .ui-select .ui-btn select.ui-select-nativeonly { opacity: 1; text-indent: 0; }
@@ -1821,7 +1823,7 @@ ol.ui-listview .ui-li-jsnumbering:before { content: "" !important; } /* to avoid
 input.ui-slider-input,
 .ui-field-contain input.ui-slider-input { display: inline-block; width: 50px; }
 select.ui-slider-switch { display: none; }
-div.ui-slider { position: relative; display: inline-block; overflow: visible; height: 15px; padding: 0; margin: 0 2% 0 20px; top: 4px; width: 66%; }
+div.ui-slider { position: relative; display: inline-block; overflow: visible; height: 15px; padding: 0; margin: 0 2% 0 20px; top: 4px; width: 60%; }
 div.ui-slider-switch { width: 99.8%; }
 a.ui-slider-handle { position: absolute; z-index: 10;  top: 50%; width: 28px; height: 28px; margin-top: -15px; margin-left: -15px; }
 a.ui-slider-handle .ui-btn-inner { padding-left: 0; padding-right: 0; }
