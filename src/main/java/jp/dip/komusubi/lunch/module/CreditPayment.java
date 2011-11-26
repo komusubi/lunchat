@@ -18,7 +18,6 @@
  */
 package jp.dip.komusubi.lunch.module;
 
-import jp.dip.komusubi.lunch.model.Basket;
 import jp.dip.komusubi.lunch.model.Payment;
 
 public class CreditPayment implements Payment {

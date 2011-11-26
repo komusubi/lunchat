@@ -17,12 +17,19 @@
 package jp.dip.komusubi.lunch.model;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Date;
 
 public class Shop implements Serializable {
 
 	private static final long serialVersionUID = -1020122183352301083L;
 	private String id;
 	private String name;
+	// private GeoLocation geoLocation;
+	private String url;
+	private String phoneNumber;
+	private Date lastOrder;
 
 	public Shop(String id) {
 		this.id = id;
@@ -32,8 +39,35 @@ public class Shop implements Serializable {
 		return id;
 	}
 
+	public Date getLastOrder() {
+		return lastOrder;
+	}
+
 	public String getName() {
 		return name;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public URL getURL() {
+		URL url = null;
+		try {
+			url = new URL(this.url);
+		} catch (MalformedURLException e) {
+			// ignore
+		}
+		return url;
+	}
+
+	public Shop setLastOrder(Date lastOrder) {
+		this.lastOrder = lastOrder;
+		return this;
 	}
 
 	public Shop setName(String name) {
@@ -41,10 +75,19 @@ public class Shop implements Serializable {
 		return this;
 	}
 
+	public Shop setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+		return this;
+	}
+
+	public Shop setUrl(String url) {
+		this.url = url;
+		return this;
+	}
+
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Shop [id=").append(id).append(", name=").append(name).append("]");
-		return builder.toString();
+		return "Shop [id=" + id + ", name=" + name + ", url=" + url + ", phoneNumber="
+				+ phoneNumber + ", lastOrder=" + lastOrder + "]";
 	}
 }

@@ -18,26 +18,28 @@
  */
 package jp.dip.komusubi.lunch.wicket.page;
 
-import jp.dip.komusubi.lunch.wicket.panel.ChangePassword;
+import jp.dip.komusubi.lunch.module.Basket;
+import jp.dip.komusubi.lunch.service.Shopping;
 import jp.dip.komusubi.lunch.wicket.panel.Footer;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
-import jp.dip.komusubi.lunch.wicket.panel.Header.HeaderBean;
+import jp.dip.komusubi.lunch.wicket.panel.ProductList;
 
 import org.apache.wicket.model.Model;
 
 /**
- * setting page. 
+ * order confirm page. 
  * @author jun.ozeki
- * @since 2011/11/16
+ * @since 2011/11/19
  */
-public class Setting extends AuthorizedPage {
+public class Confirm extends AuthorizedPage {
 
-	private static final long serialVersionUID = 3235692022909765328L;
+	private static final long serialVersionUID = 6448297553843014369L;
+	private Shopping shopping;
+	private String pageTitle = getString("page.title");
 	
-	public Setting() {
-		HeaderBean bean = getDefaultHeaderBean(getString("page.title"));
-		add(new Header("header", Model.of(bean), true));
-		add(new ChangePassword("change.password"));
+	public Confirm(Basket basket) {
+		add(new Header("header", Model.of(getDefaultHeaderBean(pageTitle))));
+		add(new ProductList("basket", shopping));
 		add(new Footer("footer"));
 	}
 }

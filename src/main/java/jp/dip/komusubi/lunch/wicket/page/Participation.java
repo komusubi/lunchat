@@ -29,6 +29,11 @@ import jp.dip.komusubi.lunch.wicket.panel.Header;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 
+/**
+ * participation group.
+ * @author jun.ozeki
+ * @since 2011/11/19
+ */
 public class Participation extends VariationBase {
 
 	private static final long serialVersionUID = 1242588429737776047L;

@@ -18,6 +18,8 @@
  */
 package jp.dip.komusubi.lunch.model;
 
+import jp.dip.komusubi.lunch.module.Basket;
+
 public interface Payment {
 
 	boolean pay(Basket basket);

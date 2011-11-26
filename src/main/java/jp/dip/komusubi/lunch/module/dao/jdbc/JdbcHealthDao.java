@@ -25,9 +25,11 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Health;
 import jp.dip.komusubi.lunch.module.dao.HealthDao;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
@@ -48,7 +50,12 @@ public class JdbcHealthDao implements HealthDao {
 	
 	@Override
 	public Health find(String pk) {
-		Health health = template.queryForObject(SELECT_QUERY_PK, healthRowMapper, pk);
+		Health health = null;
+		try {
+			health = template.queryForObject(SELECT_QUERY_PK, healthRowMapper, pk);
+		} catch (DataAccessException e) {
+			throw new LunchException(e);
+		}
 		return health;
 	}
 
@@ -59,11 +66,15 @@ public class JdbcHealthDao implements HealthDao {
 
 	@Override
 	public String persist(Health instance) {
-		template.update(INSERT_QUERY, instance.getUserId(),
+		try {
+			template.update(INSERT_QUERY, instance.getUserId(),
 											instance.getLogin(),
 											instance.getLastLogin(),
 											instance.getLoginFail(),
 											instance.isActive());
+		} catch (DataAccessException e) {
+			throw new LunchException(e);
+		}
 		return instance.getUserId();									
 	}
 
@@ -74,11 +85,15 @@ public class JdbcHealthDao implements HealthDao {
 
 	@Override
 	public void update(Health instance) {
-		template.update(UPDATE_QUERY, instance.getLogin(),
+		try {
+			template.update(UPDATE_QUERY, instance.getLogin(),
 											instance.getLastLogin(),
 											instance.getLoginFail(),
 											instance.isActive(),
 											instance.getUserId());
+		} catch (DataAccessException e) {
+			throw new LunchException(e);
+		}
 	}
 
 	private static RowMapper<Health> healthRowMapper = new RowMapper<Health>() {

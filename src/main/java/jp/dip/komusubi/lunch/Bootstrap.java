@@ -34,19 +34,21 @@ import jp.dip.komusubi.common.protocol.smtp.SmtpServer;
 import jp.dip.komusubi.common.util.Resolver;
 import jp.dip.komusubi.lunch.Configuration.RuntimeMode;
 import jp.dip.komusubi.lunch.model.Authentication;
-import jp.dip.komusubi.lunch.model.Basket;
+import jp.dip.komusubi.lunch.module.Basket;
 import jp.dip.komusubi.lunch.module.DefaultAuthentication;
 import jp.dip.komusubi.lunch.module.DefaultNonce;
 import jp.dip.komusubi.lunch.module.Transactional;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.module.dao.HealthDao;
 import jp.dip.komusubi.lunch.module.dao.OrderDao;
+import jp.dip.komusubi.lunch.module.dao.OrderLineDao;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.module.dao.jdbc.JdbcGroupDao;
 import jp.dip.komusubi.lunch.module.dao.jdbc.JdbcHealthDao;
 import jp.dip.komusubi.lunch.module.dao.jdbc.JdbcOrderDao;
+import jp.dip.komusubi.lunch.module.dao.jdbc.JdbcOrderLineDao;
 import jp.dip.komusubi.lunch.module.dao.jdbc.JdbcProductDao;
 import jp.dip.komusubi.lunch.module.dao.jdbc.JdbcShopDao;
 import jp.dip.komusubi.lunch.module.dao.jdbc.JdbcUserDao;
@@ -197,6 +199,7 @@ public class Bootstrap extends GuiceServletContextListener {
 			bind(UserDao.class).to(JdbcUserDao.class);
 			bind(ShopDao.class).to(JdbcShopDao.class);
 			bind(OrderDao.class).to(JdbcOrderDao.class);
+			bind(OrderLineDao.class).to(JdbcOrderLineDao.class);
 			bind(HealthDao.class).to(JdbcHealthDao.class);
 			bind(GroupDao.class).to(JdbcGroupDao.class);
 			bind(ProductDao.class).to(JdbcProductDao.class);
@@ -226,9 +229,10 @@ public class Bootstrap extends GuiceServletContextListener {
 				
 				txManager.commit(status);
 
-			} catch (RuntimeException e) {
+			} catch (Exception e) {
 				logger.warn("database rollback: {}", e);
 				txManager.rollback(status);
+				throw e;
 			}
 			return obj;
 		}

@@ -29,6 +29,6 @@ public class Index {
 	}
 	public void onClick() {
 		
-		shopping.add("");
+//		shopping.add("");
 	}
 }

@@ -19,7 +19,6 @@
 package jp.dip.komusubi.lunch.module;
 
 import jp.dip.komusubi.lunch.model.Action;
-import jp.dip.komusubi.lunch.model.Basket;
 import jp.dip.komusubi.lunch.model.Payment;
 import jp.dip.komusubi.lunch.model.Role;
 import jp.dip.komusubi.lunch.model.User;
@@ -53,7 +52,8 @@ public class CashPayment implements Payment, Action {
 	}
 
 	public boolean isPayable(Basket basket) {
-		return isPayable(basket.amountAll());
+//		return isPayable(basket.amountAll());
+		return false;
 	}
 
 }

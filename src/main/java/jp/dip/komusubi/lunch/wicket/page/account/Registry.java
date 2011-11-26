@@ -14,10 +14,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package jp.dip.komusubi.lunch.wicket.page.settings;
+package jp.dip.komusubi.lunch.wicket.page.account;
 
 import jp.dip.komusubi.lunch.wicket.page.VariationBase;
 import jp.dip.komusubi.lunch.wicket.page.error.ErrorPage;
+import jp.dip.komusubi.lunch.wicket.panel.Footer;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
 import jp.dip.komusubi.lunch.wicket.panel.Profile;
 
@@ -26,16 +27,17 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Confirm extends VariationBase {
+public class Registry extends VariationBase {
 
 	private static final long serialVersionUID = -7502193205773677682L;
-	private static final Logger logger = LoggerFactory.getLogger(Confirm.class);
+	private static final Logger logger = LoggerFactory.getLogger(Registry.class);
 	private PageParameters params;
 	
-	public Confirm(PageParameters params) {
+	public Registry(PageParameters params) {
 		this.params = params;
 		add(new Header("header", Model.of(getDefaultHeaderBean("ユーザー登録"))));
 		add(new Profile("profile", params.get("segment").toString()));
+		add(new Footer("footer"));
 	}
 
 	@Override

@@ -39,11 +39,11 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 public class JdbcUserDao implements UserDao {
 	private static final Logger logger = LoggerFactory.getLogger(JdbcUserDao.class);
 	private static String COLUMNS = "id, groupId, password, name, email";
-	private static final String SELECT_RECORD_QUERY = "select " + COLUMNS + " from user where id = ?";
-	private static final String INSERT_RECORD_QUERY = "insert into user (" + COLUMNS + ") values (?, ?, ?, ?, ?)";
-	private static final String UPDATE_RECORD_QUERY = "update user set password = ?, name = ?, email = ? where id = ?";
-	private static final String SELECT_RECORD_BY_EMAIL = "select " + COLUMNS + " from user where email = ?";
-	private static final String SELECT_RECORD_BY_GROUPID = "select " + COLUMNS + " from user where groupId = ?";
+	private static final String SELECT_RECORD_QUERY = "select " + COLUMNS + " from users where id = ?";
+	private static final String INSERT_RECORD_QUERY = "insert into users (" + COLUMNS + ") values (?, ?, ?, ?, ?)";
+	private static final String UPDATE_RECORD_QUERY = "update users set password = ?, name = ?, email = ? where id = ?";
+	private static final String SELECT_RECORD_BY_EMAIL = "select " + COLUMNS + " from users where email = ?";
+	private static final String SELECT_RECORD_BY_GROUPID = "select " + COLUMNS + " from users where groupId = ?";
 	private HealthDao healthDao;
 	private SimpleJdbcTemplate template;
 	
