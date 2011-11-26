@@ -18,9 +18,12 @@
  */
 package jp.dip.komusubi.lunch.wicket;
 
+import java.io.File;
+
 import javax.servlet.ServletContextEvent;
 
 import jp.dip.komusubi.common.util.Resolver;
+import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.MockBootstrap;
 
 import org.apache.wicket.protocol.http.WebApplication;
@@ -64,4 +67,16 @@ public class WicketTesterResource extends ExternalResource {
 		return tester;
 	}
 	
+	protected void configureResource() {
+		File webXml = new File(servletContext.getRealPath("WEB-INF/web.xml"));
+		if (webXml.exists() && webXml.isFile())
+			return;
+			
+		File webXmlTemplate = new File(servletContext.getRealPath("/WEB-INF/web.xml.template"));
+		if (!webXmlTemplate.exists() || !webXmlTemplate.isFile()) {
+			throw new LunchException("not found resouce for unit test. : " + webXmlTemplate.getAbsolutePath());
+		}
+		webXmlTemplate.renameTo(webXml);
+	}
+
 }

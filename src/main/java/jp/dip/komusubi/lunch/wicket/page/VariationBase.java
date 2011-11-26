@@ -19,6 +19,7 @@
 package jp.dip.komusubi.lunch.wicket.page;
 
 import jp.dip.komusubi.lunch.wicket.WicketSession;
+import jp.dip.komusubi.lunch.wicket.page.account.Setting;
 import jp.dip.komusubi.lunch.wicket.panel.Header.HeaderBean;
 
 import org.apache.log4j.MDC;

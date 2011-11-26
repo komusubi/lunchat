@@ -1,14 +1,16 @@
 use lunchat;
 
-drop table if exists user;
 drop table if exists health;
-drop table if exists groups;
-drop table if exists userRole;
-drop table if exists shop;
-drop table if exists product;
-drop table if exists receiving;
+drop table if exists shippinglines;
 drop table if exists shipping;
-drop table if exists ordered;
+drop table if exists orderlines;
+drop table if exists orders;
+drop table if exists receiving;
+drop table if exists payment;
+drop table if exists products;
+drop table if exists users;
+drop table if exists groups;
+drop table if exists shop;
 
 drop table if exists groups;
 create table if not exists groups (
@@ -17,8 +19,8 @@ create table if not exists groups (
 	lastOrder time
 );
 
-drop table if exists user;
-create table if not exists user (
+drop table if exists users;
+create table if not exists users (
 	id varchar(64) primary key,
 	groupId varchar(128),
 	password varchar(64),
@@ -84,8 +86,8 @@ create table if not exists shipping (
 	foreign key (productId) references product(id) on delete no action
 );
 
-drop table if exists ordered;
-create table if not exists ordered (
+drop table if exists orders;
+create table if not exists orders (
 	id int unsigned auto_increment primary key,
 	userId varchar(64),
 	productId varchar(32),

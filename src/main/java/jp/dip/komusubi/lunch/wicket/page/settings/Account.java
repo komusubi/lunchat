@@ -45,12 +45,4 @@ public class Account extends VariationBase {
 	protected void onInitialize() {
 		
 	}
-	// check login 
-	@Override
-	public void onBeforeRender() {
-		if (!WicketSession.get().isSignedIn())
-			setResponsePage(Login.class);
-		
-		super.onBeforeRender();
-	}
 }

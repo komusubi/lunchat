@@ -49,7 +49,7 @@ public class Notice extends WebPage {
 
 		@Override
 		public void onSubmit() {
-			shopping.order(true);
+//			shopping.order(true);
 		}
 
 	}

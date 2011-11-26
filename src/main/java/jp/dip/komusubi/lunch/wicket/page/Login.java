@@ -18,15 +18,21 @@
  */
 package jp.dip.komusubi.lunch.wicket.page;
 
+import jp.dip.komusubi.lunch.wicket.page.account.Registry;
 import jp.dip.komusubi.lunch.wicket.panel.Footer;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
-import jp.dip.komusubi.lunch.wicket.panel.Registry;
+import jp.dip.komusubi.lunch.wicket.panel.EmailEntry;
 import jp.dip.komusubi.lunch.wicket.panel.SignIn;
 
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 
+/**
+ * login page.
+ * @author jun.ozeki
+ * @since 2011/11/19
+ */
 public class Login extends VariationBase {
 
 	private static final long serialVersionUID = -5101224283988545642L;
@@ -45,7 +51,7 @@ public class Login extends VariationBase {
 		
 		add(signIn);
 		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title"))), false));
-		add(new Registry("registry"));
+		add(new EmailEntry("registry", Registry.class));
 		add(new Footer("footer"));
 	}
 }

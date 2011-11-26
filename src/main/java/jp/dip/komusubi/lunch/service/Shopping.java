@@ -18,7 +18,6 @@ package jp.dip.komusubi.lunch.service;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,148 +25,114 @@ import javax.inject.Named;
 
 import jp.dip.komusubi.common.util.Resolver;
 import jp.dip.komusubi.lunch.Configuration;
-import jp.dip.komusubi.lunch.model.Basket;
 import jp.dip.komusubi.lunch.model.Order;
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.model.User;
-import jp.dip.komusubi.lunch.module.NotFoundProductException;
+import jp.dip.komusubi.lunch.module.Basket;
 import jp.dip.komusubi.lunch.module.Transactional;
 import jp.dip.komusubi.lunch.module.dao.OrderDao;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
 
+/**
+ * shopping.
+ * @author jun.ozeki
+ * @since 2011/11/20
+ */
 public class Shopping implements Serializable {
 
 	private static final long serialVersionUID = 6554643970716125151L;
 	private Basket basket;
-	private User user;
-	@Inject
-	private transient OrderDao orderDao;
 	@Inject
 	private transient ProductDao productDao;
+	@Inject 
+	private OrderDao orderDao;
 	@Inject
 	@Named("date")
 	private transient Resolver<Date> dateResolver;
-	
+
 	public Shopping() {
 		this(new User(), Configuration.getInstance(Basket.class));
 	}
-	
+
 	public Shopping(User user) {
 		this(user, Configuration.getInstance(Basket.class));
 	}
-	
+
 	public Shopping(User user, Basket basket) {
-		this.user = user;
 		this.basket = basket;
-		basket.setUserId(user.getId());
-	}
-	
-	Shopping(User user, Basket basket, OrderDao orderDao, ProductDao productDao) {
-		this.user = user;
-		this.basket = basket;
-		this.orderDao = orderDao;
-		this.productDao = productDao;
+		basket.setUser(user);
 	}
 
-	public void add(Order order) {
-		basket.add(order);
-	}
-	
-	public void add(Product product) {
-		Order order = new Order()
-							.setProduct(product)
-							.setUser(user)
-							.setDate(dateResolver.resolve());
-		add(order);
-	}
-	
-	public void add(String productId) {
-		Product p = productDao.find(productId);
-		if (p == null)
-			throw new NotFoundProductException(productId);
-		add(p);
+	Shopping(User user, Basket basket, OrderDao orderDao, ProductDao productDao) {
+		this.basket = basket;
+		this.productDao = productDao;
+		basket.setUser(user);
 	}
 
 	public List<Product> getProducts(String shopId) {
 		return getProducts(shopId, dateResolver.resolve());
 	}
-	
+
 	public List<Product> getProducts(String shopId, Date date) {
 		return productDao.findBySalable(shopId, date);
 	}
-	
+
 	public List<Product> getProductAll(String shopId) {
 		return productDao.findByShopId(shopId);
 	}
-	
+
 	public List<Product> getRegularProduct(String shopId) {
 		// user が nullの場合の考慮必要あり。
 		return null;
 	}
-	
+
 	public List<Product> getRegularProduct() {
 		return null;
 	}
-	
-	public int amount() {
-		return basket.amountAll();
-	}
 
-	public void clear() {
-		basket.clear();
-	}
-
-	public Basket getBasket() {
+	public Basket getBasket(User user) {
+		basket.setUser(user);
 		return basket;
 	}
 
-	public Iterator<Order> iterator() {
-		return basket.iterator();
+	@Transactional
+	public void order(Basket basket) {
+		for (Order order: basket) {
+			// order date
+			order.setDatetime(dateResolver.resolve());
+			orderDao.persist(order);
+		}
+
+
+//				if (map.containsKey(o.getProduct().getShopId())) {
+//				List<OrderLine> list = map.get(o.getProduct().getShopId());
+//				list.add(o);
+//			} else {
+//				List<OrderLine> list = new ArrayList<>();
+//				list.add(o);
+//				map.put(o.getProduct().getShopId(), list);
+//			}
+//		}
+//		for (Entry<String, List<OrderLine>> e: map.entrySet()) {
+//			String shopId = e.getKey();
+//			Order order = orderDao.findByUnique(user.getGroupId(), shopId, null);
+//			if (order == null) {
+//				order = new Order();
+//				order.setShop(shopDao.find(shopId))
+//					.setGroup(groupDao.find(user.getGroupId()))
+//					.setDatetime(dateResolver.resolve());
+//			}
+//			order.addOrderLines(e.getValue());
+//			orderDao.persist(order);
+//		}
+
 	}
-
-	public User getUser() {
-		return user;
+	
+	public void order() {
+		order(this.basket);
 	}
-
-    public void order() {
-        order(false);
-    }
-
-    @Transactional
-    public void order(boolean force) {
-        if (user == null)
-            throw new IllegalStateException("shopping user is null");
-
-        // 二重購入を避けるためにチェックを行うが、マッチング項目をどうするか？
-        // まとめ買いをした場合には購入日は別になる。
-        // 商品名は献立に依存するので期待できない。
-        for (Order o: basket) {
-            if (o.getUser() == null || o.getUser().getId() == null)
-                throw new IllegalStateException("order user is null");
-            if (!force) {
-                List<Order> ordered = orderDao.findByUserAndDate(
-                        user.getId(),
-                        dateResolver.resolve());
-
-                if (ordered.size() > 0) {
-                    throw new DuplicatedOrderException(ordered);
-                }
-            }
-            int pk = orderDao.persist(o);
-            // TODO pk の値とれる？
-        }
-
-    }
-
+	
 	public void purchase() {
-		return;
+		throw new UnsupportedOperationException();
 	}
-
-	public void remove(String productId) {
-		basket.remove(productId);
-	}
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

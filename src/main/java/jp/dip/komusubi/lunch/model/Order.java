@@ -17,87 +17,139 @@
 package jp.dip.komusubi.lunch.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
-public class Order implements Serializable {
+/**
+ * order.
+ * 
+ * @author jun.ozeki
+ * @since 2011/11/24
+ */
+public class Order implements Serializable, Iterable<OrderLine> {
 
 	private static final long serialVersionUID = -6439746231384675399L;
 	private int id;
 	private User user;
-	private Product product;
-	private Date date;
-	private int quantity;
-//	private int amount;
+	private Shop shop;
+	private int amount;
+	private Date datetime;
+	// private int geoId;
+	private List<OrderLine> lines;
 
 	public Order() {
-		quantity = 1;
+		this(0);
 	}
 
 	public Order(int id) {
-		this();
 		this.id = id;
+		lines = new ArrayList<OrderLine>();
 	}
 
-	public boolean equals(Product product) {
-		if (product == null)
-			return false;
-		return product.equals(this.product);
+	public Order addOrderLine(OrderLine orderLine) {
+		lines.add(orderLine);
+		return this;
+	}
+
+	public Order addOrderLines(Collection<OrderLine> orderLines) {
+		lines.addAll(orderLines);
+		return this;
+	}
+
+	public void clear() {
+		lines.clear();
 	}
 
 	public int getAmount() {
-//		return amount * getQuantity();
-		if (product == null)
-			return 0;
-		return product.getAmount() * getQuantity();
+		// FIXME 注文確定後に商品が値段を変更した場合の対処が必要
+		int amountAll = 0;
+		for (OrderLine o: lines) {
+			amountAll += o.getAmount();
+		}
+		return amountAll;
 	}
 
-	public Date getDate() {
-		return date;
+	public Date getDatetime() {
+		return datetime;
 	}
 
 	public int getId() {
 		return id;
 	}
 
-	public Product getProduct() {
-		return this.product;
+	public OrderLine getOrderLine(int index) {
+		return lines.get(index);
 	}
 
-	public int getQuantity() {
-		return quantity;
+	public OrderLine getOrderLine(String productId) {
+		OrderLine orderLine = null;
+		if (productId == null || "".equals(productId))
+			return orderLine;
+		for (OrderLine o : lines) {
+			if (o.getProduct() != null && productId.equals(o.getProduct().getId()))
+				orderLine = o;
+		}
+		return orderLine;
+	}
+
+	public Shop getShop() {
+		return shop;
 	}
 
 	public User getUser() {
 		return user;
 	}
 
-//	public Order setAmount(int amount) {
-//		this.amount = amount;
-//		return this;
-//	}
+	@Override
+	public Iterator<OrderLine> iterator() {
+		return lines.iterator();
+	}
 
-	public Order setDate(Date date) {
-		this.date = date;
+	public void modify(String productId, int quantity) {
+		if (quantity < 0)
+			throw new IllegalArgumentException("quantity MUST not minus: " + quantity);
+		if (productId == null || "".equals(productId))
+			throw new IllegalArgumentException("productId MUST required.");
+		OrderLine orderLine = getOrderLine(productId);
+		if (orderLine == null)
+			throw new IllegalArgumentException("not found productId: " + productId);
+		if ((orderLine.getQuantity() + quantity) < 1)
+			throw new IllegalArgumentException("quantity can't under zero. current:"
+					+ orderLine.getQuantity() + ", modify to: " + quantity);
+		orderLine.increment(quantity);
+	}
+
+	public void remove(Product product) {
+		remove(product.getId());
+	}
+
+	public boolean remove(String productId) {
+		boolean result = false;
+		if (productId == null || "".equals(productId))
+			return result;
+		for (OrderLine o : lines) {
+			if (o.getProduct() != null && productId.equals(o.getProduct().getId())) {
+				result = lines.remove(o);
+			}
+		}
+		return result;
+	}
+
+	public Order setAmount(int amount) {
+		this.amount = amount;
 		return this;
 	}
 
-	public Order setProduct(Product product) {
-		this.product = product;
+	public Order setDatetime(Date datetime) {
+		this.datetime = datetime;
 		return this;
 	}
 
-	public Order setQuantity(int quantity) {
-		if (quantity <= 0)
-			throw new IllegalArgumentException("wrong value, " + quantity	+ " quantity must not have minus.");
-		this.quantity = quantity;
-		return this;
-	}
-
-	public Order incrementQuantity(int quantity) {
-		int sum = getQuantity() + quantity;
-		if (sum < 0)
-			throw new IllegalArgumentException("wrong value, now:" + this.quantity + "value:"	+ quantity);
-		setQuantity(sum);
+	public Order setShop(Shop shop) {
+		this.shop = shop;
 		return this;
 	}
 
@@ -109,9 +161,10 @@ public class Order implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Order [id=").append(id).append(", user=").append(user).append(", product=")
-				.append(product).append(", date=").append(date).append(", quantity=")
-				.append(quantity).append("]");
+		builder.append("Order [id=").append(id).append(", user=").append(user).append(", shop=")
+				.append(shop).append(", amount=").append(amount).append(", datetime=")
+				.append(datetime).append(", lines=").append(lines).append("]");
 		return builder.toString();
 	}
+
 }

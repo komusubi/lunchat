@@ -39,10 +39,10 @@ public class JdbcProductDao implements ProductDao {
 
 	private SimpleJdbcTemplate template;
 	private static final String SELECT_COLUMNS = "id, refId, shopId, name, amount, start, finish";
-	private static final String SELECT_RECORDS_SHOPID = "select " + SELECT_COLUMNS + " from product where shopId = ?";
-	private static final String SELECT_RECORD_PK = "select " + SELECT_COLUMNS + " from proeuct where id = ?";
+	private static final String SELECT_RECORDS_SHOPID = "select " + SELECT_COLUMNS + " from products where shopId = ?";
+	private static final String SELECT_RECORD_PK = "select " + SELECT_COLUMNS + " from proeucts where id = ?";
 	private static final String SELECT_RECORDS_SHOPID_SALABLE = "select " + SELECT_COLUMNS 
-													+ " from product where shopId = ? and start <= ? and finish >= ?";
+													+ " from products where shopId = ? and start <= ? and finish >= ?";
 	@Inject
 	public JdbcProductDao(DataSource dataSource) {
 		this.template = new SimpleJdbcTemplate(dataSource);

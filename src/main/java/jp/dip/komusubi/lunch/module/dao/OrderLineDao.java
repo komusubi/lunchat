@@ -16,15 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.wicket.page;
+package jp.dip.komusubi.lunch.module.dao;
 
-import org.apache.wicket.markup.html.basic.Label;
+import java.util.List;
 
-public class OrderConfirm extends VariationBase {
+import jp.dip.komusubi.common.persistence.GenericDao;
+import jp.dip.komusubi.lunch.model.OrderLine;
+import jp.dip.komusubi.lunch.model.OrderLine.OrderLineKey;
 
-	private static final long serialVersionUID = 6448297553843014369L;
+public interface OrderLineDao extends GenericDao<OrderLineKey, OrderLine> {
 
-	public OrderConfirm(String name) {
-		add(new Label("shop.name", name));
-	}
+	List<OrderLine> findByOrderId(int orderId);
+
 }

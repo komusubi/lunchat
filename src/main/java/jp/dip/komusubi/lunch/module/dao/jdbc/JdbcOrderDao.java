@@ -26,28 +26,43 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Order;
+import jp.dip.komusubi.lunch.model.OrderLine;
 import jp.dip.komusubi.lunch.module.dao.OrderDao;
-import jp.dip.komusubi.lunch.module.dao.ProductDao;
+import jp.dip.komusubi.lunch.module.dao.OrderLineDao;
+import jp.dip.komusubi.lunch.module.dao.ShopDao;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
+/**
+ * jdbc order dao.
+ * @author jun.ozeki
+ * @since 2011/11/26
+ */
 public class JdbcOrderDao implements OrderDao {
 	
 	private static final Logger logger = LoggerFactory.getLogger(JdbcOrderDao.class);
-	private static final String INSERT_QUERY = "insert into ordered (userId, productId, quantity, amount, datetime) "
-													+ "values (?, ?, ?, ?, ?)";
-	private static final String SELECT_QUERY_ORDER_DATE = "select id, userId, productId, quantity, amount, datetime "
-														+ "from ordered where datetime = ?";
+	private static String COLUMNS = "id, userId, shopId, amount, geoId, datetime";
+	private static final String INSERT_QUERY = "insert into orders ( " + COLUMNS + " ) values (?, ?, ?, ?, ?, ?)";
+	private static final String SELECT_QUERY_BY_USER = "select " + COLUMNS + " from orders where userId = ?";
+//	private static final String SELECT_QUERY_ORDER_DATE = "select " + COLUMNS + " from orders where datetime = ?";
+//	private static final String SELECT_QUERY_BY_NOT_ORDRED = "select " + COLUMNS 
+//			+ " from orders where groupId = ? and shopId = ? and datetime is null";
+//	private static final String SELECT_QUERY_BY_UNIQUE = "select " + COLUMNS 
+//			+ " from orders where groupId = ? and shopId = ? and datetime = ?";
 	private SimpleJdbcTemplate template;
 	@Inject
-	private UserDao userDao;
+	private OrderLineDao orderLineDao;
+	@Inject 
+	private ShopDao shopDao;
 	@Inject
-	private ProductDao productDao;
+	private UserDao userDao;
 	
 	@Inject
 	public JdbcOrderDao(DataSource dataSource) {
@@ -63,12 +78,20 @@ public class JdbcOrderDao implements OrderDao {
 	}
 	
 	public Integer persist(Order instance) {
-		template.update(INSERT_QUERY , instance.getUser().getId(),
-											instance.getProduct().getId(),
-											instance.getQuantity(),
+		try {
+			template.update(INSERT_QUERY, instance.getId(),
+											instance.getUser().getId(),
+											instance.getShop().getId(),
 											instance.getAmount(),
-											instance.getDate());
-		logger.info("persisted: {}", instance);
+											null,
+											instance.getDatetime());
+			for (OrderLine o: instance) {
+				orderLineDao.persist(o);
+			}
+			logger.info("persisted: {}", instance);
+		} catch (DataAccessException e) {
+			throw new LunchException(e);
+		}
 		// return to auto boxing 
 		return instance.getId();
 	}
@@ -81,50 +104,69 @@ public class JdbcOrderDao implements OrderDao {
 		throw new UnsupportedOperationException("#update not supported");
 	}
 
-	public List<Order> findByDate(Date date) {
-		List<Order> list;
-		list = template.query(SELECT_QUERY_ORDER_DATE, orderRowMap, date);
-		logger.info("findByDate({}): {}", date, list.size());
-		return list;
-	}
+//	public List<Order> findByDate(Date date) {
+//		List<Order> list;
+//		list = template.query(SELECT_QUERY_ORDER_DATE, orderRowMap, date);
+//		logger.info("findByDate({}): {}", date, list.size());
+//		return list;
+//	}
 
-	private RowMapper<Order> orderRowMap = new RowMapper<Order>() {
-		
-		@Override
-		public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Order order = new Order(rs.getInt("id"))
-								.setQuantity(rs.getInt("quantity"))
-//								.setAmount(rs.getInt("amount"))
-								.setDate(rs.getDate("datetime"))
-								.setUser(userDao.find(rs.getString("userId")))
-								.setProduct(productDao.find(rs.getString("productId")));
-			return order;
-		}
-		
-	};
-
+//	@Override
+//	public Order findByUnique(String groupId, String shopId, Date orderDate) {
+//		Order order = null;
+//		try {
+//			if (orderDate == null)
+//				order = template.queryForObject(SELECT_QUERY_BY_NOT_ORDRED, orderRowMap, groupId, shopId);
+//			else
+//				order = template.queryForObject(SELECT_QUERY_BY_UNIQUE, orderRowMap, groupId, shopId, orderDate); 
+//		} catch (EmptyResultDataAccessException e) {
+//			logger.info("not found order by groupId:{}, shopId:{}, orderDate:{}", 
+//					new Object[]{groupId, shopId, orderDate});
+//		}
+//		
+//		return order;
+//	}
+	
 	@Override
 	public List<Order> findByUserAndDate(String userId, Date date) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException("JdbcOrderDao#findByUserAndDate");
 	}
 
 	@Override
-	public List<Order> findByUser(String userIde) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Order> findByUser(String userId) {
+		List<Order> order = template.query(SELECT_QUERY_BY_USER, orderRowMapper, userId);
+		logger.info("findByUser userId:{}, count:{}", userId, order.size());
+		return order;
 	}
 
 	@Override
 	public List<Order> findByProduct(String productId) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException("JdbcOrderDao#findByProduct");
 	}
 
 	@Override
 	public List<Order> findByUserAndProductAndDate(String userId, String productId, Date date) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException("JdbcOrderDao#findByUserAndProductAndDate");
 	}
 
+	@Override
+	public List<Order> findByGroupId(String groupId) {
+		throw new UnsupportedOperationException("JdbcOrderDao#findByGroupId");
+	}
+
+	private RowMapper<Order> orderRowMapper = new RowMapper<Order>() {
+		
+		@Override
+		public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
+			Order order = new Order(rs.getInt("id"))
+			.setUser(userDao.find(rs.getString("userId")))
+			.setShop(shopDao.find(rs.getString("shopId")))
+			.setAmount(rs.getInt("amount"))
+			.addOrderLines(orderLineDao.findByOrderId(rs.getInt("id")))
+			.setDatetime(rs.getDate("datetime"));
+			return order;
+		}
+		
+	};
+	
 }

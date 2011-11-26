@@ -27,7 +27,6 @@ import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.service.MockSmtpServer;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketTesterResource;
-import jp.dip.komusubi.lunch.wicket.page.settings.Confirm;
 import jp.dip.komusubi.lunch.wicket.panel.Profile;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -81,8 +80,8 @@ public class ConfirmTest {
 	public void renderedSuccess() {
 		tester = wicketResource.getTester();
 		
-		tester.startPage(Confirm.class, new PageParameters().set("segment", "value"));
+		tester.startPage(Registry.class, new PageParameters().set("segment", "value"));
 		tester.assertComponent("profile", Profile.class);
-		tester.assertRenderedPage(Confirm.class);
+		tester.assertRenderedPage(Registry.class);
 	}
 }

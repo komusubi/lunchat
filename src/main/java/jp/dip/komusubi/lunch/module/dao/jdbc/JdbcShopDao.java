@@ -1,20 +1,18 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.    
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package jp.dip.komusubi.lunch.module.dao.jdbc;
 
@@ -39,17 +37,19 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 public class JdbcShopDao implements ShopDao {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(JdbcShopDao.class);
-	private static final String SELECT_RECORD_QUERY = "select id, name from shop where id = ?";
-	private static final String SELECT_ALL_RECORD = "select id, name from shop";
+	private static final String COLUMNS = "id, name, geoId, url, phoneNumber, lastOrder";
+	private static final String SELECT_RECORD_QUERY = "select " + COLUMNS + " from shops where id = ?";
+	private static final String SELECT_ALL_RECORD = "select " + COLUMNS + " from shops";
 	private SimpleJdbcTemplate template;
 	private ProductDao productDao;
-	
+
 	@Inject
 	public JdbcShopDao(DataSource dataSource) {
 		template = new SimpleJdbcTemplate(dataSource);
 	}
+
 	@Override
 	public Shop find(String pk) {
 		Shop shop = null;
@@ -78,24 +78,27 @@ public class JdbcShopDao implements ShopDao {
 	@Override
 	public void remove(Shop instance) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void update(Shop instance) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public List<Product> findBySalable(String shopId, Date date) {
 		return null;
 	}
-	
+
 	private static RowMapper<Shop> shopRowMapper = new RowMapper<Shop>() {
 		public Shop mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Shop shop = new Shop(rs.getString("id"))
-							.setName(rs.getString("name"));
+								.setName(rs.getString("name"))
+								.setPhoneNumber(rs.getString("phoneNumber"))
+								.setUrl(rs.getString("url"))
+								.setLastOrder(rs.getDate("lastOrder"));
 			return shop;
 		}
 	};

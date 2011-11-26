@@ -32,6 +32,7 @@
     </repository>
   </repositories>
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <wicket.version>1.5.2</wicket.version>
     <!-- <jetty.version>7.3.0.v20110203</jetty.version> -->
     <jetty.version>7.5.1.v20110908</jetty.version>
@@ -170,6 +171,11 @@
       <artifactId>log4jdbc4</artifactId>
       <version>1.2beta2</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.empire-db</groupId>
+      <artifactId>empire-db</artifactId>
+      <version>2.2.0-incubating</version>
+    </dependency>
   </dependencies>
   <build>
     <resources>
@@ -211,10 +217,11 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.7</source>
+          <target>1.7</target>
           <optimize>true</optimize>
           <debug>true</debug>
+          <encoding>utf-8</encoding>
         </configuration>
       </plugin>
       <plugin>

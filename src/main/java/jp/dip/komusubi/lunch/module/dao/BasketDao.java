@@ -19,7 +19,7 @@
 package jp.dip.komusubi.lunch.module.dao;
 
 import jp.dip.komusubi.common.persistence.GenericDao;
-import jp.dip.komusubi.lunch.model.Basket;
+import jp.dip.komusubi.lunch.module.Basket;
 
 public interface BasketDao extends GenericDao<Long, Basket> {
 

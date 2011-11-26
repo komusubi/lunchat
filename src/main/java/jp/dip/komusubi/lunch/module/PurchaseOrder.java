@@ -23,7 +23,6 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import jp.dip.komusubi.common.util.Resolver;
-import jp.dip.komusubi.lunch.model.Basket;
 import jp.dip.komusubi.lunch.model.Payment;
 import jp.dip.komusubi.lunch.module.dao.BasketDao;
 import jp.dip.komusubi.lunch.module.dao.OrderDao;
@@ -38,12 +37,12 @@ public class PurchaseOrder {
 		this.payment = payment;
 	}
 
-	public int purchase(Basket basket) {
-		if (payment.isPayable(basket.amountAll()))
-			return 0;
-		payment.pay(basket);
-		return basket.amountAll(); 
-	}
+//	public int purchase(Basket basket) {
+//		if (payment.isPayable(basket.amountAll()))
+//			return 0;
+//		payment.pay(basket);
+//		return basket.amountAll(); 
+//	}
 	
 	private OrderDao orderDao;
 	private Resolver<Date> resolver;

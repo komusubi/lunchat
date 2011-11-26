@@ -24,11 +24,11 @@ import jp.dip.komusubi.lunch.wicket.page.Login;
 import jp.dip.komusubi.lunch.wicket.page.Member;
 import jp.dip.komusubi.lunch.wicket.page.Receipt;
 import jp.dip.komusubi.lunch.wicket.page.Reminder;
-import jp.dip.komusubi.lunch.wicket.page.Setting;
+import jp.dip.komusubi.lunch.wicket.page.account.Registry;
+import jp.dip.komusubi.lunch.wicket.page.account.Setting;
 import jp.dip.komusubi.lunch.wicket.page.error.ErrorPage;
 import jp.dip.komusubi.lunch.wicket.page.error.ExpiredError;
 import jp.dip.komusubi.lunch.wicket.page.error.InternalServerError;
-import jp.dip.komusubi.lunch.wicket.page.settings.Confirm;
 
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
@@ -109,9 +109,10 @@ public class WicketApplication extends AuthenticatedWebApplication {
 		mountPage("/members", Member.class);
 		mountPage("/postback", BrowserInfoPage.class);
 		mountPage("/reminder", Reminder.class);
-		mountPage("/confirm/${segment}", Confirm.class);
-		mountPage("/setting", Setting.class);
-		// mountPage("/account/${id}", Account.class);
+		mountPage("/account/registry/${segment}", Registry.class);
+		mountPage("/account/setting", Setting.class);
+//		mountPage("/setting", Setting.class);
+
 		// error page
 		mountPage("/error", ErrorPage.class);
 		mountPage("/error/internal", InternalServerError.class);

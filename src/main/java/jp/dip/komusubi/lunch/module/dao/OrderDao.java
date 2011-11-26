@@ -24,12 +24,20 @@ import java.util.List;
 import jp.dip.komusubi.common.persistence.GenericDao;
 import jp.dip.komusubi.lunch.model.Order;
 
+/**
+ * order dao.
+ * @author jun.ozeki
+ * @since 2011/11/26
+ */
 public interface OrderDao extends GenericDao<Integer, Order> {
 
-	List<Order> findByDate(Date date);
+//	List<Order> findByDate(Date date);
 	List<Order> findByUserAndDate(String userId, Date date);
 	List<Order> findByUser(String userIde);
 	List<Order> findByProduct(String productId);
 	List<Order> findByUserAndProductAndDate(String userId, String productId, Date date);
+	// 
+	List<Order> findByGroupId(String groupId);
+//	Order findByUnique(String groupId, String shopId, Date orderd);
 
 }

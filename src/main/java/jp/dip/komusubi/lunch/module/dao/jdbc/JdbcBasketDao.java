@@ -20,7 +20,7 @@ package jp.dip.komusubi.lunch.module.dao.jdbc;
 
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Basket;
+import jp.dip.komusubi.lunch.module.Basket;
 import jp.dip.komusubi.lunch.module.dao.BasketDao;
 
 public class JdbcBasketDao implements BasketDao {

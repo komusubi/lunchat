@@ -16,26 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.wicket.page;
+package jp.dip.komusubi.lunch.wicket.page.account;
 
-import jp.dip.komusubi.lunch.module.dao.OrderDao;
-import jp.dip.komusubi.lunch.service.Shopping;
+import jp.dip.komusubi.lunch.wicket.page.AuthorizedPage;
+import jp.dip.komusubi.lunch.wicket.panel.ChangePassword;
+import jp.dip.komusubi.lunch.wicket.panel.Footer;
+import jp.dip.komusubi.lunch.wicket.panel.Header;
+import jp.dip.komusubi.lunch.wicket.panel.Header.HeaderBean;
 
-import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.Model;
 
-import com.google.inject.Inject;
+/**
+ * setting page. 
+ * @author jun.ozeki
+ * @since 2011/11/16
+ */
+public class Setting extends AuthorizedPage {
 
-public class CompleteOrder extends AuthorizedPage {
-
-	private static final long serialVersionUID = -6096514197924442740L;
-	@Inject
-	private transient OrderDao orderDao;
-	private transient Shopping shopping;
+	private static final long serialVersionUID = 3235692022909765328L;
 	
-	public CompleteOrder(Shopping shopping) {
-		this.shopping = shopping;
-//		Order order = shopping.iterator().next();
-//		add(new Label("name", order.getProduct().getName() + " " + order.getAmount() + "円"));
-		add(new Label("name", "dummy"));
+	public Setting() {
+		HeaderBean bean = getDefaultHeaderBean(getString("page.title"));
+		add(new Header("header", Model.of(bean), true));
+		add(new ChangePassword("change.password"));
+		add(new Footer("footer"));
 	}
 }
