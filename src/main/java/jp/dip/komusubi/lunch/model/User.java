@@ -34,7 +34,8 @@ public class User implements Serializable, Destination {
 	private Health health;
 
 	public User() {
-		this(new Health(null));
+//		this(new Health((User) null));
+		this.health = new Health(this);
 	}
 
 	public User(Health health) {
@@ -42,6 +43,7 @@ public class User implements Serializable, Destination {
 	}
 	
 	public User(String id) {
+		this();
 		this.id = id;
 	}
 
@@ -92,16 +94,17 @@ public class User implements Serializable, Destination {
 		return this;
 	}
 
+	@Deprecated
 	public User setHealth(Health health) {
 		this.health = health;
 		return this;
 	}
 
-	public User setId(String id) {
-		this.id = id;
-		this.health.setUserId(id);
-		return this;
-	}
+//	public User setId(String id) {
+//		this.id = id;
+//		this.health.setUserId(id);
+//		return this;
+//	}
 
 	public User setName(String name) {
 		this.name = name;

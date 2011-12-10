@@ -19,17 +19,33 @@ package jp.dip.komusubi.lunch.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * health.
+ * @author jun.ozeki
+ * @since 2011/12/05
+ */
 public class Health implements Serializable {
 
 	private static final long serialVersionUID = -5968243531502612079L;
-	private String userId;
+	private static final Logger logger = LoggerFactory.getLogger(Health.class);
+//	private String userId;
 	private int login;
 	private Date lastLogin;
 	private int loginFail;
 	private boolean active;
-	
+	private User user;
+
+	@Deprecated
 	public Health(String userId) {
-		this.userId = userId;
+//		this.userId = userId;
+		this(new User(userId));
+	}
+
+	public Health(User user) {
+		this.user = user;
 	}
 
 	public Date getLastLogin() {
@@ -44,10 +60,18 @@ public class Health implements Serializable {
 		return loginFail;
 	}
 
+	@Deprecated
 	public String getUserId() {
-		return userId;
+//		return userId;
+		if (user == null)
+			return null;
+		return user.getId();
 	}
 
+	public User getUser() {
+		return user;
+	}
+	
 	public Health incrementLogin() {
 		setLogin(getLogin() + 1);
 		return this;
@@ -61,7 +85,7 @@ public class Health implements Serializable {
 	public boolean isActive() {
 		return active;
 	}
-	
+
 	public Health setActive(boolean active) {
 		this.active = active;
 		return this;
@@ -71,7 +95,7 @@ public class Health implements Serializable {
 		this.lastLogin = lastLogin;
 		return this;
 	}
-	
+
 	public Health setLogin(int login) {
 		this.login = login;
 		return this;
@@ -82,16 +106,19 @@ public class Health implements Serializable {
 		return this;
 	}
 
+	@Deprecated
 	public void setUserId(String userId) {
-		this.userId = userId;
+//		this.userId = userId;
+		// nothing to do
+		logger.warn("nothing to do Health#setUserId:{}", userId);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Health [userId=").append(userId).append(", login=").append(login)
-				.append(", lastLogin=").append(lastLogin).append(", loginFail=").append(loginFail)
-				.append(", active=").append(active).append("]");
+		builder.append("Health [login=").append(login).append(", lastLogin=").append(lastLogin)
+				.append(", loginFail=").append(loginFail).append(", active=").append(active)
+				.append(", user=").append(user).append("]");
 		return builder.toString();
 	}
 

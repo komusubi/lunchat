@@ -16,28 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.wicket.page;
+package jp.dip.komusubi.lunch.module.dao;
 
-import jp.dip.komusubi.lunch.module.Basket;
-import jp.dip.komusubi.lunch.wicket.panel.Footer;
-import jp.dip.komusubi.lunch.wicket.panel.Header;
-import jp.dip.komusubi.lunch.wicket.panel.OrderList;
+import java.util.Set;
 
-import org.apache.wicket.model.Model;
+import jp.dip.komusubi.common.persistence.GenericDao;
+import jp.dip.komusubi.lunch.model.Contract;
 
-/**
- * order confirm page. 
- * @author jun.ozeki
- * @since 2011/11/19
- */
-public class Confirm extends AuthorizedPage {
+public interface ContractDao extends GenericDao<Integer, Contract> {
 
-	private static final long serialVersionUID = 6448297553843014369L;
-	private String pageTitle = getString("page.title");
-	
-	public Confirm(Basket basket) {
-		add(new Header("header", Model.of(getDefaultHeaderBean(pageTitle))));
-		add(new OrderList("basket", basket));
-		add(new Footer("footer"));
-	}
+	Set<Contract> findByGroupId(String groupId);
+	Set<Contract> findByShopId(String shopId);
+	Contract findByGroupIdAndShopId(String groupId, String shopId);
 }

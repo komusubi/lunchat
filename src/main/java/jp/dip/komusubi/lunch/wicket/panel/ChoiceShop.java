@@ -17,17 +17,21 @@
 package jp.dip.komusubi.lunch.wicket.panel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import jp.dip.komusubi.common.util.Resolver;
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.model.Shop;
+import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.Basket;
-import jp.dip.komusubi.lunch.module.dao.ShopDao;
+import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.service.Shopping;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.page.Confirm;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
@@ -39,6 +43,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 /**
  * choice shop panel.
@@ -56,11 +63,15 @@ public class ChoiceShop extends Panel {
 	// @Inject
 	// private final ShopDao shopDao;
 
-	public ChoiceShop(String id) {
+	public ChoiceShop(String id, boolean forward) {
 		super(id);
-		add(new Choice("choice"));
+		add(new Choice("choice", forward));
 	}
 
+	public ChoiceShop(String id) {
+		this(id, false);
+	}
+	
 	/**
 	 * choice from.
 	 * 
@@ -72,35 +83,86 @@ public class ChoiceShop extends Panel {
 //		private transient Shopping shopping = Configuration.getInstance(Shopping.class);
 //		@Inject
 //		private transient ShopDao shopDao;
+		@Inject @Named("calendar") Resolver<Calendar> calendarResolver;
 		private LoadableDetachableModel<List<Object>> ldmodel = new LoadableDetachableModel<List<Object>>() {
 			private static final long serialVersionUID = 3385439610274972123L;
-
+			private static final int SEEK_PERIOD = 14;
+			private static final long MILLISECONDS_DAY = 60 * 60 * 24 * 1000;
+			
 			@Override
 			public List<Object> load() {
 				Shopping shopping = Configuration.getInstance(Shopping.class);
-				ShopDao shopDao = Configuration.getInstance(ShopDao.class);
-				List<Object> itemValues = new ArrayList<Object>();
-				for (Shop shop : shopDao.findAll()) {
+				AccountService accountService = Configuration.getInstance(AccountService.class);
+				List<Shop> shops = null;
+				Calendar current = calendarResolver.resolve();
+				if (WicketSession.get().isSignedIn()) {
+					User user = WicketSession.get().getLoggedInUser();
+					shops = accountService.getContractedShops(user);
+    			} else {
+    				shops = shopping.getAvailableShops();
+    			}
+				
+				List<Object> itemValues = new ArrayList<>();
+				Calendar todayLimit = calendarResolver.resolve();
+				todayLimit.set(Calendar.HOUR_OF_DAY, 13);
+				todayLimit.set(Calendar.MINUTE, 0);
+				todayLimit.set(Calendar.SECOND, 0);
+				todayLimit.set(Calendar.MILLISECOND, 0);
+				for (Shop shop: shops) {
+					boolean found = false;
 					itemValues.add(shop);
-					for (Product product : shopping.getProducts(shop.getId())) {
-						itemValues.add(product);
+					if (current.before(todayLimit)) {
+						for (Product product: shopping.getDeadlineProducts(shop.getId())) {
+							if (product.getFinish().before(current.getTime())) {
+								itemValues.add(product);
+								found = true;
+							}
+						}
+						if (!found) {
+							// FIXME string go to resource file.
+							String lastOrderDate = DateFormatUtils.format(current, "MM/dd(EEE)");
+							itemValues.add(new Product("dummy")
+											.setName(shop.getName() + " は " + lastOrderDate + "の注文の受付を終了しました。")
+											.setAmount(0)
+											.setShop(shop));
+						}
+					} else {
+						for (Calendar orderCalendar = (Calendar) current.clone(); 
+								(orderCalendar.getTimeInMillis() - current.getTimeInMillis()) / MILLISECONDS_DAY <= SEEK_PERIOD;
+								orderCalendar.add(Calendar.DATE, 1)) {
+							for (Product product: shopping.getDeadlineProducts(shop.getId(), orderCalendar.getTime())) {
+								itemValues.add(product);
+								found = true;
+							}
+							if (found)
+								break;
+						}
+						if (!found) { 
+//							throw new IllegalStateException("not found product over the period days:"  + SEEK_PERIOD);
+//							String lastOrderDate = DateFormatUtils.format(current, "MM/dd(EEE)");
+							itemValues.add(new Product("dummy")
+											.setName(shop.getName() + " の商品は見つかりませんでした。")
+											.setAmount(0)
+											.setShop(shop));
+						}
 					}
 				}
+				
 				return itemValues;
 			}
 		};
 
-		public Choice(String id) {
+		public Choice(String id, boolean forward) {
 			super(id);
 			add(getProductList("shop.list"));
 			// .setReuseItems(true));
 		}
 
-		public Choice(String id, ShopDao shopDao) {
-			this(id);
+//		public Choice(String id, ShopDao shopDao) {
+//			this(id, null);
 //			this.shopDao = shopDao;
-			throw new UnsupportedOperationException("choice constructor.");
-		}
+//			throw new UnsupportedOperationException("choice constructor.");
+//		}
 
 		private ListView<Object> getProductList(String id) {
 
@@ -124,6 +186,7 @@ public class ChoiceShop extends Panel {
 
 		/**
 		 * リンク.
+		 * 
 		 * @param id
 		 * @param itemValue
 		 * @return

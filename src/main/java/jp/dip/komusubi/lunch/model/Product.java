@@ -26,7 +26,8 @@ public class Product implements Serializable {
 	private String refId;
 	private String name;
 	private int amount;
-	private String shopId;
+//	private String shopId;
+	private Shop shop;
 	private Date start;
 	private Date finish;
 
@@ -54,8 +55,14 @@ public class Product implements Serializable {
 		return refId;
 	}
 
+	@Deprecated
 	public String getShopId() {
-		return shopId;
+//		return shopId;
+		return shop.getId();
+	}
+	
+	public Shop getShop() {
+		return shop;
 	}
 
 	public Date getStart() {
@@ -82,8 +89,13 @@ public class Product implements Serializable {
 		return this;
 	}
 
-	public Product setShopId(String shopId) {
-		this.shopId = shopId;
+//	public Product setShopId(String shopId) {
+//		this.shopId = shopId;
+//		return this;
+//	}
+	
+	public Product setShop(Shop shop) {
+		this.shop = shop;
 		return this;
 	}
 
@@ -116,9 +128,8 @@ public class Product implements Serializable {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Product [id=").append(id).append(", refId=").append(refId)
 				.append(", name=").append(name).append(", amount=").append(amount)
-				.append(", shopId=").append(shopId).append(", start=").append(start)
+				.append(", shop=").append(shop).append(", start=").append(start)
 				.append(", finish=").append(finish).append("]");
 		return builder.toString();
 	}
-
 }

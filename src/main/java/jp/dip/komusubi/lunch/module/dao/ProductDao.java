@@ -27,5 +27,6 @@ import jp.dip.komusubi.lunch.model.Product;
 public interface ProductDao extends GenericDao<String, Product> {
 
 	List<Product> findByShopId(String shopId);
+	List<Product> findByShopIdAndFinishDay(String shopId, Date finishDay);
 	List<Product> findBySalable(String shopId, Date date);
 }

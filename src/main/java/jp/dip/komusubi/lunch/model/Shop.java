@@ -20,9 +20,56 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Shop implements Serializable {
 
+//	/**
+//	 * contract.
+//	 * @author jun.ozeki
+//	 * @since 2011/12/04
+//	 */
+//	public static class Contract implements Serializable {
+//
+//		private static final long serialVersionUID = 2158869251958947749L;
+//		private int id;
+//		private Group group;
+//		private Date contracted;
+//
+//		public Contract(int id) {
+//			this.id = id;
+//		}
+//		
+//		public Date getContracted() {
+//			return contracted;
+//		}
+//
+//		public Group getGroup() {
+//			return group;
+//		}
+//
+//		public int getId() {
+//			return id;
+//		}
+//
+//		public void setContracted(Date contracted) {
+//			this.contracted = contracted;
+//		}
+//
+//		public void setGroup(Group group) {
+//			this.group = group;
+//		}
+//
+//		@Override
+//		public String toString() {
+//			StringBuilder builder = new StringBuilder();
+//			builder.append("Contract [id=").append(id).append(", group=").append(group)
+//					.append(", contracted=").append(contracted).append("]");
+//			return builder.toString();
+//		}
+//
+//	}
 	private static final long serialVersionUID = -1020122183352301083L;
 	private String id;
 	private String name;
@@ -30,9 +77,23 @@ public class Shop implements Serializable {
 	private String url;
 	private String phoneNumber;
 	private Date lastOrder;
+	private Set<Contract> contracts;
 
 	public Shop(String id) {
 		this.id = id;
+	}
+
+	public Shop addContracts(Contract contract) {
+		if (contracts == null)
+			contracts = new HashSet<>();
+		this.contracts.add(contract);
+		return this;
+	}
+
+	public Set<Contract> getContracts() {
+		if (contracts == null)
+			contracts = new HashSet<>();
+		return contracts;
 	}
 
 	public String getId() {
@@ -65,6 +126,11 @@ public class Shop implements Serializable {
 		return url;
 	}
 
+	public Shop setContracts(Set<Contract> contracts) {
+		this.contracts = contracts;
+		return this;
+	}
+
 	public Shop setLastOrder(Date lastOrder) {
 		this.lastOrder = lastOrder;
 		return this;
@@ -87,7 +153,10 @@ public class Shop implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Shop [id=" + id + ", name=" + name + ", url=" + url + ", phoneNumber="
-				+ phoneNumber + ", lastOrder=" + lastOrder + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("Shop [id=").append(id).append(", name=").append(name).append(", url=")
+				.append(url).append(", phoneNumber=").append(phoneNumber).append(", lastOrder=")
+				.append(lastOrder).append(", contracts=").append(contracts).append("]");
+		return builder.toString();
 	}
 }

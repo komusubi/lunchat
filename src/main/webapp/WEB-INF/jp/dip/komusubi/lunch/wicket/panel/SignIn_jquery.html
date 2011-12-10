@@ -10,35 +10,37 @@
 <title>Signin_jquery</title>
 </head>
 <body>
-<div data-role="page">
-  <div data-role="header">
-    <h1>Sigin_jquery</h1>
-  </div>
-  <div data-role="content">
-  <wicket:panel>
-    <span wicket:id="feedback">feedback</span>
-    <form data-ajax="false" wicket:id="signInForm">
-      
-        <div data-role="fieldcontain">
+  <div data-role="page">
+    <div data-role="header">
+      <h1>Sigin_jquery</h1>
+    </div>
+    <div data-role="content">
+      <wicket:panel>
+        <span wicket:id="feedback">feedback</span>
+        <form data-ajax="false" wicket:id="signInForm">
+          <div data-role="fieldcontain">
             <label for="account.id">ID</label><input type="text" wicket:id="username" id="account.id" required>
           </div>
-        <div data-role="fieldcontain">
+          <div data-role="fieldcontain">
             <label for="pass">パスワード</label><input type="password" wicket:id="password" id="pass" required>
           </div>
-        <div wicket:id="rememberMeRow">
+          <div wicket:id="rememberMeRow">
             <input type="checkbox" wicket:id="rememberMe" id="rememberMe"> <label for="rememberMe">ログイン状態を記憶する</label>
           </div>
-
-      <div class="ui-grid-a">
-      <span class="ui-block-a"><input type="submit" value="ログイン" data-theme="b"></span>
-      <span class="ui-block-b"><input type="reset" value="リセット"></span>
-      </div>
-    </form>
-  </wicket:panel>
+          <input type="submit" value="ログイン" data-theme="b">
+          <input type="reset" value="リセット">
+          <!-- 
+          <div class="ui-grid-a">
+            <span class="ui-block-a"><input type="submit" value="ログイン" data-theme="b"></span> <span
+              class="ui-block-b"><input type="reset" value="リセット"></span>
+          </div>
+          -->
+        </form>
+      </wicket:panel>
+    </div>
+    <div data-role="footer">
+      <h1>フッター</h1>
+    </div>
   </div>
-  <div data-role="footer">
-    <h1>フッター</h1>
-  </div>
-</div>  
 </body>
 </html>

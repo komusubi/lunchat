@@ -18,6 +18,8 @@
  */
 package jp.dip.komusubi.lunch.wicket.page;
 
+import jp.dip.komusubi.lunch.Configuration;
+import jp.dip.komusubi.lunch.Configuration.RuntimeMode;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.page.account.Setting;
 import jp.dip.komusubi.lunch.wicket.panel.Header.HeaderBean;
@@ -88,7 +90,8 @@ public class VariationBase extends WebPage {
 			response.renderJavaScriptReference("/js/jquery-1.6.4.min.js");
 			response.renderJavaScriptReference("/js/jquery.mobile.min.js");
 		}
-		response.renderJavaScript(analytics, null);
+		if (RuntimeMode.DEPLOYMENT.equals(Configuration.mode()))
+			response.renderJavaScript(analytics, null);
 	}
 	
 	protected HeaderBean getDefaultHeaderBean(String pageTitle) {

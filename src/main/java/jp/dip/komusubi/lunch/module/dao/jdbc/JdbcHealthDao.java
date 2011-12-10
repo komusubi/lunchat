@@ -27,6 +27,7 @@ import javax.sql.DataSource;
 
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Health;
+import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.dao.HealthDao;
 
 import org.springframework.dao.DataAccessException;
@@ -100,7 +101,9 @@ public class JdbcHealthDao implements HealthDao {
 
 		@Override
 		public Health mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Health health = new Health(rs.getString("userId"))
+			User user = new User(rs.getString("userId"));
+			Health health = user.getHealth()
+//			Health health = new Health(rs.getString("userId"))
 									.setLogin(rs.getInt("login"))
 									.setLoginFail(rs.getInt("loginFail"))
 									.setLastLogin(rs.getDate("lastLogin"))
