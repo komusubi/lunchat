@@ -27,11 +27,13 @@ import jp.dip.komusubi.common.util.Resolver;
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.Order;
 import jp.dip.komusubi.lunch.model.Product;
+import jp.dip.komusubi.lunch.model.Shop;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.Basket;
 import jp.dip.komusubi.lunch.module.Transactional;
 import jp.dip.komusubi.lunch.module.dao.OrderDao;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
+import jp.dip.komusubi.lunch.module.dao.ShopDao;
 
 /**
  * shopping.
@@ -42,13 +44,10 @@ public class Shopping implements Serializable {
 
 	private static final long serialVersionUID = 6554643970716125151L;
 	private Basket basket;
-	@Inject
-	private transient ProductDao productDao;
-	@Inject 
-	private OrderDao orderDao;
-	@Inject
-	@Named("date")
-	private transient Resolver<Date> dateResolver;
+	@Inject	private transient ProductDao productDao;
+	@Inject private OrderDao orderDao;
+	@Inject	private ShopDao shopDao;
+	@Inject	@Named("date") private transient Resolver<Date> dateResolver;
 
 	public Shopping() {
 		this(new User(), Configuration.getInstance(Basket.class));
@@ -69,24 +68,65 @@ public class Shopping implements Serializable {
 		basket.setUser(user);
 	}
 
-	public List<Product> getProducts(String shopId) {
-		return getProducts(shopId, dateResolver.resolve());
+	protected Resolver<Date> getResolver() {
+		return dateResolver;
 	}
-
-	public List<Product> getProducts(String shopId, Date date) {
+	
+	public ShoppingStore specified(Shop shop) {
+		return new ShoppingStore(this, shop);
+	}
+	
+	public ShoppingDateStore specified(Shop shop, Date date) {
+		return new ShoppingDateStore(this, shop, date);
+	}
+	
+	public boolean isOrderable(String shopId) {
+		return isOrderable(shopId, dateResolver.resolve());
+	}
+	
+	public boolean isOrderable(String shopId, Date current) {
+		Shop shop = shopDao.find(shopId);
+		return isOrderable(shop, current);
+	}
+	
+	public boolean isOrderable(Shop shop, Date current) {
+		if (shop == null)
+			throw new IllegalArgumentException("shop is MUST not be null.");
+		return shop.getLastOrder().after(current);
+	}
+	
+	public List<Product> getAvailableProducts(String shopId) {
+		return getAvailableProducts(shopId, dateResolver.resolve());
+	}
+	
+	public List<Product> getAvailableProducts(String shopId, Date date) {
+		if (shopId == null || "".equals(shopId))
+			throw new IllegalArgumentException("shopId is invalid.");
 		return productDao.findBySalable(shopId, date);
 	}
 
-	public List<Product> getProductAll(String shopId) {
+	public List<Product> getDeadlineProducts(String shopId) {
+		if (shopId == null || "".equals(shopId)) 
+			throw new IllegalArgumentException("shopId is invalid.");
+		return getDeadlineProducts(shopId, dateResolver.resolve());
+	}
+	
+	public List<Product> getDeadlineProducts(String shopId, Date date) {
+		if (shopId == null || "".equals(shopId))
+			throw new IllegalArgumentException("shopId is invalid");
+		return productDao.findByShopIdAndFinishDay(shopId, date);
+	}
+	
+	public List<Product> getProductsAll(String shopId) {
 		return productDao.findByShopId(shopId);
 	}
 
+//	public List<Product> findByFinishDay(String shopId, Date finishDay) {
+//		return productDao.findByShopIdAndFinishDay(shopId, finishDay);
+//	}
+	
 	public List<Product> getRegularProduct(String shopId) {
 		// user が nullの場合の考慮必要あり。
-		return null;
-	}
-
-	public List<Product> getRegularProduct() {
 		return null;
 	}
 
@@ -102,30 +142,6 @@ public class Shopping implements Serializable {
 			order.setDatetime(dateResolver.resolve());
 			orderDao.persist(order);
 		}
-
-
-//				if (map.containsKey(o.getProduct().getShopId())) {
-//				List<OrderLine> list = map.get(o.getProduct().getShopId());
-//				list.add(o);
-//			} else {
-//				List<OrderLine> list = new ArrayList<>();
-//				list.add(o);
-//				map.put(o.getProduct().getShopId(), list);
-//			}
-//		}
-//		for (Entry<String, List<OrderLine>> e: map.entrySet()) {
-//			String shopId = e.getKey();
-//			Order order = orderDao.findByUnique(user.getGroupId(), shopId, null);
-//			if (order == null) {
-//				order = new Order();
-//				order.setShop(shopDao.find(shopId))
-//					.setGroup(groupDao.find(user.getGroupId()))
-//					.setDatetime(dateResolver.resolve());
-//			}
-//			order.addOrderLines(e.getValue());
-//			orderDao.persist(order);
-//		}
-
 	}
 	
 	public void order() {
@@ -134,5 +150,9 @@ public class Shopping implements Serializable {
 	
 	public void purchase() {
 		throw new UnsupportedOperationException();
+	}
+
+	public List<Shop> getAvailableShops() {
+		return shopDao.findAll();
 	}
 }

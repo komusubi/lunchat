@@ -37,6 +37,11 @@ import org.apache.wicket.validation.validator.AbstractValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * sign in.
+ * @author jun.ozeki
+ * @since 2011/12/06
+ */
 public class SignIn extends SignInPanel {
 
 	private static final long serialVersionUID = 4834818596146852372L;
@@ -55,7 +60,6 @@ public class SignIn extends SignInPanel {
 		this.activate = true;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void onInitialize() {
 //		SignInForm form = getForm();

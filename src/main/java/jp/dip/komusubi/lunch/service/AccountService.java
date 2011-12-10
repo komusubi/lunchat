@@ -18,7 +18,9 @@ package jp.dip.komusubi.lunch.service;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -33,16 +35,26 @@ import jp.dip.komusubi.common.util.XmlResourceBundle;
 import jp.dip.komusubi.common.util.XmlResourceBundleControl;
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.LunchException;
+import jp.dip.komusubi.lunch.model.Contract;
 import jp.dip.komusubi.lunch.model.Group;
+import jp.dip.komusubi.lunch.model.Order;
+import jp.dip.komusubi.lunch.model.Shop;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.Transactional;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
+import jp.dip.komusubi.lunch.module.dao.OrderDao;
+import jp.dip.komusubi.lunch.module.dao.ShopDao;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.util.Nonce;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * account service.
+ * @author jun.ozeki
+ * @since 2011/12/04
+ */
 public class AccountService implements Serializable {
 	private static final long serialVersionUID = -9045008918138414477L;
 	private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
@@ -64,12 +76,11 @@ public class AccountService implements Serializable {
 	private transient UserDao userDao;
 	private SmtpServer smtp;
 	private transient Resolver<String> resolver;
-	@Inject
-	@Named("date")
-	private transient Resolver<Date> dateResolver;
+	@Inject	@Named("date") private transient Resolver<Date> dateResolver;
 	private User authedUser;
-	@Inject
-	private GroupDao groupDao;
+	@Inject	private GroupDao groupDao;
+	@Inject private ShopDao shopDao;
+	@Inject private OrderDao orderDao;
 	
 	@Inject
 	public AccountService(UserDao userDao, 
@@ -114,12 +125,30 @@ public class AccountService implements Serializable {
 		return user;
 	}
 	
+	public boolean isDeadline(User user, Date now) {
+		boolean result = false;
+		if (user.getGroupId() == null)
+			return result;
+		Group group = groupDao.find(user.getGroupId());
+		if (group.getLastOrder().before(now))
+			result = true;
+		return result;
+	}
+	
+	public boolean isDeadline(User user) {
+		return isDeadline(user, dateResolver.resolve());
+	}
+	
 	public User readByEmail(String email) {
 		return userDao.readByEmail(email);
 	}
 	
 	@Transactional
 	public boolean signIn(String id, String password) {
+		// FIXME supply product from back office here. 
+		BackOffice backOffice = Configuration.getInstance(BackOffice.class);
+		backOffice.supplyProduct();
+		
 		boolean evaluate = false;
 		User user = userDao.find(id);
 		if (user == null)
@@ -228,5 +257,19 @@ public class AccountService implements Serializable {
 			logger.info("activate again success:{}", user);
 		}
 		return result;
+	}
+	
+	public List<Shop> getContractedShops(User user) {
+		List<Shop> list = new ArrayList<>();
+		Group group = groupDao.find(user.getGroupId());
+		for (Contract c: group.getContracts()) {
+			list.add(shopDao.find(c.getShopId()));
+		}
+		return list;
+	}
+	
+	public List<Order> getOrders(User user, Date date) {
+		List<Order> orders = orderDao.findByUserAndDate(user.getId(), date);
+		return orders;
 	}
 }

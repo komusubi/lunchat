@@ -27,7 +27,7 @@ import javax.sql.DataSource;
 
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.model.Shop;
-import jp.dip.komusubi.lunch.module.dao.ProductDao;
+import jp.dip.komusubi.lunch.module.dao.ContractDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
 
 import org.slf4j.Logger;
@@ -43,7 +43,7 @@ public class JdbcShopDao implements ShopDao {
 	private static final String SELECT_RECORD_QUERY = "select " + COLUMNS + " from shops where id = ?";
 	private static final String SELECT_ALL_RECORD = "select " + COLUMNS + " from shops";
 	private SimpleJdbcTemplate template;
-	private ProductDao productDao;
+	@Inject private ContractDao contractDao;
 
 	@Inject
 	public JdbcShopDao(DataSource dataSource) {
@@ -92,13 +92,17 @@ public class JdbcShopDao implements ShopDao {
 		return null;
 	}
 
-	private static RowMapper<Shop> shopRowMapper = new RowMapper<Shop>() {
+	private final RowMapper<Shop> shopRowMapper = new RowMapper<Shop>() {
+		
+		@Override
 		public Shop mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Shop shop = new Shop(rs.getString("id"))
 								.setName(rs.getString("name"))
 								.setPhoneNumber(rs.getString("phoneNumber"))
 								.setUrl(rs.getString("url"))
-								.setLastOrder(rs.getDate("lastOrder"));
+//								.setLastOrder(rs.getTime("lastOrder"))
+								.setLastOrder(JdbcDateConverter.toCurrentDate(rs.getTime("lastOrder")))
+								.setContracts(contractDao.findByShopId(rs.getString("id")));
 			return shop;
 		}
 	};

@@ -29,6 +29,7 @@ import javax.sql.DataSource;
 
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Group;
+import jp.dip.komusubi.lunch.module.dao.ContractDao;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
 
 import org.slf4j.Logger;
@@ -45,6 +46,8 @@ public class JdbcGroupDao implements GroupDao {
 	private static final String SELECT_RECORD_QUERY = "select " + COLUMNS + " from groups where id = ?";
 	private static final String SELECT_RECORD_ALL = "select " + COLUMNS + " from groups";
 	private static final String INSERT_RECORD = "insert into groups (" + COLUMNS + ") values (?, ?, ?)";
+//	private static final String SELECT_QUERY_CONTRACTS = "select id, shopId from"
+	@Inject private ContractDao contractDao;
 	private SimpleJdbcTemplate template;
 
 	@Inject
@@ -95,14 +98,16 @@ public class JdbcGroupDao implements GroupDao {
 		throw new UnsupportedOperationException("groupDao#update");
 	}
 	
-	private static final RowMapper<Group> groupRowMapper = new RowMapper<Group>() {
+	private final RowMapper<Group> groupRowMapper = new RowMapper<Group>() {
 		private Calendar cal = Calendar.getInstance();
 		
 		@Override
 		public Group mapRow(ResultSet rs, int rowNum) throws SQLException {
+			
 			Group group = new Group(rs.getString("id"))
 									.setName(rs.getString("name"))
-									.setLastOrder(rs.getTime("lastOrder", cal));
+									.setLastOrder(rs.getTime("lastOrder", cal))
+									.setContracts(contractDao.findByGroupId(rs.getString("id")));
 			return group;
 		}
 		

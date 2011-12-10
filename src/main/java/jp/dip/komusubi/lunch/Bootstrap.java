@@ -23,6 +23,7 @@ import static com.google.inject.matcher.Matchers.any;
 
 import java.io.PrintWriter;
 import java.sql.DriverManager;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +39,7 @@ import jp.dip.komusubi.lunch.module.Basket;
 import jp.dip.komusubi.lunch.module.DefaultAuthentication;
 import jp.dip.komusubi.lunch.module.DefaultNonce;
 import jp.dip.komusubi.lunch.module.Transactional;
+import jp.dip.komusubi.lunch.module.dao.ContractDao;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.module.dao.HealthDao;
 import jp.dip.komusubi.lunch.module.dao.OrderDao;
@@ -45,6 +47,7 @@ import jp.dip.komusubi.lunch.module.dao.OrderLineDao;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
+import jp.dip.komusubi.lunch.module.dao.jdbc.JdbcContractDao;
 import jp.dip.komusubi.lunch.module.dao.jdbc.JdbcGroupDao;
 import jp.dip.komusubi.lunch.module.dao.jdbc.JdbcHealthDao;
 import jp.dip.komusubi.lunch.module.dao.jdbc.JdbcOrderDao;
@@ -54,7 +57,9 @@ import jp.dip.komusubi.lunch.module.dao.jdbc.JdbcShopDao;
 import jp.dip.komusubi.lunch.module.dao.jdbc.JdbcUserDao;
 import jp.dip.komusubi.lunch.module.resolver.DateResolver;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
+import jp.dip.komusubi.lunch.module.resolver.Resolvers;
 import jp.dip.komusubi.lunch.service.AccountService;
+import jp.dip.komusubi.lunch.service.BackOffice;
 import jp.dip.komusubi.lunch.service.Shopping;
 import jp.dip.komusubi.lunch.service.ShoppingResource;
 import jp.dip.komusubi.lunch.util.Nonce;
@@ -155,7 +160,10 @@ public class Bootstrap extends GuiceServletContextListener {
 				.annotatedWith(Names.named("digest")).to(DigestResolver.class);
 			bind(new TypeLiteral<Resolver<Date>>(){ })
 				.annotatedWith(Names.named("date")).to(DateResolver.class);
+			bind(new TypeLiteral<Resolver<Calendar>>(){ })
+				.annotatedWith(Names.named("calendar")).to(Resolvers.CalendarResolver.class);
 			bind(AccountService.class);
+			bind(BackOffice.class);
 			bind(Nonce.class).to(DefaultNonce.class);
 			bind(Shopping.class);
 			bind(Basket.class);
@@ -203,6 +211,7 @@ public class Bootstrap extends GuiceServletContextListener {
 			bind(HealthDao.class).to(JdbcHealthDao.class);
 			bind(GroupDao.class).to(JdbcGroupDao.class);
 			bind(ProductDao.class).to(JdbcProductDao.class);
+			bind(ContractDao.class).to(JdbcContractDao.class);
 			bind(DataSource.class).toInstance(dataSource);
 			bindInterceptor(any(), annotatedWith(Transactional.class), getTransactionInterceptor());
 			bind(PlatformTransactionManager.class).toInstance(newTransactionManager());

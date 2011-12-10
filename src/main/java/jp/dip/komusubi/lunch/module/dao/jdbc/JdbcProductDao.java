@@ -28,21 +28,34 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
+import jp.dip.komusubi.lunch.module.dao.ShopDao;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 public class JdbcProductDao implements ProductDao {
 
+	private static final Logger logger = LoggerFactory.getLogger(JdbcProductDao.class);
+	private static final String COLUMNS = "id, refId, shopId, name, amount, start, finish";
+	private static final String SELECT_RECORDS_SHOPID = "select " + COLUMNS + " from products where shopId = ?";
+	private static final String SELECT_RECORD_PK = "select " + COLUMNS + " from proeucts where id = ?";
+	private static final String SELECT_RECORDS_SHOPID_SALABLE = "select " + COLUMNS 
+											+ " from products where shopId = ? and start <= ? and finish >= ?";
+	private static final String SELECT_RECORDS_SHOPID_FINISH_DAY = "select " + COLUMNS
+											+ " from products where shopId = ? and date(finish) = ?";
+//	private static final String SELECT_RECORDS_
+	private static final String INSERT_QUERY = "insert into products ( " + COLUMNS + " )"
+											+ " values (?, ?, ?, ?, ?, ?, ?)";
+	@Inject private ShopDao shopDao;
 	private SimpleJdbcTemplate template;
-	private static final String SELECT_COLUMNS = "id, refId, shopId, name, amount, start, finish";
-	private static final String SELECT_RECORDS_SHOPID = "select " + SELECT_COLUMNS + " from products where shopId = ?";
-	private static final String SELECT_RECORD_PK = "select " + SELECT_COLUMNS + " from proeucts where id = ?";
-	private static final String SELECT_RECORDS_SHOPID_SALABLE = "select " + SELECT_COLUMNS 
-													+ " from products where shopId = ? and start <= ? and finish >= ?";
+	
 	@Inject
 	public JdbcProductDao(DataSource dataSource) {
 		this.template = new SimpleJdbcTemplate(dataSource);
@@ -63,18 +76,28 @@ public class JdbcProductDao implements ProductDao {
 
 	@Override
 	public String persist(Product instance) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			template.update(INSERT_QUERY, instance.getId(),
+											instance.getRefId(),
+											instance.getShopId(),
+											instance.getName(),
+											instance.getAmount(),
+											instance.getStart(),
+											instance.getFinish());
+		} catch (DataAccessException e) {
+			throw new LunchException(e);
+		}
+		return instance.getId();
 	}
 
 	@Override
 	public void remove(Product instance) {
-		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("#remove");
 	}
 
 	@Override
 	public void update(Product instance) {
-		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("#update");
 	}
 
 	@Override
@@ -100,13 +123,29 @@ public class JdbcProductDao implements ProductDao {
 		return list;
 	}
 	
-	private static RowMapper<Product> productRowMapper = new RowMapper<Product>() {
+	@Override
+	public List<Product> findByShopIdAndFinishDay(String shopId, Date finishDay) {
+		List<Product> list = template.query(SELECT_RECORDS_SHOPID_FINISH_DAY, 
+								productRowMapper, shopId, JdbcDateConverter.toSqlDate(finishDay));
+		logger.info("shopId:{}, finishDay:{}, count:{}", new Object[]{shopId, finishDay, list.size()});
+		return list;
+	}
+	
+//	public List<Product> findBySalable(Date date) {
+//		List<Product> list = template.query("", productRowMapper, date);
+//		logger.info("date:{}, count:{}", date, list.size());
+//		return list;
+//	}
+	
+	
+	private RowMapper<Product> productRowMapper = new RowMapper<Product>() {
 		@Override
 		public Product mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 			Product product = new Product(rs.getString("id"))
 											.setRefId(rs.getString("refId"))
-											.setShopId(rs.getString("shopId"))
+//											.setShopId(rs.getString("shopId"))
+											.setShop(shopDao.find(rs.getString("shopId")))
 											.setName(rs.getString("name"))
 											.setAmount(rs.getInt("amount"))
 											.setStart(rs.getDate("start"))

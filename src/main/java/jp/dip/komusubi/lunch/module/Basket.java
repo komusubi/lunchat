@@ -82,6 +82,10 @@ public class Basket implements Iterable<Order>, Serializable {
 		return orders.get(index);
 	}
 	
+	public List<Order> getOrders() {
+		return orders;
+	}
+	
 	public void add(Product product) {
 		add(product, 1);
 	}

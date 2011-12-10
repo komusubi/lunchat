@@ -87,9 +87,8 @@ public class ProfileTest {
 	@Test
 	public void renderedSuccess() {
 
-		User user = new User();
-		user.setId("komusubi")
-			.setPassword(new DigestResolver().resolve("vulnerable"))
+		User user = new User("komusubi");
+		user.setPassword(new DigestResolver().resolve("vulnerable"))
 			.setName("こむすび")
 			.setEmail(email)
 			.getHealth().setActive(true);
