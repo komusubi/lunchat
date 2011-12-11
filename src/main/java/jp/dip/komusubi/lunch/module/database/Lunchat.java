@@ -116,16 +116,16 @@ public class Lunchat extends DBDatabase {
 		public final DBTableColumn name;
 		public final DBTableColumn lastOrder;
 		public final DBTableColumn place;
-		public final DBTableColumn tel;
+		public final DBTableColumn phoneNumber;
 
 		public Groups(DBDatabase db) {
 			super("Groups", db);
-			id 			= addColumn("id", 		 DataType.TEXT, 	sizeOfGroupId, 	DataMode.NotNull);
-			geoId		= addColumn("geoId", 	 DataType.INTEGER, 	   			0, 	DataMode.Nullable);
-			name 		= addColumn("name", 	 DataType.TEXT, 			  128, 	DataMode.NotNull);
-			lastOrder 	= addColumn("lastOrder", DataType.DATETIME,	  			0, 	DataMode.NotNull);
-			place       = addColumn("place", 	 DataType.TEXT,	    		  255, 	DataMode.NotNull);
-			tel         = addColumn("tel", 	 	 DataType.TEXT,	 	   		   64, 	DataMode.NotNull);
+			id 			= addColumn("id", 		 	DataType.TEXT, 		sizeOfGroupId, 	DataMode.NotNull);
+			geoId		= addColumn("geoId", 	 	DataType.INTEGER, 	   			0, 	DataMode.Nullable);
+			name 		= addColumn("name", 	 	DataType.TEXT, 				  128, 	DataMode.NotNull);
+			lastOrder 	= addColumn("lastOrder", 	DataType.DATETIME,	  			0, 	DataMode.NotNull);
+			place       = addColumn("place", 	 	DataType.TEXT,	    		  255, 	DataMode.Nullable);
+			phoneNumber = addColumn("phoneNumber",	DataType.TEXT,	 	   		   64, 	DataMode.Nullable);
 
 			setPrimaryKey(id);
 		}

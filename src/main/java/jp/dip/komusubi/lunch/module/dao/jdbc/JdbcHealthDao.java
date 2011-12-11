@@ -101,6 +101,8 @@ public class JdbcHealthDao implements HealthDao {
 
 		@Override
 		public Health mapRow(ResultSet rs, int rowNum) throws SQLException {
+			// TODO NOTICE!! health and user has cross reference, 
+			// this Health instance has empty property user.
 			User user = new User(rs.getString("userId"));
 			Health health = user.getHealth()
 //			Health health = new Health(rs.getString("userId"))

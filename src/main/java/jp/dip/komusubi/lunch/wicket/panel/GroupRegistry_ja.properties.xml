@@ -2,7 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>GroupRegistry Panel Properties</comment>
-<entry key="registry.completed">${name}グループが登録されました。</entry>
+<entry key="registry.completed">${name}が登録されました。</entry>
 <entry key="registry.failed">グループの登録処理でエラーが発生しました。</entry>
 <entry key="wrong.value">登録不可能なIDです</entry>
 </properties>

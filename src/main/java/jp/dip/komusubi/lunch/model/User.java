@@ -22,11 +22,17 @@ import java.util.List;
 
 import jp.dip.komusubi.common.protocol.smtp.Destination;
 
+/**
+ * user.
+ * @author jun.ozeki
+ * @since 2011/12/11
+ */
 public class User implements Serializable, Destination {
 
 	private static final long serialVersionUID = 8305012931385761901L;
 	private String id;
-	private String groupId;
+//	private String groupId;
+	private Group group;
 	private String name;
 	private String password;
 	private String email;
@@ -57,9 +63,17 @@ public class User implements Serializable, Destination {
 	}
 
 	public String getGroupId() {
+//		return groupId;
+		String groupId = null;
+		if (group != null)
+			groupId = group.getId();
 		return groupId;
 	}
-
+	
+	public Group getGroup() {
+		return group;
+	}
+	
 	public Health getHealth() {
 		return health;
 	}
@@ -89,8 +103,14 @@ public class User implements Serializable, Destination {
 		return this;
 	}
 
+	@Deprecated
 	public User setGroupId(String groupId) {
-		this.groupId = groupId;
+//		this.groupId = groupId;
+		return this;
+	}
+	
+	public User setGroup(Group group) {
+		this.group = group;
 		return this;
 	}
 
@@ -123,10 +143,10 @@ public class User implements Serializable, Destination {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("User [id=").append(id).append(", groupId=").append(groupId)
-				.append(", name=").append(name).append(", password=").append(password)
-				.append(", email=").append(email).append(", roles=").append(roles)
-				.append(", health=").append(health).append("]");
+		builder.append("User [id=").append(id).append(", group=").append(group).append(", name=")
+				.append(name).append(", password=").append(password).append(", email=")
+				.append(email).append(", roles=").append(roles).append(", health=").append(health)
+				.append("]");
 		return builder.toString();
 	}
 }

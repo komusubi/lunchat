@@ -20,9 +20,8 @@ package jp.dip.komusubi.lunch.module.dao.jdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
@@ -81,14 +80,14 @@ public class JdbcContractDao implements ContractDao {
 	@Override
 	public Integer persist(Contract instance) {
 		try {
-			template.update(INSERT_RECORD_QUERY, instance.getGroupId(), 
-										instance.getShopId(), 
+			template.update(INSERT_RECORD_QUERY, instance.getGroup().getId(), 
+										instance.getShop().getId(), 
 										instance.getContracted());
 			
 		} catch (DataAccessException e) {
 			throw new LunchException(e);
 		}
-		Contract contract = findByGroupIdAndShopId(instance.getGroupId(), instance.getShopId());
+		Contract contract = findByGroupIdAndShopId(instance.getGroup().getId(), instance.getShop().getId());
 		return contract.getId();
 	}
 
@@ -108,8 +107,8 @@ public class JdbcContractDao implements ContractDao {
 		if (instance != null && instance.getId() == 0)
 			throw new IllegalArgumentException("contract id MUST not be zero.");
 		try {
-			template.update(UPDATE_RECORD_QUERY, instance.getGroupId(), 
-										instance.getShopId(), 
+			template.update(UPDATE_RECORD_QUERY, instance.getGroup().getId(), 
+										instance.getShop().getId(), 
 										instance.getContracted(),
 										instance.getId());
 		} catch (DataAccessException e) {
@@ -118,25 +117,31 @@ public class JdbcContractDao implements ContractDao {
 	}
 
 	@Override
-	public Set<Contract> findByGroupId(String groupId) {
-		Set<Contract> set = new HashSet<>();
+	public List<Contract> findByGroupId(String groupId) {
+//		Set<Contract> set = new HashSet<>();
+		List<Contract> list;
 		try {
-			set.addAll(template.query(SELECT_QUERY_GROUPID, contractRowMapper, groupId));
+//			set.addAll(template.query(SELECT_QUERY_GROUPID, contractRowMapper, groupId));
+			list = template.query(SELECT_QUERY_GROUPID, contractRowMapper, groupId);
 		} catch (EmptyResultDataAccessException e) {
 			logger.info("not found contract, groupId:{}", groupId);
+			list = Collections.emptyList();
 		}
-		return set;
+		return list;
 	}
 
 	@Override
-	public Set<Contract> findByShopId(String shopId) {
-		Set<Contract> set = new HashSet<>();
+	public List<Contract> findByShopId(String shopId) {
+//		Set<Contract> set = new HashSet<>();
+		List<Contract> list; 
 		try {
-			set.addAll(template.query(SELECT_QUERY_SHOPID, contractRowMapper, shopId));
+//			set.addAll(template.query(SELECT_QUERY_SHOPID, contractRowMapper, shopId));
+			list = template.query(SELECT_QUERY_SHOPID, contractRowMapper, shopId);
 		} catch (EmptyResultDataAccessException e) {
 			logger.info("not found contract, shopId:{}", shopId);
+			list = Collections.emptyList();
 		}
-		return set;
+		return list;
 	}
 
 	@Override
@@ -155,10 +160,10 @@ public class JdbcContractDao implements ContractDao {
 		@Override
 		public Contract mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Contract contract = new Contract(rs.getInt("id"))
-								.setGroupId(rs.getString("groupId"))
-								.setShopId(rs.getString("shopId"))
-//								.setGroup(groupDao.find(rs.getString("groupId")))
-//								.setShop(shopDao.find(rs.getString("shopId")))
+//								.setGroupId(rs.getString("groupId"))
+//								.setShopId(rs.getString("shopId"))
+								.setGroup(groupDao.find(rs.getString("groupId")))
+								.setShop(shopDao.find(rs.getString("shopId")))
 								.setContracted(rs.getDate("contracted"));
 			return contract;
 		}

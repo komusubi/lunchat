@@ -20,10 +20,8 @@ package jp.dip.komusubi.lunch.wicket.panel;
 
 import java.util.List;
 
-import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.model.User;
-import jp.dip.komusubi.lunch.module.dao.UserDao;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -35,27 +33,36 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * member list.
+ * @author jun.ozeki
+ * @since 2011/12/11
+ */
 public class MemberList extends Panel {
 
 	private static final long serialVersionUID = 695094056051480395L;
-
+	private static final Logger logger = LoggerFactory.getLogger(MemberList.class);
+	
 	public MemberList(String id, Group group) { // IModel<Group> model) {
 		super(id);
 		add(new FeedbackPanel("feedback"));
 		add(new Label("list.name", getString("label.title", Model.of(group))));
-		add(new GroupListView("list", getLoadableDetachableModel(group.getId())));
+		add(new GroupListView("list", getLoadableDetachableModel(group)));
 	}
 
-	private LoadableDetachableModel<List<User>> getLoadableDetachableModel(final String groupId) {
+	private LoadableDetachableModel<List<User>> getLoadableDetachableModel(final Group group) {
 		return new LoadableDetachableModel<List<User>>() {
 		
 			private static final long serialVersionUID = 342639502330434200L;
 	
 			@Override
 			public List<User> load() {
-				UserDao userDao = Configuration.getInstance(UserDao.class);
-				return userDao.findByGroupId(groupId);
+//				UserDao userDao = Configuration.getInstance(UserDao.class);
+//				return userDao.findByGroupId(groupId);
+				return group.getUsers();
 			}
 		};
 	}
@@ -93,7 +100,7 @@ public class MemberList extends Panel {
 				}
 				@Override
 				public void onClick() {
-					
+					logger.info("onClick: {}", model.getObject());
 				}
 				
 			};

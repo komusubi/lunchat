@@ -18,16 +18,25 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Group;
+import jp.dip.komusubi.lunch.model.Shop;
 import jp.dip.komusubi.lunch.model.User;
+import jp.dip.komusubi.lunch.module.dao.ShopDao;
 import jp.dip.komusubi.lunch.service.AccountService;
+import jp.dip.komusubi.lunch.wicket.WicketSession;
 
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -38,6 +47,11 @@ import org.apache.wicket.validation.validator.StringValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * group registry.
+ * @author jun.ozeki
+ * @since 2011/12/11
+ */
 public class GroupRegistry extends Panel {
 
 	private static final long serialVersionUID = 5865881679606159636L;
@@ -49,7 +63,7 @@ public class GroupRegistry extends Panel {
 		add(new GroupRegistryForm("group.form"));
 	}
 
-	private static class GroupRegistryForm extends Form<Void> {
+	private class GroupRegistryForm extends Form<Void> {
 
 		private static final long serialVersionUID = -7593471899292529129L;
 		private Group group = new Group(null);
@@ -59,6 +73,8 @@ public class GroupRegistry extends Panel {
 			setDefaultModel(new CompoundPropertyModel<Group>(group));
 			add(getIdField("id"));
 			add(getNameField("name"));
+			add(getLastOrderField("lastOrder"));
+			add(getShopList("shop.item"));
 		}
 
 		private TextField<String> getIdField(String id) {
@@ -93,6 +109,28 @@ public class GroupRegistry extends Panel {
 			};
 		}
 		
+		private TextField<Date> getLastOrderField(String id) {
+			TextField<Date> dateField = new TextField<Date>(id);
+			dateField.setRequired(true);
+			return dateField;
+		}
+		
+		private ListView<Shop> getShopList(String id) {
+			ShopDao shopDao = Configuration.getInstance(ShopDao.class);
+			List<Shop> shops = shopDao.findAll();
+			return new ListView<Shop>(id, shops) {
+
+				private static final long serialVersionUID = -1533834060618470935L;
+
+				@Override
+				protected void populateItem(ListItem<Shop> item) {
+					Shop shop = item.getModelObject();
+					item.add(new Label("shop.name", shop.getName()));
+				}
+				
+			}.setReuseItems(true);
+		}
+		
 		@Override
 		public void onSubmit() {
 			if (group.getLastOrder() == null) {
@@ -104,14 +142,18 @@ public class GroupRegistry extends Panel {
 				cal.set(Calendar.MILLISECOND, 0);
 				group.setLastOrder(cal.getTime());
 			}
+			User user = WicketSession.get().getLoggedInUser();
 			try {
 				AccountService accountService = Configuration.getInstance(AccountService.class);
-				accountService.create(new User(""), group);
+				user.setGroup(group);
+				accountService.referTo(user);
 			} catch (LunchException e) {
-				error("registry.failed");
+				// group set null again.
+				user.setGroup(null); 
+				error(getLocalizer().getString("registry.failed", GroupRegistry.this));
 				return;
 			}
-			info(getString("registry.completed", Model.of(group)));
+			info(getLocalizer().getString("registry.completed", GroupRegistry.this, Model.of(group)));
 		}
 	}
 

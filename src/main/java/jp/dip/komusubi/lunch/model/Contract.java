@@ -30,12 +30,16 @@ public class Contract implements Serializable {
 	
 	private static final long serialVersionUID = 7667124644145815969L;
 	private int id;
-//	private Group group;
-	private String groupId;
-//	private Shop shop;
-	private String shopId;
+	private Group group;
+//	private String groupId;
+	private Shop shop;
+//	private String shopId;
 	private Date contracted;
 
+	public Contract() {
+		this(0);
+	}
+	
 	public Contract(int id) {
 		this.id = id;
 	}
@@ -44,53 +48,53 @@ public class Contract implements Serializable {
 		return contracted;
 	}
 
-//	public Group getGroup() {
-//		return group;
-//	}
-	public String getGroupId() {
-		return groupId;
+	public Group getGroup() {
+		return group;
 	}
+//	public String getGroupId() {
+//		return groupId;
+//	}
 	
 	public int getId() {
 		return id;
 	}
 
-//	public Shop getShop() {
-//		return shop;
-//	}
-	public String getShopId() {
-		return this.shopId;
+	public Shop getShop() {
+		return shop;
 	}
+//	public String getShopId() {
+//		return this.shopId;
+//	}
 
 	public Contract setContracted(Date contracted) {
 		this.contracted = contracted;
 		return this;
 	}
 
-//	public Contract setGroup(Group group) {
-//		this.group = group;
-//		return this;
-//	}
-	public Contract setGroupId(String groupId) {
-		this.groupId = groupId;
+	public Contract setGroup(Group group) {
+		this.group = group;
 		return this;
 	}
+//	public Contract setGroupId(String groupId) {
+//		this.groupId = groupId;
+//		return this;
+//	}
 
-//	public Contract setShop(Shop shop) {
-//		this.shop = shop;
-//		return this;
-//	}
-	
-	public Contract setShopId(String shopId) {
-		this.shopId = shopId;
+	public Contract setShop(Shop shop) {
+		this.shop = shop;
 		return this;
 	}
+	
+//	public Contract setShopId(String shopId) {
+//		this.shopId = shopId;
+//		return this;
+//	}
 	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Contract [id=").append(id).append(", groupId=").append(groupId)
-				.append(", shopId=").append(shopId).append(", contracted=").append(contracted)
+		builder.append("Contract [id=").append(id).append(", group=").append(group)
+				.append(", shop=").append(shop).append(", contracted=").append(contracted)
 				.append("]");
 		return builder.toString();
 	}

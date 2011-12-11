@@ -47,11 +47,6 @@ public class MockUserDao implements UserDao {
 
 	}
 
-	public List<User> findByEmail(String email) {
-
-		return null;
-	}
-
 	@Override
 	public void update(Health instance) {
 		// TODO Auto-generated method stub
@@ -59,7 +54,7 @@ public class MockUserDao implements UserDao {
 	}
 
 	@Override
-	public User readByEmail(String email) {
+	public User findByEmail(String email) {
 		// TODO Auto-generated method stub
 		return null;
 	}

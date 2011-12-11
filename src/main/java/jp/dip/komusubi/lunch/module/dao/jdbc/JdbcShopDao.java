@@ -101,8 +101,8 @@ public class JdbcShopDao implements ShopDao {
 								.setPhoneNumber(rs.getString("phoneNumber"))
 								.setUrl(rs.getString("url"))
 //								.setLastOrder(rs.getTime("lastOrder"))
-								.setLastOrder(JdbcDateConverter.toCurrentDate(rs.getTime("lastOrder")))
-								.setContracts(contractDao.findByShopId(rs.getString("id")));
+								.setLastOrder(JdbcDateConverter.toCurrentDate(rs.getTime("lastOrder")));
+//								.setContracts(contractDao.findByShopId(rs.getString("id")));
 			return shop;
 		}
 	};
