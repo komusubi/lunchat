@@ -32,10 +32,14 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * group list.
+ * @author jun.ozeki
+ * @since 2011/12/11
+ */
 public class GroupList extends Panel {
 
 	private static final long serialVersionUID = -728544767659111573L;
@@ -52,7 +56,11 @@ public class GroupList extends Panel {
 		@Override
 		public List<Group> load() {
 			GroupDao groupDao = Configuration.getInstance(GroupDao.class);
-			return groupDao.findAll();
+			List<Group> groups = groupDao.findAll();
+			if (groups.size() == 0)
+				groups.add(new Group("dummy")
+								.setName("グループが1件も存在しませんでした。"));
+			return groups;
 		}
 	};
 	
@@ -80,8 +88,14 @@ public class GroupList extends Panel {
 					public void onClick() {
 						logger.info("onClick to {}", group);
 //						setResponsePage(page);
-						// FIXME reference to page pacakage.
+						// FIXME reference to page package.
 						setResponsePage(new Member(group));
+					}
+					@Override
+					public boolean isEnabled() {
+						if ("dummy".equals(group.getId()))
+							return false;
+						return true;
 					}
 				};
 			}

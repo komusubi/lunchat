@@ -2,5 +2,5 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>MemberList Panel Properties</comment>
-<entry key="label.title">${name}グループメンバー</entry>
+<entry key="label.title">${name}メンバー</entry>
 </properties>

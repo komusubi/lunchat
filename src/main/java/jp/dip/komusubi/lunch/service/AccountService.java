@@ -99,16 +99,17 @@ public class AccountService implements Serializable {
 	}
 
 	@Transactional
-	public String create(User user, Group group) {
-		String id = groupDao.persist(group);
+	public String referTo(User user) {
+		String id = groupDao.persist(user.getGroup());
 		// relation to groupId
-		userDao.update(user.setGroupId(group.getId()));
+		userDao.update(user);
 		return id;
 	}
 	
 	@Transactional
 	public void remove(String id) {
 		userDao.remove(new User(id));
+		// FIXME when group has nobody, delete same time.
 	}
 	
 	@Transactional
@@ -140,7 +141,7 @@ public class AccountService implements Serializable {
 	}
 	
 	public User readByEmail(String email) {
-		return userDao.readByEmail(email);
+		return userDao.findByEmail(email);
 	}
 	
 	@Transactional
@@ -209,7 +210,7 @@ public class AccountService implements Serializable {
 	}
 	
 	public Nonce remind(String email, String url) {
-		User to = userDao.readByEmail(email);
+		User to = userDao.findByEmail(email);
 		if (to == null) 
 			throw new NotFoundEmailException("not found email: " + email);
 		StringBuilder urlBuilder = new StringBuilder(url);
@@ -260,16 +261,23 @@ public class AccountService implements Serializable {
 	}
 	
 	public List<Shop> getContractedShops(User user) {
-		List<Shop> list = new ArrayList<>();
-		Group group = groupDao.find(user.getGroupId());
-		for (Contract c: group.getContracts()) {
-			list.add(shopDao.find(c.getShopId()));
-		}
-		return list;
+//		List<Shop> list = new ArrayList<>();
+//		Group group = groupDao.find(user.getGroupId());
+//		for (Contract c: group.getContracts()) {
+//			list.add(shopDao.find(c.getShopId()));
+//		}
+//		return list;
+		List<Contract> contracts = user.getGroup().getContracts();
+		List<Shop> shops = new ArrayList<>();
+		for (Contract contract: contracts)
+			shops.add(contract.getShop());
+
+		return shops;
 	}
 	
 	public List<Order> getOrders(User user, Date date) {
-		List<Order> orders = orderDao.findByUserAndDate(user.getId(), date);
+//		List<Order> orders = orderDao.findByUserAndDate(user.getId(), date);
+		List<Order> orders = new ArrayList<>();
 		return orders;
 	}
 }

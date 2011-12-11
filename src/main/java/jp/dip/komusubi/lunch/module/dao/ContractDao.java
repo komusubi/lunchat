@@ -18,14 +18,14 @@
  */
 package jp.dip.komusubi.lunch.module.dao;
 
-import java.util.Set;
+import java.util.List;
 
 import jp.dip.komusubi.common.persistence.GenericDao;
 import jp.dip.komusubi.lunch.model.Contract;
 
 public interface ContractDao extends GenericDao<Integer, Contract> {
 
-	Set<Contract> findByGroupId(String groupId);
-	Set<Contract> findByShopId(String shopId);
+	List<Contract> findByGroupId(String groupId);
+	List<Contract> findByShopId(String shopId);
 	Contract findByGroupIdAndShopId(String groupId, String shopId);
 }

@@ -19,7 +19,6 @@ package jp.dip.komusubi.lunch.wicket;
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.service.AccountService;
-import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.component.SimpleBrowserInfoPage;
 
 import org.apache.wicket.Session;

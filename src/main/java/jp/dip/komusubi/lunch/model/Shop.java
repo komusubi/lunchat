@@ -19,57 +19,20 @@ package jp.dip.komusubi.lunch.model;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
+import jp.dip.komusubi.lunch.Configuration;
+import jp.dip.komusubi.lunch.module.dao.ContractDao;
+
+/**
+ * 
+ * @author jun.ozeki
+ * @since 2011/12/11
+ */
 public class Shop implements Serializable {
 
-//	/**
-//	 * contract.
-//	 * @author jun.ozeki
-//	 * @since 2011/12/04
-//	 */
-//	public static class Contract implements Serializable {
-//
-//		private static final long serialVersionUID = 2158869251958947749L;
-//		private int id;
-//		private Group group;
-//		private Date contracted;
-//
-//		public Contract(int id) {
-//			this.id = id;
-//		}
-//		
-//		public Date getContracted() {
-//			return contracted;
-//		}
-//
-//		public Group getGroup() {
-//			return group;
-//		}
-//
-//		public int getId() {
-//			return id;
-//		}
-//
-//		public void setContracted(Date contracted) {
-//			this.contracted = contracted;
-//		}
-//
-//		public void setGroup(Group group) {
-//			this.group = group;
-//		}
-//
-//		@Override
-//		public String toString() {
-//			StringBuilder builder = new StringBuilder();
-//			builder.append("Contract [id=").append(id).append(", group=").append(group)
-//					.append(", contracted=").append(contracted).append("]");
-//			return builder.toString();
-//		}
-//
-//	}
 	private static final long serialVersionUID = -1020122183352301083L;
 	private String id;
 	private String name;
@@ -77,7 +40,7 @@ public class Shop implements Serializable {
 	private String url;
 	private String phoneNumber;
 	private Date lastOrder;
-	private Set<Contract> contracts;
+	private List<Contract> contracts;
 
 	public Shop(String id) {
 		this.id = id;
@@ -85,14 +48,18 @@ public class Shop implements Serializable {
 
 	public Shop addContracts(Contract contract) {
 		if (contracts == null)
-			contracts = new HashSet<>();
+//			contracts = new HashSet<>();
+			contracts = new ArrayList<>();
 		this.contracts.add(contract);
 		return this;
 	}
 
-	public Set<Contract> getContracts() {
-		if (contracts == null)
-			contracts = new HashSet<>();
+	public List<Contract> getContracts() {
+		if (contracts == null) {
+			// FIXME should be proxy pattern.
+			ContractDao contractDao = Configuration.getInstance(ContractDao.class);
+			contracts = contractDao.findByShopId(getId());
+		}
 		return contracts;
 	}
 
@@ -126,7 +93,7 @@ public class Shop implements Serializable {
 		return url;
 	}
 
-	public Shop setContracts(Set<Contract> contracts) {
+	public Shop setContracts(List<Contract> contracts) {
 		this.contracts = contracts;
 		return this;
 	}

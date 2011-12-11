@@ -19,9 +19,9 @@
 package jp.dip.komusubi.lunch.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.module.dao.ContractDao;
@@ -39,36 +39,39 @@ public class Group implements Serializable {
 	private String id;
 	private String name;
 	private Date lastOrder;
-	private Set<Contract> contracts;
-	private Set<User> users;
+	private String phoneNumber;
+	private List<Contract> contracts;
+	private List<User> users;
 
 	public Group(String id) {
 		this.id = id;
 	}
 
+	public Group addContract(Shop shop) {
+		if (contracts == null)
+			contracts = new ArrayList<>();
+		Contract contract = new Contract();
+		contract.setGroup(this)
+				.setShop(shop);
+		addContract(contract);
+		return this;
+	}
+	
 	public Group addContract(Contract contract) {
 		if (contracts == null)
-			contracts = new HashSet<>();
+//			contracts = new HashSet<>();
+			contracts = new ArrayList<>();
 		contracts.add(contract);
 		return this;
 	}
 
-	public Set<User> getUsers() {
-		if (users == null) {
-			// FIXME should fix proxy pattern.
-			users = new HashSet<>();
-			UserDao userDao = Configuration.getInstance(UserDao.class);
-			users.addAll(userDao.findByGroupId(getId()));
-		}
-		return users;
-	}
-	
-	public Set<Contract> getContracts() {
+	public List<Contract> getContracts() {
 		if (contracts == null) {
 			// FIXME refer to module package. should fix proxy pattern.
 			ContractDao contractDao = Configuration.getInstance(ContractDao.class);
-			contracts = new HashSet<>();
-			contracts.addAll(contractDao.findByGroupId(getId()));
+			contracts = contractDao.findByGroupId(getId());
+//			contracts = new HashSet<>();
+//			contracts.addAll(contractDao.findByGroupId(getId()));
 		}
 		return contracts;
 	}
@@ -85,7 +88,21 @@ public class Group implements Serializable {
 		return name;
 	}
 
-	public Group setContracts(Set<Contract> contracts) {
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public List<User> getUsers() {
+		if (users == null) {
+			// FIXME should fix proxy pattern.
+			UserDao userDao = Configuration.getInstance(UserDao.class);
+			users = userDao.findByGroupId(getId());
+//			users.addAll(userDao.findByGroupId(getId()));
+		}
+		return users;
+	}
+
+	public Group setContracts(List<Contract> contracts) {
 		this.contracts = contracts;
 		return this;
 	}
@@ -100,13 +117,18 @@ public class Group implements Serializable {
 		return this;
 	}
 
+	public Group setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+		return this;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Group [id=").append(id).append(", name=").append(name)
-				.append(", lastOrder=").append(lastOrder).append(", contracts=").append(contracts)
-				.append("]");
+				.append(", lastOrder=").append(lastOrder).append(", phoneNumber=")
+				.append(phoneNumber).append(", contracts=").append(contracts).append(", users=")
+				.append(users).append("]");
 		return builder.toString();
 	}
-
 }

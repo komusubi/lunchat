@@ -42,10 +42,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 public class JdbcGroupDao implements GroupDao {
 	
 	private static final Logger logger = LoggerFactory.getLogger(JdbcGroupDao.class);
-	private static final String COLUMNS = "id, name, lastOrder";
+	private static final String COLUMNS = "id, name, lastOrder, place, phoneNumber";
 	private static final String SELECT_RECORD_QUERY = "select " + COLUMNS + " from groups where id = ?";
 	private static final String SELECT_RECORD_ALL = "select " + COLUMNS + " from groups";
-	private static final String INSERT_RECORD = "insert into groups (" + COLUMNS + ") values (?, ?, ?)";
+	private static final String INSERT_RECORD = "insert into groups (" + COLUMNS + ") values (?, ?, ?, ?, ?)";
 //	private static final String SELECT_QUERY_CONTRACTS = "select id, shopId from"
 	@Inject private ContractDao contractDao;
 	private SimpleJdbcTemplate template;
@@ -81,7 +81,9 @@ public class JdbcGroupDao implements GroupDao {
 		try {
 			template.update(INSERT_RECORD, instance.getId(),
 												instance.getName(),
-												instance.getLastOrder());
+												instance.getLastOrder(),
+												null,
+												instance.getPhoneNumber());
 		} catch (DataAccessException e) {
 			throw new LunchException(e);
 		}
@@ -107,7 +109,8 @@ public class JdbcGroupDao implements GroupDao {
 			Group group = new Group(rs.getString("id"))
 									.setName(rs.getString("name"))
 									.setLastOrder(rs.getTime("lastOrder", cal))
-									.setContracts(contractDao.findByGroupId(rs.getString("id")));
+									.setPhoneNumber(rs.getString("phoneNumber"));
+//									.setContracts(contractDao.findByGroupId(rs.getString("id")));
 			return group;
 		}
 		

@@ -19,20 +19,19 @@
 package jp.dip.komusubi.lunch.wicket.page;
 
 import java.util.Calendar;
-import java.util.List;
 
 import jp.dip.komusubi.common.util.Resolver;
 import jp.dip.komusubi.lunch.Configuration;
-import jp.dip.komusubi.lunch.model.Order;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.component.AuthenticatedLabel;
 import jp.dip.komusubi.lunch.wicket.panel.ChoiceShop;
 import jp.dip.komusubi.lunch.wicket.panel.Footer;
+import jp.dip.komusubi.lunch.wicket.panel.GroupList;
+import jp.dip.komusubi.lunch.wicket.panel.GroupRegistry;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
 import jp.dip.komusubi.lunch.wicket.panel.Header.HeaderBean;
-import jp.dip.komusubi.lunch.wicket.panel.OrderList;
 
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
@@ -54,28 +53,45 @@ public class Home extends VariationBase {
     public Home() {
     	HeaderBean bean = getDefaultHeaderBean(getLocalizer().getString("page.title", this));
     	add(new Header("header", Model.of(bean), true));
-//    	add(new ChoiceShop("shop.list"));
-    	add(choicePanel("shop.list"));
+    	add(getMainPanel("main.panel"));
+    	add(getSubPanel("sub.panel"));
     	add(new AuthenticatedLabel("greeting", getLocalizer().getString("greeting", this, new Model<Home>(this))));
     	add(new Footer("footer"));
     }
     
-    protected Panel choicePanel(String id) {
+    protected Panel getMainPanel(String id) {
     	AccountService accountService = Configuration.getInstance(AccountService.class);
     	Panel panel = null;
-    	Calendar current = Calendar.getInstance(); // FIXME resolver?
+    	Calendar current = resolver.resolve();
     	// login ?
     	if (WicketSession.get().isSignedIn()) {
-    		// have order already ?
-    		// FIXEME 食べ終わってない注文があったら。メソッド修正必須。
-    		List<Order> orders = accountService.getOrders(user, current.getTime());
-    		if (orders.size() > 0) {
-    			panel = new OrderList(id, orders);
-    		}  
+    		if (user.getGroup() == null) {
+    			panel = new GroupList(id, null);
+    		} else if (accountService.getContractedShops(user).size() == 0) {
+    			panel = new GroupRegistry(id);
+    		} else if (accountService.getOrders(user, current.getTime()).size() > 0) {
+    			// have order already ?
+    			// FIXEME 食べ終わってない注文があったら。メソッド修正必須。
+//    			panel = new OrderList(id, orders);
+    		}
     	}
     	if (panel == null)
     		panel = new ChoiceShop(id);
     	return panel;
     }
     
+    protected Panel getSubPanel(String id) {
+    	GroupRegistry groupRegistry = new GroupRegistry(id) {
+    		
+    		private static final long serialVersionUID = -9153627644004536343L;
+
+    		@Override
+			public boolean isVisible() {
+    			if (!WicketSession.get().isSignedIn() || user.getGroup() != null)
+    				return false;
+    			return true;
+    		}
+    	};
+    	return groupRegistry;
+    }
 }

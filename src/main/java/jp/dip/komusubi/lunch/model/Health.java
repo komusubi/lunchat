@@ -118,7 +118,7 @@ public class Health implements Serializable {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Health [login=").append(login).append(", lastLogin=").append(lastLogin)
 				.append(", loginFail=").append(loginFail).append(", active=").append(active)
-				.append(", user=").append(user).append("]");
+				.append("]");
 		return builder.toString();
 	}
 

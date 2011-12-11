@@ -26,7 +26,7 @@ import jp.dip.komusubi.lunch.model.User;
 
 public interface UserDao extends GenericDao<String, User> {
 
-	User readByEmail(String email);
+	User findByEmail(String email);
 	void update(Health instance);
 	List<User> findByGroupId(String groupId);
 }
