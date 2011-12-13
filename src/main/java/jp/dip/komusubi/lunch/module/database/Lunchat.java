@@ -106,6 +106,29 @@ public class Lunchat extends DBDatabase {
 		}
 	}
 
+	// notice
+	public static class Notices extends DBTable {
+
+		private static final long serialVersionUID = 1L;
+
+		public final DBTableColumn id;    // identify a user, so that email address, twitter id, facebook id etc...
+		public final DBTableColumn userId;
+		public final DBTableColumn type; // email, twitter, facebook and so on.
+		public final DBTableColumn priority;
+		
+		public Notices(DBDatabase db) {
+			super("Notices", db);
+			id 		= addColumn("id", 		DataType.TEXT, 			255, DataMode.NotNull);
+			userId 	= addColumn("userId", 	DataType.TEXT, sizeOfUserId, DataMode.NotNull);
+			type	= addColumn("type",		DataType.INTEGER, 		  0, DataMode.NotNull);
+			priority = addColumn("priority", DataType.INTEGER, 		  0, DataMode.NotNull);
+			
+			addIndex("notice_idx", true, new DBTableColumn[]{userId, priority});
+			
+			setPrimaryKey(id);
+		}
+	}
+
 	// groups
 	public static class Groups extends DBTable {
 
