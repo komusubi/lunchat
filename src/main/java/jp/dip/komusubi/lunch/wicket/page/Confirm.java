@@ -21,7 +21,6 @@ package jp.dip.komusubi.lunch.wicket.page;
 import jp.dip.komusubi.lunch.module.Basket;
 import jp.dip.komusubi.lunch.wicket.panel.Footer;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
-import jp.dip.komusubi.lunch.wicket.panel.OrderList;
 
 import org.apache.wicket.model.Model;
 
@@ -37,7 +36,7 @@ public class Confirm extends AuthorizedPage {
 	
 	public Confirm(Basket basket) {
 		add(new Header("header", Model.of(getDefaultHeaderBean(pageTitle))));
-		add(new OrderList("basket", basket));
+//		add(new OrderList("basket", basket));
 		add(new Footer("footer"));
 	}
 }
