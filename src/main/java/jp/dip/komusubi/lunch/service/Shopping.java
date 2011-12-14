@@ -77,7 +77,8 @@ public class Shopping implements Serializable {
 	}
 	
 	public ShoppingDateStore specified(Shop shop, Date date) {
-		return new ShoppingDateStore(this, shop, date);
+//		return new ShoppingDateStore(this, shop, date);
+		return null;
 	}
 	
 	public boolean isOrderable(String shopId) {
