@@ -18,9 +18,9 @@
  */
 package jp.dip.komusubi.lunch.service;
 
-import jp.dip.komusubi.common.protocol.smtp.MailMessage;
-import jp.dip.komusubi.common.protocol.smtp.SmtpServer;
 
+import org.komusubi.common.protocol.smtp.MailMessage;
+import org.komusubi.common.protocol.smtp.SmtpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

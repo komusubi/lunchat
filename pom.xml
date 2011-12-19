@@ -9,7 +9,7 @@
   <description></description>
   <organization>
     <name>komusubi</name>
-    <url>http://komusubi.dip.jp</url>
+    <url>http://komusubi.org</url>
   </organization>
   <licenses>
     <license>
@@ -22,13 +22,24 @@
     <repository>
       <id>komusubi-repo</id>
       <name>komusubi maven2 repository</name>
-      <url>http://komusubi.dip.jp/m2/repo</url>
+      <url>http://komusubi.org/m2/repo</url>
       <releases>
         <enabled>true</enabled>
       </releases>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
+    </repository>
+    <repository>
+      <id>komusubi-snapshot</id>
+      <name>komusubi snapshot repository</name>
+      <url>http://komusubi.org/m2/snapshot</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
     </repository>
   </repositories>
   <properties>
@@ -44,8 +55,8 @@
       <artifactId>wicket-core</artifactId>
       <version>${wicket.version}</version>
     </dependency>
-    <!-- OPTIONAL DEPENDENCY <dependency> <groupId>org.apache.wicket</groupId> 
-      <artifactId>wicket-extensions</artifactId> <version>${wicket.version}</version> 
+    <!-- OPTIONAL DEPENDENCY <dependency> <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-extensions</artifactId> <version>${wicket.version}</version>
       </dependency> -->
 
     <!-- LOGGING DEPENDENCIES - LOG4J -->
@@ -94,9 +105,8 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>jp.dip.komusubi</groupId>
+      <groupId>org.komusubi</groupId>
       <artifactId>common</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>mysql</groupId>
@@ -314,6 +324,20 @@
           </reportPlugins>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.1.2</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
     <extensions>
       <extension>
@@ -339,19 +363,19 @@
     <site>
       <id>komusubi-repo</id>
       <name>komusubi vps</name>
-      <url>scp://komusubi.dip.jp:3843/home/sites/komusubi.dip.jp/web/m2/site/lunch</url>
+      <url>scp://komusubi.org:3843/home/sites/komusubi.org/web/m2/site/lunch</url>
     </site>
     <repository>
       <uniqueVersion>false</uniqueVersion>
       <id>komusubi-repo</id>
       <name>komusubi vps</name>
-      <url>scp://komusubi.dip.jp:3843/home/sites/komusubi.dip.jp/web/m2/repo</url>
+      <url>scp://komusubi.org:3843/home/sites/komusubi.org/web/m2/repo</url>
       <layout>default</layout>
     </repository>
     <snapshotRepository>
       <id>komusubi-snapshot</id>
       <name>komusubi snapshot</name>
-      <url>scp://komusubi.dip.jp:3843/home/sites/komusubi.dip.jp/web/m2/snapshot</url>
+      <url>scp://komusubi.org:3843/home/sites/komusubi.org/web/m2/snapshot</url>
     </snapshotRepository>
   </distributionManagement>
   <inceptionYear>2011</inceptionYear>
@@ -361,10 +385,19 @@
   </scm>
   <issueManagement>
     <system>github</system>
-    <url>https://github.com/komusubi/lunch/issues</url>
+    <url>https://github.com/komusubi/common/issues</url>
   </issueManagement>
   <ciManagement>
-    <url>https://komusubi.ci.cloudbees.com/job/lunch</url>
-    <system>jenkins (cloundbees)</system>
+    <url>http://komusubi.org/job/lunch</url>
+    <system>jenkins</system>
   </ciManagement>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.komusubi</groupId>
+        <artifactId>common</artifactId>
+        <version>0.0.2-SNAPSHOT</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>

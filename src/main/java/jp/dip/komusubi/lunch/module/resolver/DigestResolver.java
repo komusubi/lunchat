@@ -20,9 +20,8 @@ package jp.dip.komusubi.lunch.module.resolver;
 
 import java.io.Serializable;
 
-import jp.dip.komusubi.common.util.Resolver;
-
 import org.apache.commons.codec.digest.DigestUtils;
+import org.komusubi.common.util.Resolver;
 
 public class DigestResolver implements Resolver<String>, Serializable {
 

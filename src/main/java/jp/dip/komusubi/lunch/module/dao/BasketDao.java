@@ -18,8 +18,9 @@
  */
 package jp.dip.komusubi.lunch.module.dao;
 
-import jp.dip.komusubi.common.persistence.GenericDao;
 import jp.dip.komusubi.lunch.module.Basket;
+
+import org.komusubi.common.persistence.GenericDao;
 
 public interface BasketDao extends GenericDao<Long, Basket> {
 

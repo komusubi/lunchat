@@ -20,11 +20,10 @@ package jp.dip.komusubi.lunch.wicket.component;
 
 import java.util.Locale;
 
-import jp.dip.komusubi.common.util.Resolver;
-
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
+import org.komusubi.common.util.Resolver;
 
 public class HashedPasswordTextField extends PasswordTextField {
 

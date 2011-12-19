@@ -18,8 +18,6 @@
  */
 package jp.dip.komusubi.lunch.wicket.page.account;
 
-import jp.dip.komusubi.common.protocol.smtp.SmtpServer;
-import jp.dip.komusubi.common.util.Resolver;
 import jp.dip.komusubi.lunch.module.DefaultNonce;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
@@ -33,6 +31,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Rule;
 import org.junit.Test;
+import org.komusubi.common.protocol.smtp.SmtpServer;
+import org.komusubi.common.util.Resolver;
 import org.mockito.Mockito;
 
 import com.google.inject.AbstractModule;

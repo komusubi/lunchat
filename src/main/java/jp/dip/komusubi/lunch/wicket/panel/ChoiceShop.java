@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import jp.dip.komusubi.common.util.Resolver;
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.model.Shop;
@@ -41,6 +40,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

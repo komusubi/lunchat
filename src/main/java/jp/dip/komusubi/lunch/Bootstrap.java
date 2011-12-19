@@ -31,8 +31,6 @@ import java.util.Map;
 import javax.servlet.ServletContextEvent;
 import javax.sql.DataSource;
 
-import jp.dip.komusubi.common.protocol.smtp.SmtpServer;
-import jp.dip.komusubi.common.util.Resolver;
 import jp.dip.komusubi.lunch.Configuration.RuntimeMode;
 import jp.dip.komusubi.lunch.model.Authentication;
 import jp.dip.komusubi.lunch.module.Basket;
@@ -70,6 +68,8 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.wicket.protocol.http.WicketFilter;
+import org.komusubi.common.protocol.smtp.SmtpServer;
+import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;

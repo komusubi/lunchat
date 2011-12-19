@@ -18,7 +18,6 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
-import jp.dip.komusubi.common.util.Resolver;
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
@@ -37,6 +36,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.AbstractValidator;
+import org.komusubi.common.util.Resolver;
 
 public class ChangePassword extends Panel {
 

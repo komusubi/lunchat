@@ -20,7 +20,6 @@ package jp.dip.komusubi.lunch.wicket.page;
 
 import java.util.Calendar;
 
-import jp.dip.komusubi.common.util.Resolver;
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.service.AccountService;
@@ -35,6 +34,7 @@ import jp.dip.komusubi.lunch.wicket.panel.Header.HeaderBean;
 
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

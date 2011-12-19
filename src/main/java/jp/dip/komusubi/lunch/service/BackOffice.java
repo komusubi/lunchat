@@ -24,13 +24,13 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import jp.dip.komusubi.common.util.Resolver;
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.model.Shop;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
 import jp.dip.komusubi.lunch.module.database.Lunchat;
 
+import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
