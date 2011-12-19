@@ -20,9 +20,10 @@ package jp.dip.komusubi.lunch.module.dao;
 
 import java.util.List;
 
-import jp.dip.komusubi.common.persistence.GenericDao;
 import jp.dip.komusubi.lunch.model.OrderLine;
 import jp.dip.komusubi.lunch.model.OrderLine.OrderLineKey;
+
+import org.komusubi.common.persistence.GenericDao;
 
 public interface OrderLineDao extends GenericDao<OrderLineKey, OrderLine> {
 

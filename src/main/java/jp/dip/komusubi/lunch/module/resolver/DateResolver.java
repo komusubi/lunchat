@@ -20,7 +20,7 @@ package jp.dip.komusubi.lunch.module.resolver;
 
 import java.util.Date;
 
-import jp.dip.komusubi.common.util.Resolver;
+import org.komusubi.common.util.Resolver;
 
 public class DateResolver implements Resolver<Date> {
 

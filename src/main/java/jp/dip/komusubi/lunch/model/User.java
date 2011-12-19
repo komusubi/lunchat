@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.dip.komusubi.common.protocol.smtp.Destination;
+import org.komusubi.common.protocol.smtp.Destination;
 
 /**
  * user.

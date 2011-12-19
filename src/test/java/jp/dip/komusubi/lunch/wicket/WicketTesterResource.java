@@ -22,7 +22,6 @@ import java.io.File;
 
 import javax.servlet.ServletContextEvent;
 
-import jp.dip.komusubi.common.util.Resolver;
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.MockBootstrap;
 
@@ -30,6 +29,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.rules.ExternalResource;
+import org.komusubi.common.util.Resolver;
 
 import com.google.inject.Injector;
 

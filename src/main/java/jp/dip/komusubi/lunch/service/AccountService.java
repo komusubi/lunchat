@@ -27,12 +27,6 @@ import java.util.ResourceBundle;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import jp.dip.komusubi.common.protocol.smtp.MailContent;
-import jp.dip.komusubi.common.protocol.smtp.MailMessage;
-import jp.dip.komusubi.common.protocol.smtp.SmtpServer;
-import jp.dip.komusubi.common.util.Resolver;
-import jp.dip.komusubi.common.util.XmlResourceBundle;
-import jp.dip.komusubi.common.util.XmlResourceBundleControl;
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Contract;
@@ -47,6 +41,12 @@ import jp.dip.komusubi.lunch.module.dao.ShopDao;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.util.Nonce;
 
+import org.komusubi.common.protocol.smtp.MailContent;
+import org.komusubi.common.protocol.smtp.MailMessage;
+import org.komusubi.common.protocol.smtp.SmtpServer;
+import org.komusubi.common.util.Resolver;
+import org.komusubi.common.util.XmlResourceBundle;
+import org.komusubi.common.util.XmlResourceBundleControl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -18,7 +18,6 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
-import jp.dip.komusubi.common.util.Resolver;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.DefaultNonce;
 import jp.dip.komusubi.lunch.module.dao.MockUserDao;
@@ -35,6 +34,7 @@ import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Rule;
 import org.junit.Test;
+import org.komusubi.common.util.Resolver;
 import org.mockito.Mockito;
 
 import com.google.inject.AbstractModule;

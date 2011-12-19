@@ -23,7 +23,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import jp.dip.komusubi.common.util.Resolver;
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.Order;
 import jp.dip.komusubi.lunch.model.Product;
@@ -34,6 +33,8 @@ import jp.dip.komusubi.lunch.module.Transactional;
 import jp.dip.komusubi.lunch.module.dao.OrderDao;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
+
+import org.komusubi.common.util.Resolver;
 
 /**
  * shopping.

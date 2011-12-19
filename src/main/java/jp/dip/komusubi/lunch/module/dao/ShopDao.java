@@ -21,9 +21,10 @@ package jp.dip.komusubi.lunch.module.dao;
 import java.util.Date;
 import java.util.List;
 
-import jp.dip.komusubi.common.persistence.GenericDao;
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.model.Shop;
+
+import org.komusubi.common.persistence.GenericDao;
 
 public interface ShopDao extends GenericDao<String, Shop> {
 

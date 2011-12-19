@@ -26,7 +26,6 @@ import static org.mockito.Mockito.when;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
-import jp.dip.komusubi.common.protocol.smtp.MailMessage;
 import jp.dip.komusubi.lunch.MockBootstrap;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.DefaultNonce;
@@ -38,6 +37,7 @@ import junitx.util.PrivateAccessor;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.junit.Before;
 import org.junit.Test;
+import org.komusubi.common.protocol.smtp.MailMessage;
 import org.mockito.Mockito;
 
 import com.google.inject.AbstractModule;
