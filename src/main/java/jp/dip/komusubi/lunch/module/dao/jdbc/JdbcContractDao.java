@@ -160,8 +160,6 @@ public class JdbcContractDao implements ContractDao {
 		@Override
 		public Contract mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Contract contract = new Contract(rs.getInt("id"))
-//								.setGroupId(rs.getString("groupId"))
-//								.setShopId(rs.getString("shopId"))
 								.setGroup(groupDao.find(rs.getString("groupId")))
 								.setShop(shopDao.find(rs.getString("shopId")))
 								.setContracted(rs.getDate("contracted"));

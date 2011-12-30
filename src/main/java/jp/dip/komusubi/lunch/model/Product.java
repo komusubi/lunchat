@@ -22,6 +22,7 @@ import java.util.Date;
 public class Product implements Serializable {
 
 	private static final long serialVersionUID = -2538213207179936427L;
+	public static final String DEFAULT_ID = "dummy";
 	private String id;
 	private String refId;
 	private String name;
@@ -30,7 +31,11 @@ public class Product implements Serializable {
 	private Shop shop;
 	private Date start;
 	private Date finish;
-
+	
+	public Product() {
+		this(DEFAULT_ID);
+	}
+	
 	public Product(String id) {
 		this.id = id;
 	}

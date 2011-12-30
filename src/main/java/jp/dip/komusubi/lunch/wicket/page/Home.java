@@ -20,19 +20,18 @@ package jp.dip.komusubi.lunch.wicket.page;
 
 import java.util.Calendar;
 
-import jp.dip.komusubi.lunch.Configuration;
+import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.model.User;
-import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.component.AuthenticatedLabel;
-import jp.dip.komusubi.lunch.wicket.panel.ChoiceShop;
+import jp.dip.komusubi.lunch.wicket.panel.ChoiceLunch;
 import jp.dip.komusubi.lunch.wicket.panel.Footer;
 import jp.dip.komusubi.lunch.wicket.panel.GroupList;
 import jp.dip.komusubi.lunch.wicket.panel.GroupRegistry;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
 import jp.dip.komusubi.lunch.wicket.panel.Header.HeaderBean;
 
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
@@ -41,6 +40,11 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+/**
+ * home page.
+ * @author jun.ozeki
+ * @since 2011/12/19
+ */
 public class Home extends VariationBase {
 	
 	private static final long serialVersionUID = -5767042157938188479L;
@@ -53,45 +57,41 @@ public class Home extends VariationBase {
     public Home() {
     	HeaderBean bean = getDefaultHeaderBean(getLocalizer().getString("page.title", this));
     	add(new Header("header", Model.of(bean), true));
-    	add(getMainPanel("main.panel"));
-    	add(getSubPanel("sub.panel"));
+    	add(getChoiceShop("select.menu"));
+    	add(new GroupList("group.list"));
+    	add(getGroupRegistry("group.registry"));
+    	// FIXME temporary set label component.
+    	add(new Label("order.list").setVisible(false));
     	add(new AuthenticatedLabel("greeting", getLocalizer().getString("greeting", this, new Model<Home>(this))));
     	add(new Footer("footer"));
     }
     
-    protected Panel getMainPanel(String id) {
-    	AccountService accountService = Configuration.getInstance(AccountService.class);
-    	Panel panel = null;
-    	Calendar current = resolver.resolve();
-    	// login ?
-    	if (WicketSession.get().isSignedIn()) {
-    		if (user.getGroup() == null) {
-    			panel = new GroupList(id, null);
-    		} else if (accountService.getContractedShops(user).size() == 0) {
-    			panel = new GroupRegistry(id);
-    		} else if (accountService.getOrders(user, current.getTime()).size() > 0) {
-    			// have order already ?
-    			// FIXEME 食べ終わってない注文があったら。メソッド修正必須。
-//    			panel = new OrderList(id, orders);
-    		}
-    	}
-    	if (panel == null)
-    		panel = new ChoiceShop(id);
-    	return panel;
+    protected ChoiceLunch getChoiceShop(String id) {
+    	return new ChoiceLunch(id) {
+
+			private static final long serialVersionUID = -8829593828769576050L;
+
+			@Override
+			protected void onChoiceProduct(Product product) {
+				if (!WicketSession.get().isSignedIn()) {
+					// FIXME it should hold in choice product.
+					setResponsePage(Login.class);
+				} else if (WicketSession.get().getLoggedInUser().getGroup() == null){
+					setResponsePage(Home.this);
+				}
+			}
+    		
+    	};
     }
     
-    protected Panel getSubPanel(String id) {
-    	GroupRegistry groupRegistry = new GroupRegistry(id) {
-    		
-    		private static final long serialVersionUID = -9153627644004536343L;
+    protected GroupRegistry getGroupRegistry(String id) {
+    	return new GroupRegistry(id) {
+    		private static final long serialVersionUID = -3291096546275717623L;
 
-    		@Override
-			public boolean isVisible() {
-    			if (!WicketSession.get().isSignedIn() || user.getGroup() != null)
-    				return false;
-    			return true;
+			@Override
+    		protected void onRegistered() {
+    			setResponsePage(Home.this);
     		}
     	};
-    	return groupRegistry;
     }
 }

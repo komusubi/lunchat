@@ -61,6 +61,7 @@ public class SignIn extends SignInPanel {
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
 	public void onInitialize() {
 //		SignInForm form = getForm();
 //		if (WicketSession.VARIATION_JQUERY_MOBILE.equals(getVariation())) {
@@ -69,6 +70,8 @@ public class SignIn extends SignInPanel {
 		
 		FormComponent<String> text = (FormComponent<String>) getForm().get("username");
 		FormComponent<String> password = (FormComponent<String>) getForm().get("password");
+		// remember cookie
+		setRememberMe(false);
 		
 		SpecificBehavior.behaveIdField(text);
 		SpecificBehavior.behavePasswordField(password);

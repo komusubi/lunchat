@@ -5,4 +5,9 @@
 <entry key="registry.completed">${name}が登録されました。</entry>
 <entry key="registry.failed">グループの登録処理でエラーが発生しました。</entry>
 <entry key="wrong.value">登録不可能なIDです</entry>
+<entry key="lastOrder.Required">グループの締め切り時刻を設定してください。</entry>
+<entry key="id.Required">グループIDを入力してください。</entry>
+<entry key="name.Required">グループ名を入力してください。</entry>
+<entry key="select.shop.message">お店を選択してください。</entry>
+<entry key="DateValidator.range">締切時刻は${minimum}から${maximum}までの時刻を設定してください。</entry>
 </properties>

@@ -5,8 +5,8 @@
   <artifactId>lunch</artifactId>
   <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
-  <name>lunch order</name>
-  <description></description>
+  <name>lunch order management</name>
+  <description>2011</description>
   <organization>
     <name>komusubi</name>
     <url>http://komusubi.org</url>
@@ -22,7 +22,7 @@
     <repository>
       <id>komusubi-repo</id>
       <name>komusubi maven2 repository</name>
-      <url>http://komusubi.org/m2/repo</url>
+      <url>http://m2.komusubi.org/repo</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -33,7 +33,7 @@
     <repository>
       <id>komusubi-snapshot</id>
       <name>komusubi snapshot repository</name>
-      <url>http://komusubi.org/m2/snapshot</url>
+      <url>http://m2.komusubi.org/snapshot</url>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>

@@ -29,6 +29,7 @@ import java.util.Date;
 public class Contract implements Serializable {
 	
 	private static final long serialVersionUID = 7667124644145815969L;
+	public static final int DEFAULT_ID = -1;
 	private int id;
 	private Group group;
 //	private String groupId;
@@ -37,7 +38,7 @@ public class Contract implements Serializable {
 	private Date contracted;
 
 	public Contract() {
-		this(0);
+		this(DEFAULT_ID);
 	}
 	
 	public Contract(int id) {

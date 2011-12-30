@@ -64,7 +64,13 @@ public class HtmlProductDao implements ProductDao {
 	}
 
 	@Override
-	public List<Product> findByShopIdAndFinishDay(String shopId, Date finishDay) {
+	public List<Product> findByShopIdAndFinishDate(String shopId, Date finishDay) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Product> findByShopIdAndFinishDatetime(String shopId, Date finishDate) {
 		// TODO Auto-generated method stub
 		return null;
 	}

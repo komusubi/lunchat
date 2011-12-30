@@ -28,6 +28,7 @@ import org.komusubi.common.persistence.GenericDao;
 public interface ProductDao extends GenericDao<String, Product> {
 
 	List<Product> findByShopId(String shopId);
-	List<Product> findByShopIdAndFinishDay(String shopId, Date finishDay);
+	List<Product> findByShopIdAndFinishDate(String shopId, Date finishDate);
+	List<Product> findByShopIdAndFinishDatetime(String shopId, Date finishDate);
 	List<Product> findBySalable(String shopId, Date date);
 }

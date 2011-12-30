@@ -584,8 +584,11 @@ public class Lunchat extends DBDatabase {
 		finish.set(Calendar.MILLISECOND, 0);
 		for (int i = 0; i < 7; i++) {
 			finish.add(Calendar.DATE, 1);
-			list.addAll(getTamagoyaProducts(start, finish));
-			list.addAll(getFreshLunchProducts(start, finish));
+			if (finish.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY
+				&&	finish.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY ) {
+				list.addAll(getTamagoyaProducts(start, finish));
+				list.addAll(getFreshLunchProducts(start, finish));
+			}
 		}
 		return list;
 	}

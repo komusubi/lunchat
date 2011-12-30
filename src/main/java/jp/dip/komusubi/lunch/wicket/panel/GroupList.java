@@ -22,14 +22,18 @@ import java.util.List;
 
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.Group;
+import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
+import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.page.Member;
 
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.slf4j.Logger;
@@ -45,11 +49,31 @@ public class GroupList extends Panel {
 	private static final long serialVersionUID = -728544767659111573L;
 	private static final Logger logger = LoggerFactory.getLogger(GroupList.class);
 	
-	public GroupList(String id, Class<? extends WebPage> nextPage) {
+	public GroupList(String id) {
 		super(id);
-		add(getGroupList("list.item", nextPage));
+		add(getMarkupContainer("group.collapsed"));
 	}
-
+	
+	private WebMarkupContainer getMarkupContainer(String id) {
+		WebMarkupContainer container = new WebMarkupContainer(id);
+		container.add(getGroupList("list.item"));
+		container.add(new FeedbackPanel("feedback"));
+		// FIXME should change attribute value decision.
+		container.add(new AttributeModifier("data-collapsed", "false"));
+		return container;
+	}
+	
+	@Override
+	public void onConfigure() {
+		boolean visible = false;
+		if (WicketSession.get().isSignedIn()) {
+			User user = WicketSession.get().getLoggedInUser();
+			if (user.getGroup() == null)
+				visible = true;
+		}
+		setVisibilityAllowed(visible);
+	}
+	
 	private LoadableDetachableModel<List<Group>> ldmodel = new LoadableDetachableModel<List<Group>>() {
 		private static final long serialVersionUID = -371898900116480064L;
 
@@ -64,7 +88,7 @@ public class GroupList extends Panel {
 		}
 	};
 	
-	private ListView<Group> getGroupList(String id, final Class<? extends WebPage> page) {
+	private ListView<Group> getGroupList(String id) {
 		return new ListView<Group>(id, ldmodel) {
 
 			private static final long serialVersionUID = -423055326223010011L;
