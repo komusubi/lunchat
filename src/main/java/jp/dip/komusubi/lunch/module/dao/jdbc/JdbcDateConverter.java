@@ -19,6 +19,7 @@
 package jp.dip.komusubi.lunch.module.dao.jdbc;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Calendar;
 
 public class JdbcDateConverter {
@@ -33,6 +34,10 @@ public class JdbcDateConverter {
 		return new java.sql.Date(cal.getTimeInMillis());
 	}
 
+	public static final Timestamp toTimestamp(java.util.Date date) {
+		return new Timestamp(date.getTime());
+	}
+	
 	public static final java.util.Date toCurrentDate(Time time) {
 		Calendar cal = Calendar.getInstance();
 		int year = cal.get(Calendar.YEAR);

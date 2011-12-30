@@ -18,6 +18,7 @@
  */
 package jp.dip.komusubi.lunch.module.resolver;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -57,8 +58,9 @@ public class Resolvers {
 		}
 	};
 	
-	public static class CalendarResolver implements Resolver<Calendar> {
+	public static class CalendarResolver implements Resolver<Calendar>, Serializable {
 
+		private static final long serialVersionUID = 6290412967263213411L;
 		private Locale locale;
 
 		public CalendarResolver() {

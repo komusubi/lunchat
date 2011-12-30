@@ -19,6 +19,7 @@ package jp.dip.komusubi.lunch.service;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.MissingResourceException;
@@ -35,6 +36,7 @@ import jp.dip.komusubi.lunch.model.Order;
 import jp.dip.komusubi.lunch.model.Shop;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.Transactional;
+import jp.dip.komusubi.lunch.module.dao.ContractDao;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.module.dao.OrderDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
@@ -76,11 +78,12 @@ public class AccountService implements Serializable {
 	private transient UserDao userDao;
 	private SmtpServer smtp;
 	private transient Resolver<String> resolver;
-	@Inject	@Named("date") private transient Resolver<Date> dateResolver;
+	@Inject @Named("date") private transient Resolver<Date> dateResolver;
 	private User authedUser;
-	@Inject	private GroupDao groupDao;
+	@Inject private GroupDao groupDao;
 	@Inject private ShopDao shopDao;
 	@Inject private OrderDao orderDao;
+	@Inject private ContractDao contractDao;
 	
 	@Inject
 	public AccountService(UserDao userDao, 
@@ -100,9 +103,16 @@ public class AccountService implements Serializable {
 
 	@Transactional
 	public String referTo(User user) {
-		String id = groupDao.persist(user.getGroup());
+		Group group = user.getGroup();
+		if (group == null)
+			throw new IllegalArgumentException("user's group is null");
+		String id = groupDao.persist(group);
 		// relation to groupId
 		userDao.update(user);
+		for (Contract contract: group.getContracts()) {
+			if (contract.getId() == Contract.DEFAULT_ID)
+				contractDao.persist(contract);
+		}
 		return id;
 	}
 	
@@ -260,20 +270,23 @@ public class AccountService implements Serializable {
 		return result;
 	}
 	
-	public List<Shop> getContractedShops(User user) {
-//		List<Shop> list = new ArrayList<>();
-//		Group group = groupDao.find(user.getGroupId());
-//		for (Contract c: group.getContracts()) {
-//			list.add(shopDao.find(c.getShopId()));
-//		}
-//		return list;
-		List<Contract> contracts = user.getGroup().getContracts();
-		List<Shop> shops = new ArrayList<>();
-		for (Contract contract: contracts)
-			shops.add(contract.getShop());
-
-		return shops;
-	}
+//	public List<Shop> getContractedShops(User user) {
+////		List<Shop> list = new ArrayList<>();
+////		Group group = groupDao.find(user.getGroupId());
+////		for (Contract c: group.getContracts()) {
+////			list.add(shopDao.find(c.getShopId()));
+////		}
+////		return list;
+//		if (user.getGroup() == null)
+//			return Collections.emptyList();
+//		
+//		List<Contract> contracts = user.getGroup().getContracts();
+//		List<Shop> shops = new ArrayList<>();
+//		for (Contract contract: contracts)
+//			shops.add(contract.getShop());
+//
+//		return shops;
+//	}
 	
 	public List<Order> getOrders(User user, Date date) {
 //		List<Order> orders = orderDao.findByUserAndDate(user.getId(), date);

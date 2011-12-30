@@ -10,18 +10,18 @@
 </head>
 <body>
   <div data-role="page">
-      <div data-role="header">
-        <h1>メニュー一覧</h1>
-        <a href="#" data-icon="home" data-iconpos="notext" title="Home" data-theme="f">home</a> <a
-          href="#" wicket:id="auth"><span>ログイン</span> </a>
-        <div data-role="navbar">
-          <ul>
-            <li><a href="#">新規</a></li>
-            <li><a href="#">履歴</a></li>
-            <li><a href="#">設定</a></li>
-          </ul>
-        </div>
+    <div data-role="header">
+      <h1>メニュー一覧</h1>
+      <a href="#" data-icon="home" data-iconpos="notext" title="Home" data-theme="f">home</a> <a href="#"
+        wicket:id="auth"><span>ログイン</span> </a>
+      <div data-role="navbar">
+        <ul>
+          <li><a href="#">新規</a></li>
+          <li><a href="#">履歴</a></li>
+          <li><a href="#">設定</a></li>
+        </ul>
       </div>
+    </div>
     <div data-role="content">
       <h4>
         <span>XXさん、グループに参加してください。</span>
@@ -34,34 +34,38 @@
         </ul>
       </div>
       <wicket:panel>
-      <div data-role="collapsible" data-collapsed="true">
-        <h3>新規登録</h3>
-        <h4>新しいグループを作成します。IDと名称を決定してください。</h4>
-        <span wicket:id="feedback">feedback</span>
-        <form method="post" data-ajax="false" data-transitino="slide" wicket:id="group.form">
-          <div data-role="fieldcontain">
-            <label for="group.id">ID</label> <input type="text" wicket:id="id" id="group.id">
-          </div>
-          <div data-role="fieldcontain">
-            <label for="name">名前</label> <input type="text" wicket:id="name" id="name">
-          </div>
-          <div data-role="fieldcontain">
-            <label for="time">締切時刻</label><input type="text" wicket:id="lastOrder" id="time">
-          </div>
-          <div data-role="fieldcontain">
-            <label for="contracted">利用店舗</label>
-            <select name="shops" id="contracted" multiple="multiple" data-native-menu="false">
-              <option>お店を選択して下さい。</option>
-              <option wicket:id="shop.item" value="tamagoya"><span wicket:id="shop.name">玉子屋</span></option>
+        <div data-role="collapsible" data-collapsed="true" wicket:id="group.collapsed">
+          <h3>新規登録</h3>
+          <h4>新しいグループを作成します。IDと名称を決定してください。</h4>
+          <span wicket:id="feedback">feedback</span>
+          <form method="post" data-ajax="false" data-transitino="slide" wicket:id="group.form">
+            <div data-role="fieldcontain">
+              <label for="group.id">ID</label> <input type="text" wicket:id="id" id="group.id">
+            </div>
+            <div data-role="fieldcontain">
+              <label for="name">名前</label> <input type="text" wicket:id="name" id="name">
+            </div>
+            <div data-role="fieldcontain">
+              <label for="time">締切時刻</label><input type="time" wicket:id="lastOrder" id="time">
+            </div>
+            <div data-role="fieldcontain">
+              <label for="contracted">利用店舗</label>
+              <select name="shops" id="contracted" multiple="multiple" data-native-menu="false" wicket:id="choice.shop">
+                <option>お店を選択してください</option>
+              </select>
               <wicket:remove>
-              <option value="fresh1">フレッシュランチ 芝浦</option>
-              <option value="fresh2">フレッシュランチ横浜</option>
+              <select name="shops" id="contracted" multiple="multiple" data-native-menu="false">
+                <option>お店を選択して下さい。</option>
+                <option value="tamagoya"><span>玉子屋</span>
+                </option>
+                  <option value="fresh1">フレッシュランチ 芝浦</option>
+                  <option value="fresh2">フレッシュランチ横浜</option>
+              </select>
               </wicket:remove>
-            </select>
-          </div>
-          <input type="submit" value="登録">
-        </form>
-      </div>
+            </div>
+            <input type="submit" value="登録">
+          </form>
+        </div>
       </wicket:panel>
     </div>
     <div data-role="footer">

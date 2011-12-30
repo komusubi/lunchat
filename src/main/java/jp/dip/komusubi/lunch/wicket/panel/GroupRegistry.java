@@ -18,8 +18,7 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -31,18 +30,27 @@ import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
+import jp.dip.komusubi.lunch.wicket.component.TimeField;
 
-import org.apache.wicket.markup.html.basic.Label;
+import org.apache.commons.lang3.time.DateUtils;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.AbstractValidator;
+import org.apache.wicket.validation.validator.DateValidator;
 import org.apache.wicket.validation.validator.StringValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,21 +60,45 @@ import org.slf4j.LoggerFactory;
  * @author jun.ozeki
  * @since 2011/12/11
  */
-public class GroupRegistry extends Panel {
+public abstract class GroupRegistry extends Panel {
 
 	private static final long serialVersionUID = 5865881679606159636L;
 	private static final Logger logger = LoggerFactory.getLogger(GroupRegistry.class);
 	
 	public GroupRegistry(String id) {
 		super(id);
-		add(new FeedbackPanel("feedback"));
-		add(new GroupRegistryForm("group.form"));
+		add(getMarkupContainer("group.collapsed"));
 	}
 
-	private class GroupRegistryForm extends Form<Void> {
+	private WebMarkupContainer getMarkupContainer(String id) {
+		WebMarkupContainer container = new WebMarkupContainer(id);
+		container.add(new AttributeModifier("data-collapsed", "false"));
+		container.add(new FeedbackPanel("feedback"));
+		container.add(new GroupRegistryForm("group.form"));
+		return container;
+	}
+
+	@Override
+	public void onConfigure() {
+		boolean visible = false;
+		if (WicketSession.get().isSignedIn()) {
+			User user = WicketSession.get().getLoggedInUser();
+			if (user.getGroup() == null)
+				visible = true;
+		}
+		setVisibilityAllowed(visible);
+	}
+
+	/**
+	 * group registry form.
+	 * @author jun.ozeki
+	 * @since 2011/12/26
+	 */
+	protected class GroupRegistryForm extends Form<Void> {
 
 		private static final long serialVersionUID = -7593471899292529129L;
 		private Group group = new Group(null);
+		private List<Shop> selection;
 		
 		public GroupRegistryForm(String id) {
 			super(id);
@@ -74,13 +106,14 @@ public class GroupRegistry extends Panel {
 			add(getIdField("id"));
 			add(getNameField("name"));
 			add(getLastOrderField("lastOrder"));
-			add(getShopList("shop.item"));
+//			add(getShopList("shop.item"));
+			add(getShopMultiChoice("choice.shop"));
 		}
 
 		private TextField<String> getIdField(String id) {
 			TextField<String> text = new TextField<String>(id);
 			text.setRequired(true)
-				.add(new StringValidator.LengthBetweenValidator(3, 64))
+				.add(new StringValidator.LengthBetweenValidator(2, 64))
 				.add(getSpecificWordValidator());
 			return text;
 		}
@@ -88,7 +121,7 @@ public class GroupRegistry extends Panel {
 		private TextField<String> getNameField(String id) {
 			TextField<String> text = new TextField<String>(id);
 			text.setRequired(true)
-				.add(new StringValidator.LengthBetweenValidator(3, 64));
+				.add(new StringValidator.LengthBetweenValidator(2, 64));
 			return text;
 		}
 
@@ -110,43 +143,54 @@ public class GroupRegistry extends Panel {
 		}
 		
 		private TextField<Date> getLastOrderField(String id) {
-			TextField<Date> dateField = new TextField<Date>(id);
-			dateField.setRequired(true);
-			return dateField;
+			AbstractValidator<Date> validator;
+			String[] formats = {"H:mm"};
+			try {
+				Date minimum = DateUtils.parseDate("5:00", formats);
+				Date maximum = DateUtils.parseDate("11:00", formats);
+				validator = DateValidator.range(minimum, maximum, formats[0]);
+			} catch (ParseException e) {
+				throw new IllegalStateException(e);
+			}
+			TimeField timeField = new TimeField(id);
+			timeField.setRequired(true)
+					.add(validator);
+			return timeField;
 		}
 		
-		private ListView<Shop> getShopList(String id) {
+		private ListMultipleChoice<Shop> getShopMultiChoice(String id) {
 			ShopDao shopDao = Configuration.getInstance(ShopDao.class);
-			List<Shop> shops = shopDao.findAll();
-			return new ListView<Shop>(id, shops) {
+			List<Shop> shops;
+//			if (group.getContracts().size() == 0)
+				shops = shopDao.findAll();
+//			else
+//				shops = group.getContractedShops();
+			// set multiple choice message.
+			String message = getLocalizer().getString("select.shop.message", GroupRegistry.this);
+			shops.add(0, new Shop("").setName(message));
+			ListMultipleChoice<Shop> multipleShop = new ListMultipleChoice<Shop>(id, 
+					new PropertyModel<List<Shop>>(GroupRegistryForm.this, "selection"), 
+					shops, 
+					new ChoiceRenderer<Shop>("name", "id"));
 
-				private static final long serialVersionUID = -1533834060618470935L;
-
-				@Override
-				protected void populateItem(ListItem<Shop> item) {
-					Shop shop = item.getModelObject();
-					item.add(new Label("shop.name", shop.getName()));
-				}
-				
-			}.setReuseItems(true);
+			return multipleShop;
 		}
 		
 		@Override
 		public void onSubmit() {
-			if (group.getLastOrder() == null) {
-				// FIXME set last order date(time)
-				Calendar cal = Calendar.getInstance();
-				cal.set(Calendar.HOUR_OF_DAY, 10);
-				cal.set(Calendar.MINUTE, 0);
-				cal.set(Calendar.SECOND, 0);
-				cal.set(Calendar.MILLISECOND, 0);
-				group.setLastOrder(cal.getTime());
-			}
 			User user = WicketSession.get().getLoggedInUser();
 			try {
+				for (Shop shop: selection) {
+					if (logger.isDebugEnabled())
+						logger.debug("selection shop:{}", shop);
+					group.addContract(shop);
+				}
 				AccountService accountService = Configuration.getInstance(AccountService.class);
 				user.setGroup(group);
 				accountService.referTo(user);
+				// notice session
+				WicketSession.get().dirty();
+				onRegistered();
 			} catch (LunchException e) {
 				// group set null again.
 				user.setGroup(null); 
@@ -156,5 +200,7 @@ public class GroupRegistry extends Panel {
 			info(getLocalizer().getString("registry.completed", GroupRegistry.this, Model.of(group)));
 		}
 	}
+
+	protected abstract void onRegistered();
 
 }

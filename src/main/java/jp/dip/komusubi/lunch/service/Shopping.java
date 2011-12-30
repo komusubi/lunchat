@@ -107,16 +107,14 @@ public class Shopping implements Serializable {
 		return productDao.findBySalable(shopId, date);
 	}
 
-	public List<Product> getDeadlineProducts(String shopId) {
-		if (shopId == null || "".equals(shopId)) 
-			throw new IllegalArgumentException("shopId is invalid.");
-		return getDeadlineProducts(shopId, dateResolver.resolve());
+	public List<Product> getDeadlineProducts(Shop shop) {
+		return getDeadlineProducts(shop, dateResolver.resolve());
 	}
 	
-	public List<Product> getDeadlineProducts(String shopId, Date date) {
-		if (shopId == null || "".equals(shopId))
-			throw new IllegalArgumentException("shopId is invalid");
-		return productDao.findByShopIdAndFinishDay(shopId, date);
+	public List<Product> getDeadlineProducts(Shop shop, Date date) {
+		if (shop == null)
+			throw new IllegalArgumentException("shop is null");
+		return productDao.findByShopIdAndFinishDate(shop.getId(), date);
 	}
 	
 	public List<Product> getProductsAll(String shopId) {

@@ -16,6 +16,7 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -24,11 +25,8 @@ import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.model.Shop;
 import jp.dip.komusubi.lunch.model.User;
-import jp.dip.komusubi.lunch.module.Basket;
-import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.service.Shopping;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
-import jp.dip.komusubi.lunch.wicket.page.Confirm;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.wicket.AttributeModifier;
@@ -53,23 +51,37 @@ import com.google.inject.name.Named;
  * @author jun.ozeki
  * @since 2011/11/16
  */
-public class ChoiceShop extends Panel {
+public abstract class ChoiceLunch extends Panel {
 
 	private static final long serialVersionUID = -4318541322169808309L;
-	private static final Logger logger = LoggerFactory.getLogger(ChoiceShop.class);
+	private static final Logger logger = LoggerFactory.getLogger(ChoiceLunch.class);
 
 	// @Inject
 	// private transient final Shopping shopping;
 	// @Inject
 	// private final ShopDao shopDao;
 
-	public ChoiceShop(String id, boolean forward) {
+	public ChoiceLunch(String id, boolean forward) {
 		super(id);
 		add(new Choice("choice", forward));
 	}
 
-	public ChoiceShop(String id) {
+	public ChoiceLunch(String id) {
 		this(id, false);
+	}
+	
+	@Override
+	public void onConfigure() {
+		// FIXME if user have a order, visible set false.
+		boolean visible = true;
+		if (WicketSession.get().isSignedIn()) {
+			User user = WicketSession.get().getLoggedInUser();
+			if (user.getGroup() == null)
+				visible = false;
+			else
+				visible = true;
+		}
+		setVisibilityAllowed(visible);
 	}
 	
 	/**
@@ -77,7 +89,7 @@ public class ChoiceShop extends Panel {
 	 * 
 	 * @author jun.ozeki
 	 */
-	public static class Choice extends Form<Void> {
+	public class Choice extends Form<Void> {
 
 		private static final long serialVersionUID = 4242361361989135612L;
 //		private transient Shopping shopping = Configuration.getInstance(Shopping.class);
@@ -89,16 +101,23 @@ public class ChoiceShop extends Panel {
 			private static final int SEEK_PERIOD = 14;
 			private static final long MILLISECONDS_DAY = 60 * 60 * 24 * 1000;
 			
+			private Calendar getTomorrow(Calendar today) {
+				Calendar tomorrow = (Calendar) today.clone();
+				tomorrow.add(Calendar.DATE, 1);
+				return tomorrow;
+			}
+			
 			@Override
 			public List<Object> load() {
 				Shopping shopping = Configuration.getInstance(Shopping.class);
-				AccountService accountService = Configuration.getInstance(AccountService.class);
 				List<Shop> shops = null;
 				Calendar current = calendarResolver.resolve();
 				if (WicketSession.get().isSignedIn()) {
 					User user = WicketSession.get().getLoggedInUser();
-					shops = accountService.getContractedShops(user);
-    			} else {
+					if (user.getGroup() != null)
+						shops = user.getGroup().getContractedShops();
+    			} 
+				if (shops == null || shops.size() == 0) {
     				shops = shopping.getAvailableShops();
     			}
 				
@@ -112,25 +131,26 @@ public class ChoiceShop extends Panel {
 					boolean found = false;
 					itemValues.add(shop);
 					if (current.before(todayLimit)) {
-						for (Product product: shopping.getDeadlineProducts(shop.getId())) {
+						for (Product product: shopping.getDeadlineProducts(shop, current.getTime())) {
 							if (product.getFinish().before(current.getTime())) {
 								itemValues.add(product);
 								found = true;
 							}
 						}
 						if (!found) {
-							// FIXME string go to resource file.
 							String lastOrderDate = DateFormatUtils.format(current, "MM/dd(EEE)");
-							itemValues.add(new Product("dummy")
-											.setName(shop.getName() + " は " + lastOrderDate + "の注文の受付を終了しました。")
+							String orderClosed = getLocalizer().getString("order.closed.message", ChoiceLunch.this);
+							String message = MessageFormat.format(orderClosed, shop.getName(), lastOrderDate);
+							itemValues.add(new Product()
+											.setName(message)
 											.setAmount(0)
 											.setShop(shop));
 						}
 					} else {
-						for (Calendar orderCalendar = (Calendar) current.clone(); 
+						for (Calendar orderCalendar = getTomorrow(current);
 								(orderCalendar.getTimeInMillis() - current.getTimeInMillis()) / MILLISECONDS_DAY <= SEEK_PERIOD;
 								orderCalendar.add(Calendar.DATE, 1)) {
-							for (Product product: shopping.getDeadlineProducts(shop.getId(), orderCalendar.getTime())) {
+							for (Product product: shopping.getDeadlineProducts(shop, orderCalendar.getTime())) {
 								itemValues.add(product);
 								found = true;
 							}
@@ -138,10 +158,10 @@ public class ChoiceShop extends Panel {
 								break;
 						}
 						if (!found) { 
-//							throw new IllegalStateException("not found product over the period days:"  + SEEK_PERIOD);
-//							String lastOrderDate = DateFormatUtils.format(current, "MM/dd(EEE)");
-							itemValues.add(new Product("dummy")
-											.setName(shop.getName() + " の商品は見つかりませんでした。")
+							String msgPattern = getLocalizer().getString("not.found.product.in.period", ChoiceLunch.this);
+							String message = MessageFormat.format(msgPattern, shop.getName());
+							itemValues.add(new Product()
+											.setName(message)
 											.setAmount(0)
 											.setShop(shop));
 						}
@@ -217,9 +237,10 @@ public class ChoiceShop extends Panel {
 
 					@Override
 					public void onClick() {
-						Shopping shopping = Configuration.getInstance(Shopping.class);
-						Basket basket = shopping.getBasket(WicketSession.get().getLoggedInUser());
-						basket.add(product);
+						onChoiceProduct(product);
+//						Shopping shopping = Configuration.getInstance(Shopping.class);
+//						Basket basket = shopping.getBasket(WicketSession.get().getLoggedInUser());
+//						basket.add(product);
 //						try {
 //							shopping.order(true);
 //						} catch (DuplicatedOrderException e) {
@@ -228,12 +249,15 @@ public class ChoiceShop extends Panel {
 //							setResponsePage(new Notice(shopping, e.getDuplictedOrders()));
 //							return;
 //						}
-						setResponsePage(new Confirm(basket));
+//						setResponsePage(new Confirm(basket));
 					}
 				};
 				link.add(new Label("link.name", product.getName()));
-				// TODO literal to property resource.
-				link.add(new Label("amount.value", String.valueOf(product.getAmount()) + "円"));
+				String amount =  String.valueOf(product.getAmount()) 
+						+ getLocalizer().getString("amount.unit", ChoiceLunch.this);
+				link.add(new Label("amount.value", amount)
+								.setVisible(!Product.DEFAULT_ID.equals(product.getId())));
+
 			} else {
 				throw new IllegalStateException("itemValue dosen't object Shop or Product");
 			}
@@ -243,7 +267,6 @@ public class ChoiceShop extends Panel {
 
 		/**
 		 * 商品名表示.
-		 * 
 		 * @param id
 		 * @param itemValue
 		 * @return
@@ -265,7 +288,6 @@ public class ChoiceShop extends Panel {
 
 		/**
 		 * 金額表示.
-		 * 
 		 * @param id
 		 * @param itemValue
 		 * @return
@@ -273,8 +295,7 @@ public class ChoiceShop extends Panel {
 		private Label getLabelOfAmount(String id, final Object itemValue) {
 			Label label;
 			if (itemValue instanceof Shop) {
-				// TODO property resource
-				label = new Label(id, "料金");
+				label = new Label(id, getLocalizer().getString("amount.label", ChoiceLunch.this));
 			} else if (itemValue instanceof Product) {
 				label = new Label(id);
 				label.setVisible(false);
@@ -286,4 +307,6 @@ public class ChoiceShop extends Panel {
 			return label;
 		}
 	}
+	
+	protected abstract void onChoiceProduct(Product product);
 }

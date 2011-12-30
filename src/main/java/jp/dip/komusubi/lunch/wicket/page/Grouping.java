@@ -38,8 +38,8 @@ public class Grouping extends AuthorizedPage {
 	public Grouping() {
 		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
 		add(new Label("page.message", "後でメッセージ設定する"));
-		add(new GroupList("group.list", Member.class));
-		add(new GroupRegistry("group.registry"));
+		add(new GroupList("group.list"));
+//		add(new GroupRegistry("group.registry"));
 		add(new Footer("footer"));
 	}
 	

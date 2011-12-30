@@ -20,6 +20,7 @@ package jp.dip.komusubi.lunch.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -52,7 +53,8 @@ public class Group implements Serializable {
 			contracts = new ArrayList<>();
 		Contract contract = new Contract();
 		contract.setGroup(this)
-				.setShop(shop);
+				.setShop(shop)
+				.setContracted(new Date());
 		addContract(contract);
 		return this;
 	}
@@ -76,6 +78,18 @@ public class Group implements Serializable {
 		return contracts;
 	}
 
+	public List<Shop> getContractedShops() {
+		List<Shop> shops = null;
+		for (Contract contract: getContracts()) {
+			if (shops == null)
+				shops = new ArrayList<>();
+			shops.add(contract.getShop());
+		}
+		if (shops == null)
+			shops = Collections.emptyList();
+		return shops;
+	}
+	
 	public String getId() {
 		return id;
 	}

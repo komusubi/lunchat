@@ -40,6 +40,11 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
+/**
+ * product data access object jdbc implement.
+ * @author jun.ozeki
+ * @since 2011/12/29
+ */
 public class JdbcProductDao implements ProductDao {
 
 	private static final Logger logger = LoggerFactory.getLogger(JdbcProductDao.class);
@@ -48,9 +53,10 @@ public class JdbcProductDao implements ProductDao {
 	private static final String SELECT_RECORD_PK = "select " + COLUMNS + " from proeucts where id = ?";
 	private static final String SELECT_RECORDS_SHOPID_SALABLE = "select " + COLUMNS 
 											+ " from products where shopId = ? and start <= ? and finish >= ?";
-	private static final String SELECT_RECORDS_SHOPID_FINISH_DAY = "select " + COLUMNS
+	private static final String SELECT_RECORDS_SHOPID_FINISH_DATE = "select " + COLUMNS
 											+ " from products where shopId = ? and date(finish) = ?";
-//	private static final String SELECT_RECORDS_
+	private static final String SELECT_RECORDS_SHOPID_FINISH_DATETIME = "select " + COLUMNS
+											+ " from products where shopId = ? and finish = ?";
 	private static final String INSERT_QUERY = "insert into products ( " + COLUMNS + " )"
 											+ " values (?, ?, ?, ?, ?, ?, ?)";
 	@Inject private ShopDao shopDao;
@@ -77,6 +83,8 @@ public class JdbcProductDao implements ProductDao {
 	@Override
 	public String persist(Product instance) {
 		try {
+			if (Product.DEFAULT_ID.equals(instance.getId()))
+				throw new IllegalArgumentException("product id is " + Product.DEFAULT_ID);
 			template.update(INSERT_QUERY, instance.getId(),
 											instance.getRefId(),
 											instance.getShopId(),
@@ -124,19 +132,20 @@ public class JdbcProductDao implements ProductDao {
 	}
 	
 	@Override
-	public List<Product> findByShopIdAndFinishDay(String shopId, Date finishDay) {
-		List<Product> list = template.query(SELECT_RECORDS_SHOPID_FINISH_DAY, 
-								productRowMapper, shopId, JdbcDateConverter.toSqlDate(finishDay));
-		logger.info("shopId:{}, finishDay:{}, count:{}", new Object[]{shopId, finishDay, list.size()});
+	public List<Product> findByShopIdAndFinishDate(String shopId, Date finishDate) {
+		List<Product> list = template.query(SELECT_RECORDS_SHOPID_FINISH_DATE,
+								productRowMapper, shopId, JdbcDateConverter.toSqlDate(finishDate));
+		logger.info("shopId:{}, finishDay:{}, count:{}", new Object[]{shopId, finishDate, list.size()});
 		return list;
 	}
 	
-//	public List<Product> findBySalable(Date date) {
-//		List<Product> list = template.query("", productRowMapper, date);
-//		logger.info("date:{}, count:{}", date, list.size());
-//		return list;
-//	}
-	
+	@Override
+	public List<Product> findByShopIdAndFinishDatetime(String shopId, Date finishDate) {
+		List<Product> list = template.query(SELECT_RECORDS_SHOPID_FINISH_DATETIME,
+								productRowMapper, shopId, JdbcDateConverter.toTimestamp(finishDate));
+		logger.info("shopId:{}, finishDate:{}, count:{}", new Object[]{shopId, finishDate, list.size()});
+		return list;
+	}
 	
 	private RowMapper<Product> productRowMapper = new RowMapper<Product>() {
 		@Override

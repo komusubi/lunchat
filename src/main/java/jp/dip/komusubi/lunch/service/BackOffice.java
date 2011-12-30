@@ -68,7 +68,8 @@ public class BackOffice {
 					logger.info("{} is skip", calendar.getTime());
 					continue;
 				}
-				List<Product> products = productDao.findByShopIdAndFinishDay("tamagoya", calendar.getTime());
+				// 代表してtamagoyaでチェック
+				List<Product> products = productDao.findByShopIdAndFinishDate("tamagoya", calendar.getTime());
 				if (products.size() == 0)
 					supplyProduct(calendar);
 			}

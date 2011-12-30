@@ -54,7 +54,7 @@ public class JdbcShopDao implements ShopDao {
 	public Shop find(String pk) {
 		Shop shop = null;
 		try {
-			template.queryForObject(SELECT_RECORD_QUERY, shopRowMapper, pk);
+			shop = template.queryForObject(SELECT_RECORD_QUERY, shopRowMapper, pk);
 		} catch (EmptyResultDataAccessException e) {
 			logger.info("not found shop is {}", pk);
 		}
