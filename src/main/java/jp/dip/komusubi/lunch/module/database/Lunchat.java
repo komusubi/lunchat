@@ -478,7 +478,7 @@ public class Lunchat extends DBDatabase {
 		DBDatabaseDriverMySQL driver = new DBDatabaseDriverMySQL();
 		DBSQLScript script = new DBSQLScript();
 		try (Connection con 
-				= DriverManager.getConnection("jdbc:log4jdbc:mysql://localhost:3306/development", "root", "5150oozeki")) {
+				= DriverManager.getConnection("jdbc:log4jdbc:mysql://localhost:3306/development", "root", "password")) {
 			con.setAutoCommit(false);
 
 			open(driver, con);

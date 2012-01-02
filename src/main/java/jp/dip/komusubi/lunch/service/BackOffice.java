@@ -36,19 +36,15 @@ import org.slf4j.LoggerFactory;
 
 /**
  * back office.
- * 
  * @author jun.ozeki
  * @since 2011/11/27
  */
 public class BackOffice {
 
 	private static final Logger logger = LoggerFactory.getLogger(BackOffice.class);
-	@Inject
-	private ShopDao shopDao;
-	@Inject
-	private ProductDao productDao;
-	@Inject
-	@Named("calendar")
+	@Inject	private ShopDao shopDao;
+	@Inject	private ProductDao productDao;
+	@Inject	@Named("calendar")
 	private Resolver<Calendar> calendarResolver;
 	private Shop shop;
 

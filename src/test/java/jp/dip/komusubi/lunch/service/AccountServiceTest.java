@@ -23,6 +23,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Date;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
@@ -30,6 +32,7 @@ import jp.dip.komusubi.lunch.MockBootstrap;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.DefaultNonce;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
+import jp.dip.komusubi.lunch.module.resolver.DateResolver;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
 import jp.dip.komusubi.lunch.util.Nonce;
 import junitx.util.PrivateAccessor;
@@ -38,38 +41,18 @@ import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.komusubi.common.protocol.smtp.MailMessage;
+import org.komusubi.common.util.Resolver;
 import org.mockito.Mockito;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 
 public class AccountServiceTest {
-	private UserDao mock;
+//	private UserDao mock;
 	
-//	public Injector buildInjector() {
-//		Injector injector = Guice.createInjector(new AbstractModule() {
-//
-////			private AccountService newTarget() {
-//				
-////				AccountService service = new AccountService(mock);
-////				return service;
-////			}
-//			
-//			@Override
-//			protected void configure() {
-//				bind(AccountService.class);
-//				bind(UserDao.class).toInstance(mock = Mockito.mock(UserDao.class));
-//				bind(new TypeLiteral<Resolver<String>>(){ })
-//					.annotatedWith(Names.named("digest")).toInstance(new DigestResolver());
-//				bind(SmtpServer.class).toInstance(new MockSmtpServer());
-//				bind(Nonce.class).to(DefaultNonce.class);
-//			}
-//
-//		});
-//		return injector;
-//	}
-
 	@Before
 	public void prepare() {
 		ServletContext servletContext = new MockServletContext(null, null);
@@ -81,6 +64,8 @@ public class AccountServiceTest {
 					@Override
 					protected void configure() {
 						bind(Nonce.class).to(DefaultNonce.class);
+						bind(new TypeLiteral<Resolver<Date>>(){})
+							.annotatedWith(Names.named("date")).toInstance(new DateResolver());
 					}
 					
 				});
@@ -97,11 +82,22 @@ public class AccountServiceTest {
 		String password = resolver.resolve(plainPassword);
 		User komusubi = new User(id)
 								.setPassword(password);
+		komusubi.getHealth().setActive(true);
 		
 		UserDao mock = Mockito.mock(UserDao.class);
 		when(mock.find(id)).thenReturn(komusubi);
 
-		AccountService target = new AccountService(mock, new DigestResolver(), new MockSmtpServer());
+		AccountService target = new AccountService(mock, 
+									new DigestResolver(), 
+									new MockSmtpServer(),
+									new DateResolver()) {
+			private static final long serialVersionUID = -2096190310264111713L;
+
+			@Override
+			protected void temporarySupply() {
+				// nothing to do
+			}
+		};
 		assertTrue(target.signIn(id, plainPassword));
 		
 		verify(mock).find(id);
@@ -120,8 +116,8 @@ public class AccountServiceTest {
 		MockSmtpServer server = (MockSmtpServer) PrivateAccessor.getField(target, "smtp");
 		MailMessage message = server.getMailMessage();
 		User admin = new User()
-						.setName("admin")
-						.setEmail("komusubi@gmail.com");
+						.setName("Lunchat")
+						.setEmail("noreply@lunchat.jp");
 		assertEquals(admin.toString(), message.getFrom().toString());
 		assertEquals("確認メール", message.getContent().getSubject());
 	}

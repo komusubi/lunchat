@@ -19,7 +19,6 @@ package jp.dip.komusubi.lunch.service;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.MissingResourceException;
@@ -33,13 +32,10 @@ import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Contract;
 import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.model.Order;
-import jp.dip.komusubi.lunch.model.Shop;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.Transactional;
 import jp.dip.komusubi.lunch.module.dao.ContractDao;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
-import jp.dip.komusubi.lunch.module.dao.OrderDao;
-import jp.dip.komusubi.lunch.module.dao.ShopDao;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.util.Nonce;
 
@@ -81,8 +77,8 @@ public class AccountService implements Serializable {
 	@Inject @Named("date") private transient Resolver<Date> dateResolver;
 	private User authedUser;
 	@Inject private GroupDao groupDao;
-	@Inject private ShopDao shopDao;
-	@Inject private OrderDao orderDao;
+//	@Inject private ShopDao shopDao;
+//	@Inject private OrderDao orderDao;
 	@Inject private ContractDao contractDao;
 	
 	@Inject
@@ -94,6 +90,15 @@ public class AccountService implements Serializable {
 		this.smtp = smtp;
 	}
 
+	// for unit test
+	protected AccountService(UserDao userDao,
+							@Named("digest") Resolver<String> resolver,
+							SmtpServer smtp,
+							@Named("date") Resolver<Date> dateResolver) {
+		this(userDao, resolver, smtp);
+		this.dateResolver = dateResolver;
+	}
+	
 	@Transactional
 	public String create(User user) {
 		String id = userDao.persist(user);
@@ -154,11 +159,15 @@ public class AccountService implements Serializable {
 		return userDao.findByEmail(email);
 	}
 	
-	@Transactional
-	public boolean signIn(String id, String password) {
+	protected void temporarySupply() {
 		// FIXME supply product from back office here. 
 		BackOffice backOffice = Configuration.getInstance(BackOffice.class);
 		backOffice.supplyProduct();
+	}
+	
+	@Transactional
+	public boolean signIn(String id, String password) {
+		temporarySupply();
 		
 		boolean evaluate = false;
 		User user = userDao.find(id);
