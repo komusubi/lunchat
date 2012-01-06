@@ -122,4 +122,38 @@ public class Health implements Serializable {
 		return builder.toString();
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (active ? 1231 : 1237);
+		result = prime * result + ((lastLogin == null) ? 0 : lastLogin.hashCode());
+		result = prime * result + login;
+		result = prime * result + loginFail;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Health other = (Health) obj;
+		if (active != other.active)
+			return false;
+		if (lastLogin == null) {
+			if (other.lastLogin != null)
+				return false;
+		} else if (!lastLogin.equals(other.lastLogin))
+			return false;
+		if (login != other.login)
+			return false;
+		if (loginFail != other.loginFail)
+			return false;
+		return true;
+	}
+
 }

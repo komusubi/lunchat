@@ -28,7 +28,6 @@ import org.komusubi.common.protocol.smtp.Destination;
  * @since 2011/12/11
  */
 public class User implements Serializable, Destination {
-
 	private static final long serialVersionUID = 8305012931385761901L;
 	private String id;
 //	private String groupId;
@@ -40,14 +39,13 @@ public class User implements Serializable, Destination {
 	private Health health;
 
 	public User() {
-//		this(new Health((User) null));
 		this.health = new Health(this);
 	}
 
 	public User(Health health) {
 		this.health = health;
 	}
-	
+
 	public User(String id) {
 		this();
 		this.id = id;
@@ -69,11 +67,11 @@ public class User implements Serializable, Destination {
 			groupId = group.getId();
 		return groupId;
 	}
-	
+
 	public Group getGroup() {
 		return group;
 	}
-	
+
 	public Health getHealth() {
 		return health;
 	}
@@ -108,7 +106,7 @@ public class User implements Serializable, Destination {
 //		this.groupId = groupId;
 		return this;
 	}
-	
+
 	public User setGroup(Group group) {
 		this.group = group;
 		return this;
@@ -148,5 +146,66 @@ public class User implements Serializable, Destination {
 				.append(email).append(", roles=").append(roles).append(", health=").append(health)
 				.append("]");
 		return builder.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((group == null) ? 0 : group.hashCode());
+		result = prime * result + ((health == null) ? 0 : health.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (group == null) {
+			if (other.group != null)
+				return false;
+		} else if (!group.equals(other.group))
+			return false;
+		if (health == null) {
+			if (other.health != null)
+				return false;
+		} else if (!health.equals(other.health))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
+			return false;
+		if (roles == null) {
+			if (other.roles != null)
+				return false;
+		} else if (!roles.equals(other.roles))
+			return false;
+		return true;
 	}
 }

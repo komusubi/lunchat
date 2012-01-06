@@ -124,7 +124,7 @@ public class ProfileTest {
 		tester.assertRenderedPage(ProfileTestPage.class);
 		tester.assertInfoMessages("こむすびさん、登録が完了しました。ログイン画面よりご利用ください。");
 		
-		Mockito.verify(mock); //.create(user);
+		Mockito.verify(mock).create(user);
 	}
 	
 	@Test
