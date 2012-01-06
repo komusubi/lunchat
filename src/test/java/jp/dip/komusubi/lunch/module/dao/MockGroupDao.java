@@ -20,46 +20,33 @@ package jp.dip.komusubi.lunch.module.dao;
 
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Health;
-import jp.dip.komusubi.lunch.model.User;
+import jp.dip.komusubi.lunch.model.Group;
 
-public class MockUserDao implements UserDao {
-
-	public User find(String pk) {
-		return null;
-	}
-
-	public List<User> findAll() {
-
-		return null;
-	}
-
-	public String persist(User instance) {
-
-		return null;
-	}
-
-	public void remove(User instance) {
-
-	}
-
-	public void update(User instance) {
-
-	}
+public class MockGroupDao implements GroupDao {
 
 	@Override
-	public void update(Health instance) {
-		
-	}
-
-	@Override
-	public User findByEmail(String email) {
+	public Group find(String pk) {
 		return null;
 	}
 
 	@Override
-	public List<User> findByGroupId(String groupId) {
+	public List<Group> findAll() {
 		return null;
+	}
+
+	@Override
+	public String persist(Group instance) {
+		return null;
+	}
+
+	@Override
+	public void remove(Group instance) {
+
+	}
+
+	@Override
+	public void update(Group instance) {
+
 	}
 
 }

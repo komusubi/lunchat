@@ -35,6 +35,7 @@ public class Registry extends VariationBase {
 	
 	public Registry(PageParameters params) {
 		this.params = params;
+		// FIXME literal string set resource file. 
 		add(new Header("header", Model.of(getDefaultHeaderBean("ユーザー登録"))));
 		add(new Profile("profile", params.get("segment").toString()));
 		add(new Footer("footer"));

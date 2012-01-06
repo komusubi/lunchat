@@ -46,7 +46,7 @@ public class WicketTesterResource extends ExternalResource {
 	@Override
 	public void before() {
 		application = new WicketApplication();
-		servletContext = new MockServletContext(application, "/src/main/webapp");
+		servletContext = new MockServletContext(application, "src/main/webapp");
 	}
 	
 	@Override

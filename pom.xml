@@ -44,7 +44,7 @@
   </repositories>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <wicket.version>1.5.2</wicket.version>
+    <wicket.version>1.5.3</wicket.version>
     <!-- <jetty.version>7.3.0.v20110203</jetty.version> -->
     <jetty.version>7.5.1.v20110908</jetty.version>
   </properties>

@@ -20,45 +20,47 @@ package jp.dip.komusubi.lunch.module.dao;
 
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Health;
-import jp.dip.komusubi.lunch.model.User;
+import jp.dip.komusubi.lunch.model.Contract;
 
-public class MockUserDao implements UserDao {
-
-	public User find(String pk) {
-		return null;
-	}
-
-	public List<User> findAll() {
-
-		return null;
-	}
-
-	public String persist(User instance) {
-
-		return null;
-	}
-
-	public void remove(User instance) {
-
-	}
-
-	public void update(User instance) {
-
-	}
+public class MockContractDao implements ContractDao {
 
 	@Override
-	public void update(Health instance) {
-		
-	}
-
-	@Override
-	public User findByEmail(String email) {
+	public Contract find(Integer pk) {
 		return null;
 	}
 
 	@Override
-	public List<User> findByGroupId(String groupId) {
+	public List<Contract> findAll() {
+		return null;
+	}
+
+	@Override
+	public Integer persist(Contract instance) {
+		return null;
+	}
+
+	@Override
+	public void remove(Contract instance) {
+
+	}
+
+	@Override
+	public void update(Contract instance) {
+
+	}
+
+	@Override
+	public List<Contract> findByGroupId(String groupId) {
+		return null;
+	}
+
+	@Override
+	public List<Contract> findByShopId(String shopId) {
+		return null;
+	}
+
+	@Override
+	public Contract findByGroupIdAndShopId(String groupId, String shopId) {
 		return null;
 	}
 
