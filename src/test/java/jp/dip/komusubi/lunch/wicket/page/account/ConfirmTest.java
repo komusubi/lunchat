@@ -29,6 +29,7 @@ import jp.dip.komusubi.lunch.wicket.panel.Profile;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.komusubi.common.protocol.smtp.SmtpServer;
@@ -76,6 +77,7 @@ public class ConfirmTest {
 		});
 	}
 	
+	@Ignore
 	@Test
 	public void renderedSuccess() {
 		tester = wicketResource.getTester();
