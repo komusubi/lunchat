@@ -28,6 +28,7 @@ import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class HomeTest {
@@ -52,6 +53,7 @@ public class HomeTest {
 		tester.destroy();
 	}
 	
+	@Ignore
 	@Test
 	public void test() {
 		tester.startPage(Home.class);
