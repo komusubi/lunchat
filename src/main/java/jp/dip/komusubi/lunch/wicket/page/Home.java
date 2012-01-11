@@ -57,7 +57,7 @@ public class Home extends VariationBase {
     public Home() {
     	HeaderBean bean = getDefaultHeaderBean(getLocalizer().getString("page.title", this));
     	add(new Header("header", Model.of(bean), true));
-    	add(getChoiceShop("select.menu"));
+    	add(getChoiceLunch("select.menu"));
     	add(new GroupList("group.list"));
     	add(getGroupRegistry("group.registry"));
     	// FIXME temporary set label component.
@@ -66,7 +66,7 @@ public class Home extends VariationBase {
     	add(new Footer("footer"));
     }
     
-    protected ChoiceLunch getChoiceShop(String id) {
+    protected ChoiceLunch getChoiceLunch(String id) {
     	return new ChoiceLunch(id) {
 
 			private static final long serialVersionUID = -8829593828769576050L;

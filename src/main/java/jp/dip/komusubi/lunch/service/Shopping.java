@@ -45,10 +45,10 @@ public class Shopping implements Serializable {
 
 	private static final long serialVersionUID = 6554643970716125151L;
 	private Basket basket;
-	@Inject	private transient ProductDao productDao;
+	@Inject private ProductDao productDao;
 	@Inject private OrderDao orderDao;
-	@Inject	private ShopDao shopDao;
-	@Inject	@Named("date") private transient Resolver<Date> dateResolver;
+	@Inject private ShopDao shopDao;
+	@Inject @Named("date") private Resolver<Date> dateResolver;
 
 	public Shopping() {
 		this(new User(), Configuration.getInstance(Basket.class));
@@ -115,6 +115,16 @@ public class Shopping implements Serializable {
 		if (shop == null)
 			throw new IllegalArgumentException("shop is null");
 		return productDao.findByShopIdAndFinishDate(shop.getId(), date);
+	}
+	
+	public List<Product> getDeadlineTimeProducts(Shop shop) {
+		return getDeadlineTimeProducts(shop, dateResolver.resolve());
+	}
+	
+	public List<Product> getDeadlineTimeProducts(Shop shop, Date date) {
+		if (shop == null)
+			throw new IllegalArgumentException("shop is null");
+		return productDao.findByShopIdAndFinishDatetime(shop.getId(), date);
 	}
 	
 	public List<Product> getProductsAll(String shopId) {

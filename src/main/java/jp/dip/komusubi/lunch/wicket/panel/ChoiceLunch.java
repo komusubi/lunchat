@@ -131,14 +131,12 @@ public abstract class ChoiceLunch extends Panel {
 					boolean found = false;
 					itemValues.add(shop);
 					if (current.before(todayLimit)) {
-						for (Product product: shopping.getDeadlineProducts(shop, current.getTime())) {
-							if (product.getFinish().before(current.getTime())) {
-								itemValues.add(product);
-								found = true;
-							}
+						for (Product product: shopping.getDeadlineTimeProducts(shop, current.getTime())) {
+							itemValues.add(product);
+							found = true;
 						}
 						if (!found) {
-							String lastOrderDate = DateFormatUtils.format(current, "MM/dd(EEE)");
+							String lastOrderDate = DateFormatUtils.format(current, "M/d(EEE)");
 							String orderClosed = getLocalizer().getString("order.closed.message", ChoiceLunch.this);
 							String message = MessageFormat.format(orderClosed, shop.getName(), lastOrderDate);
 							itemValues.add(new Product()
@@ -150,7 +148,7 @@ public abstract class ChoiceLunch extends Panel {
 						for (Calendar orderCalendar = getTomorrow(current);
 								(orderCalendar.getTimeInMillis() - current.getTimeInMillis()) / MILLISECONDS_DAY <= SEEK_PERIOD;
 								orderCalendar.add(Calendar.DATE, 1)) {
-							for (Product product: shopping.getDeadlineProducts(shop, orderCalendar.getTime())) {
+							for (Product product: shopping.getDeadlineTimeProducts(shop, orderCalendar.getTime())) {
 								itemValues.add(product);
 								found = true;
 							}

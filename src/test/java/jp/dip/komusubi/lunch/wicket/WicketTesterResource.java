@@ -27,6 +27,7 @@ import jp.dip.komusubi.lunch.MockBootstrap;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
+import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.rules.ExternalResource;
 import org.komusubi.common.util.Resolver;
@@ -56,6 +57,10 @@ public class WicketTesterResource extends ExternalResource {
 	}
 	
 	public WicketTester getTester() {
+		return getTester(false);
+	}
+	
+	public WicketTester getTester(boolean clientInfo) {
 		MockBootstrap boot = new MockBootstrap() {
 			@Override
 			protected Injector buildInjector() {
@@ -64,6 +69,10 @@ public class WicketTesterResource extends ExternalResource {
 		};
 		boot.contextInitialized(new ServletContextEvent(servletContext));
 		tester = new WicketTester(application, servletContext);
+		if (clientInfo) {
+			tester.getHttpSession().setTemporary(false);
+			tester.getSession().setClientInfo(new WebClientInfo(tester.getRequestCycle()));
+		}
 		return tester;
 	}
 	

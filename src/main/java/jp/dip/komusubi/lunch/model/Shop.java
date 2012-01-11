@@ -33,6 +33,7 @@ import jp.dip.komusubi.lunch.module.dao.ContractDao;
  */
 public class Shop implements Serializable {
 
+	public static final String DEFAULT_ID = "default";
 	private static final long serialVersionUID = -1020122183352301083L;
 	private String id;
 	private String name;
@@ -42,6 +43,10 @@ public class Shop implements Serializable {
 	private Date lastOrder;
 	private List<Contract> contracts;
 
+	public Shop() {
+		this(DEFAULT_ID);
+	}
+	
 	public Shop(String id) {
 		this.id = id;
 	}
