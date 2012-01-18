@@ -31,10 +31,13 @@ import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.rules.ExternalResource;
 import org.komusubi.common.util.Resolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Injector;
 
 public class WicketTesterResource extends ExternalResource {
+	private static final Logger logger = LoggerFactory.getLogger(WicketTesterResource.class);
 	private WicketTester tester;
 	private Resolver<Injector> builder;
 	private MockServletContext servletContext;
@@ -64,7 +67,10 @@ public class WicketTesterResource extends ExternalResource {
 		MockBootstrap boot = new MockBootstrap() {
 			@Override
 			protected Injector buildInjector() {
-				return builder.resolve();
+				Injector injector = builder.resolve();
+				logger.info("INJECTOR is {} in WicketTesterResource.", injector);
+//				return builder.resolve();
+				return injector;
 			}
 		};
 		boot.contextInitialized(new ServletContextEvent(servletContext));

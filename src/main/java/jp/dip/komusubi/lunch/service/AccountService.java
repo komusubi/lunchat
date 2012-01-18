@@ -203,6 +203,12 @@ public class AccountService implements Serializable {
 		return evaluate;
 	}
 	
+	/**
+	 * apply create account user.
+	 * @param user for registry.
+	 * @param url temporary url for authentication.
+	 * @return
+	 */
 	public Nonce apply(User user, String url) {
 		Nonce nonce = Configuration.getInstance(Nonce.class);
 		StringBuilder builder = new StringBuilder(url);
@@ -255,6 +261,13 @@ public class AccountService implements Serializable {
 		} catch (Exception e) {
 			throw new LunchException(e);
 		}
+	}
+	
+	/**
+	 * request to attend a group.
+	 */
+	public void admit() {
+		
 	}
 	
 	@Transactional

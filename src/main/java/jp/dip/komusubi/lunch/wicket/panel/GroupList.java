@@ -82,7 +82,8 @@ public class GroupList extends Panel {
 			GroupDao groupDao = Configuration.getInstance(GroupDao.class);
 			List<Group> groups = groupDao.findAll();
 			if (groups.size() == 0)
-				groups.add(new Group("dummy")
+				// TODO localized message move resource file.
+				groups.add(new Group()
 								.setName("グループが1件も存在しませんでした。"));
 			return groups;
 		}

@@ -92,15 +92,17 @@ public class Lunchat extends DBDatabase {
 		public final DBTableColumn login;
 		public final DBTableColumn lastLogin;
 		public final DBTableColumn loginFail;
+		public final DBTableColumn signing; // 加入日
 		public final DBTableColumn active;
-
+		
 		public Health(DBDatabase db) {
 			super("health", db);
-			userId 		= addColumn("userId",	 DataType.TEXT, 	sizeOfUserId, 	DataMode.NotNull);
-			login 		= addColumn("login", 	 DataType.INTEGER, 			   0, 	DataMode.NotNull);
-			lastLogin 	= addColumn("lastLogin", DataType.DATETIME, 		   0, 	DataMode.Nullable);
-			loginFail 	= addColumn("loginFail", DataType.INTEGER, 			   0, 	DataMode.NotNull);
-			active 		= addColumn("active", 	 DataType.BOOL, 			   0, 	DataMode.NotNull);
+			userId 	= addColumn("userId", 	 DataType.TEXT, 	sizeOfUserId,	DataMode.NotNull);
+			login 		= addColumn("login", 	 DataType.INTEGER,			0, 	DataMode.NotNull);
+			lastLogin 	= addColumn("lastLogin", DataType.DATETIME, 			0, 	DataMode.Nullable);
+			loginFail 	= addColumn("loginFail", DataType.INTEGER, 			0, 	DataMode.NotNull);
+			signing 	= addColumn("signing",	 DataType.DATETIME,			0,	DataMode.NotNull);
+			active 	= addColumn("active", 	 DataType.BOOL,				0,	DataMode.NotNull);
 
 			setPrimaryKey(userId);
 		}

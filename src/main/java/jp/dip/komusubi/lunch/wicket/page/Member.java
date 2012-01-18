@@ -19,6 +19,7 @@
 package jp.dip.komusubi.lunch.wicket.page;
 
 import jp.dip.komusubi.lunch.model.Group;
+import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.wicket.panel.Footer;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
 import jp.dip.komusubi.lunch.wicket.panel.MemberList;
@@ -37,11 +38,34 @@ public class Member extends AuthorizedPage {
 	
 	public Member(Group group) {
 		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
-		add(new MemberList("member.list", group));
+		add(getMemberList("member.list", group));
 		add(new Footer("footer"));
 	}
 
+	public Member(Model<Group> model) {
+		this(model.getObject());
+	}
+	
+	public Member(Model<Group> groupModel, Model<String> stringModel) {
+		this(groupModel);
+		info(stringModel.getObject());
+	}
+	
 	public Member(PageParameters params) {
 		
+	}
+	
+	protected MemberList getMemberList(String id, Group group) {
+		return new MemberList(id, group) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onSelectedMember(User user) {
+				Confirmation page = new Confirmation(Model.of(user));
+				setResponsePage(page);
+			}
+			
+		};
 	}
 }

@@ -10,21 +10,12 @@
 </head>
 <body>
   <div data-role="page" data-theme="a">
-    <span wicket:id="header"></span>
-    <wicket:remove>
-      <div data-role="header">
-        <h1>注文確認</h1>
-      </div>
-    </wicket:remove>
+    <div data-role="header">
+      <h1 wicket:id="header.title">注文確認</h1>
+    </div>
     <div data-role="content">
-      <span wicket:id="basket">XX</span>の注文の確認
+      <div wicket:id="confirm"></div>
     </div>
-    <span wicket:id="footer"></span>
-    <wicket:remove>
-    <div data-role="footer">
-      <h1>komusubi</h1>
-    </div>
-    </wicket:remove>
   </div>
 </body>
 </html>

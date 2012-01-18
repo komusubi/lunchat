@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<meta charset="utf-8">
+<wicket:remove>
+  <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
+  <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+  <script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+</wicket:remove>
+</head>
+<body>
+  <div data-role="page" data-theme="a">
+    <wicket:remove>
+      <div data-role="header">
+        <a href="#" data-role="button">ログアウト</a> <a href="#" data-role="button" data-icon="home"></a> <span>username</span>
+        <h1>ランチ！</h1>
+      </div>
+      <!-- 
+        <form wicket:id="confirm.form" data-ajax="false">
+          <input type="submit" value="OK" data-ajax="false" data-theme="b" wicket:id="agree"> 
+          <input type="submit" value="戻る" data-ajax="false" wicket:id="cancel">
+        </form>
+            -->
+    </wicket:remove>
+    <div data-role="content">
+      <wicket:panel>
+        <h1 wicket:id="message">XXの注文の確認</h1>
+        <a href="#" data-rel=“back” data-role="button" data-ajax="false" data-theme="b" wicket:id="agree">OK</a>
+        <a href="#" data-rel="back" data-role="button" data-ajax="false" wicket:id="cancel">戻る</a>
+        <span wicket:id="feedback"></span>
+      </wicket:panel>
+    </div>
+  </div>
+</body>
+</html>

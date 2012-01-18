@@ -21,13 +21,17 @@ package jp.dip.komusubi.lunch.wicket.panel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 
+/**
+ * footer. 
+ * @author jun.ozeki
+ */
 public class Footer extends Panel {
 
 	private static final long serialVersionUID = -7550329091356140738L;
 	
 	public Footer(String id) {
 		super(id);
-		add(new Label("footer.label", "lunch"));
+		add(new Label("footer.label", "lunchat"));
 	}
 	
 }

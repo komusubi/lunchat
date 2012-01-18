@@ -22,9 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -46,11 +44,14 @@ import jp.dip.komusubi.lunch.wicket.panel.ChoiceLunch.Choice;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.komusubi.common.util.Resolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -60,7 +61,7 @@ import com.google.inject.name.Names;
 
 public class ChoiceLunchTest {
 
-//	private static final Logger logger = LoggerFactory.getLogger(ChoiceLunchTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(ChoiceLunchTest.class);
 	private static final String[] parseFormats = {"HH:mm", "yyyy/MM/dd HH:mm"};
 	private static List<Shop> shopsAll = new ArrayList<>();
 	private static List<Product> productsAll = new ArrayList<>();
@@ -69,22 +70,22 @@ public class ChoiceLunchTest {
 	private Resolver<Injector> injectBuilder = new Resolver<Injector>() {
 		
 		public Injector resolve() {
-			return Guice.createInjector(new AbstractModule() {
+			Injector injector = Guice.createInjector(new AbstractModule() {
 				
 				@Override
 				protected void configure() {
 					bind(new TypeLiteral<Resolver<Calendar>>(){ })
-					.annotatedWith(Names.named("calendar")).toInstance(newCalendarResolver());
+						.annotatedWith(Names.named("calendar")).toInstance(newCalendarResolver());
 					bind(new TypeLiteral<Resolver<Date>>(){ })
-					.annotatedWith(Names.named("date")).toInstance(new DateResolver());
-					bind(Shopping.class);
-//					bind(ProductDao.class).toInstance(newProductDao());
+						.annotatedWith(Names.named("date")).toInstance(new DateResolver());
 					bind(ProductDao.class).toProvider(ProductDaoProvider.class);
 					bind(ShopDao.class).toProvider(ShopDaoProvider.class);
 					bind(OrderDao.class).to(MockOrderDao.class);
-
+					bind(Shopping.class);
 				}
 			});
+			logger.info("injector is {}", injector);
+			return injector;
 		}
 		
 		public Injector resolve(Injector injector) {
@@ -168,13 +169,18 @@ public class ChoiceLunchTest {
 		orderCalendar = Calendar.getInstance();
 	}
 	
+	@After
+	public void after() {
+		
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void 初期表示正常() throws Exception {
 		// GuiceのInjectorがSingletonのため 返却値を想定したListにArrays.asList() を利用すると
 		// 修正ができない(Unmodified)ので 新規でArrayListをそれぞれのテストケースで生成し、static の ArrayList
 		// に addAllで設定する
-		// 複数のテストケースが存在する場合考慮する必要有り。 
+		// 複数のテストケースが存在する場合考慮する必要有り。
 		ArrayList<Shop> shops = new ArrayList<>();
 		shops.add(new Shop("bento")
 						.setName("おべんと屋さん")
@@ -221,7 +227,7 @@ public class ChoiceLunchTest {
 						.setUrl("http://lunchat.jp")
 						.setLastOrder(DateUtils.parseDate("10:00", parseFormats)));
 		shopsAll.addAll(shops);
-		productsAll = Collections.emptyList();
+//		productsAll = new ArrayList<>();
 		// 9:30は washoku のラストオーダー時刻前だが、商品が存在しないため、「受付を終了しました」と表示している。
 		// 13:00 までは当日分の商品を検索する仕様としている。休日(SHOPの休日)などで13:00までの表示を検討の必要有り。
 		orderCalendar.setTime(DateUtils.parseDate("2012/01/10 9:30", parseFormats));
@@ -253,7 +259,7 @@ public class ChoiceLunchTest {
 	@Ignore
 	@Test
 	public void 商品特定() throws Exception {
-		
+		/*
 		shopsAll = Arrays.asList(new Shop()
 										.setName("")
 										.setPhoneNumber("00-0000-0000")
@@ -279,5 +285,6 @@ public class ChoiceLunchTest {
 													.setAmount(400)
 													.setShop(shopsAll.get(0))
 													);
+													*/
 	}
 }

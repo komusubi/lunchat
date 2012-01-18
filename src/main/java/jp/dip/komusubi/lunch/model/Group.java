@@ -36,6 +36,7 @@ import jp.dip.komusubi.lunch.module.dao.UserDao;
  */
 public class Group implements Serializable {
 
+	public static final String DEFAULT_ID = "default";
 	private static final long serialVersionUID = 9163879003361362197L;
 	private String id;
 	private String name;
@@ -44,6 +45,10 @@ public class Group implements Serializable {
 	private List<Contract> contracts;
 	private List<User> users;
 
+	public Group() {
+		this(DEFAULT_ID);
+	}
+	
 	public Group(String id) {
 		this.id = id;
 	}
