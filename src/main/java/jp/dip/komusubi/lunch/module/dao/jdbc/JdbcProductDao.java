@@ -56,7 +56,7 @@ public class JdbcProductDao implements ProductDao {
 	private static final String SELECT_RECORDS_SHOPID_FINISH_DATE = "select " + COLUMNS
 											+ " from products where shopId = ? and date(finish) = ?";
 	private static final String SELECT_RECORDS_SHOPID_FINISH_DATETIME = "select " + COLUMNS
-											+ " from products where shopId = ? and finish = ?";
+											+ " from products where shopId = ? and date(finish) = ? and finish < ?";
 	private static final String INSERT_QUERY = "insert into products ( " + COLUMNS + " )"
 											+ " values (?, ?, ?, ?, ?, ?, ?)";
 	@Inject private ShopDao shopDao;
@@ -142,7 +142,9 @@ public class JdbcProductDao implements ProductDao {
 	@Override
 	public List<Product> findByShopIdAndFinishDatetime(String shopId, Date finishDate) {
 		List<Product> list = template.query(SELECT_RECORDS_SHOPID_FINISH_DATETIME,
-								productRowMapper, shopId, JdbcDateConverter.toTimestamp(finishDate));
+								productRowMapper, shopId,
+								JdbcDateConverter.toSqlDate(finishDate),
+								JdbcDateConverter.toTimestamp(finishDate));
 		logger.info("shopId:{}, finishDate:{}, count:{}", new Object[]{shopId, finishDate, list.size()});
 		return list;
 	}
