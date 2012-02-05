@@ -22,6 +22,6 @@ import jp.dip.komusubi.lunch.model.Health;
 
 import org.komusubi.common.persistence.GenericDao;
 
-public interface HealthDao extends GenericDao<String, Health> {
+public interface HealthDao extends GenericDao<Integer, Health> {
 
 }

@@ -16,30 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.wicket.page;
+package jp.dip.komusubi.lunch.model;
 
-import jp.dip.komusubi.lunch.wicket.panel.Footer;
-import jp.dip.komusubi.lunch.wicket.panel.GroupList;
-import jp.dip.komusubi.lunch.wicket.panel.Header;
+import java.io.Serializable;
 
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.Model;
+public class Notice implements Serializable {
 
-/**
- * choice group. 
- * @author jun.ozeki
- * @since 2011/11/16
- */
-public class Grouping extends AuthorizedPage { 
+	private static final long serialVersionUID = -5991320864091779504L;
 
-	private static final long serialVersionUID = -8681405849328505396L;
-	
-	public Grouping() {
-		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
-		add(new Label("page.message", "後でメッセージ設定する"));
-		add(new GroupList("group.list"));
-//		add(new GroupRegistry("group.registry"));
-		add(new Footer("footer"));
-	}
-	
 }

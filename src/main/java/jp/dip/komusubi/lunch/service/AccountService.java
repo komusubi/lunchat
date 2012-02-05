@@ -31,6 +31,7 @@ import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Contract;
 import jp.dip.komusubi.lunch.model.Group;
+import jp.dip.komusubi.lunch.model.Health;
 import jp.dip.komusubi.lunch.model.Order;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.Transactional;
@@ -73,7 +74,7 @@ public class AccountService implements Serializable {
 
 	private transient UserDao userDao;
 	private SmtpServer smtp;
-	private transient Resolver<String> resolver;
+	private transient Resolver<String> digester;
 	@Inject @Named("date") private transient Resolver<Date> dateResolver;
 	private User authedUser;
 	@Inject private GroupDao groupDao;
@@ -86,7 +87,7 @@ public class AccountService implements Serializable {
 							@Named("digest") Resolver<String> resolver, 
 							SmtpServer smtp) {
 		this.userDao = userDao;
-		this.resolver = resolver;
+		this.digester = resolver;
 		this.smtp = smtp;
 	}
 
@@ -100,20 +101,20 @@ public class AccountService implements Serializable {
 	}
 	
 	@Transactional
-	public String create(User user) {
-		String id = userDao.persist(user);
+	public Integer create(User user) {
+		Integer id = userDao.persist(user);
 		logger.info("created user, id:{}, name:{}", user.getId(), user.getName());
 		return id;
 	}
 
 	@Transactional
-	public String referTo(User user) {
+	public Integer referTo(User user) {
 		Group group = user.getGroup();
 		if (group == null)
 			throw new IllegalArgumentException("user's group is null");
-		String id = groupDao.persist(group);
+		Integer id = groupDao.persist(group);
 		// relation to groupId
-		userDao.update(user);
+		userDao.update(user.getHealth());
 		for (Contract contract: group.getContracts()) {
 			if (contract.getId() == Contract.DEFAULT_ID)
 				contractDao.persist(contract);
@@ -122,8 +123,8 @@ public class AccountService implements Serializable {
 	}
 	
 	@Transactional
-	public void remove(String id) {
-		userDao.remove(new User(id));
+	public void remove(User user) {
+		userDao.remove(user);
 		// FIXME when group has nobody, delete same time.
 	}
 	
@@ -132,12 +133,12 @@ public class AccountService implements Serializable {
 		userDao.update(user);
 	}
 	
-	public User find(String id) {
+	public User find(String email) {
 		User user = null;
-		if (authedUser != null && authedUser.getId().equals(id))
+		if (authedUser != null && authedUser.getEmail().equals(email))
 			user = authedUser;
 		else
-			user = userDao.find(id);
+			user = userDao.findByEmail(email);
 		return user;
 	}
 	
@@ -166,11 +167,12 @@ public class AccountService implements Serializable {
 	}
 	
 	@Transactional
-	public boolean signIn(String id, String password) {
+	public boolean signIn(String email, String password) {
 		temporarySupply();
 		
 		boolean evaluate = false;
-		User user = userDao.find(id);
+//		User user = userDao.find(id);
+		User user = userDao.findByEmail(email);
 		if (user == null)
 			return evaluate;
 		
@@ -187,15 +189,15 @@ public class AccountService implements Serializable {
 			user.getHealth().setActive(false);
 		}
 		
-		if (id.equals(user.getId()) && 
-				resolver.resolve(password).equals(user.getPassword())) {
+		if (email.equals(user.getEmail()) &&
+				digester.resolve(password).equals(user.getPassword())) {
 			// clear user health, after authenticated 
 			user.getHealth().incrementLogin()
 								.setLastLogin(dateResolver.resolve())
 								.setLoginFail(0);
 			evaluate = true;
 		} else {
-			logger.info("password unmatch, id:{}, password:{}", id, password);
+			logger.info("password unmatch, email:{}, password:{}", email, password);
 			user.getHealth().incrementLoginFail();
 		}
 		userDao.update(user.getHealth());
@@ -233,6 +235,56 @@ public class AccountService implements Serializable {
 			throw new IllegalStateException(e);
 		}
 	}
+
+	/**
+	 * admit to be a member.
+	 * @param who admit to member of group.
+	 * @param whom request to member of group.
+	 * @param url 
+	 */
+	public void admit(User who, User whom, String url) {
+		StringBuilder builder = new StringBuilder(url);
+		if (!url.endsWith("/"))
+			builder.append("/");
+		try {
+			// nonce ?
+			Date stamp = dateResolver.resolve();
+			String fragment = digester.resolve(who.getEmail() 
+								+ Long.toString(stamp.getTime())
+								+ whom.getEmail());
+			builder.append(fragment);
+			User from = new User();
+			MailContent content = new MailContent();
+			from.setName(getString("admit.mail.from.name"))
+				.setEmail(getString("admit.mail.from.address"));
+			content.setSubject(getString("admit.mail.title"));
+			content.setBody(format("admit.mail.body",
+					who.getName(),
+					who.getGroup().getName(),
+					whom.getName(),
+					whom.getId(),
+					builder.toString()));
+			MailMessage mail = new MailMessage();
+			mail.setContent(content);
+			mail.setFrom(from);
+			mail.addToRecipient(who);
+			smtp.send(mail);
+			logger.info("send to {}, subject is {}.", who.getEmail(), getString("admit.mail.title"));
+			
+			// persist after mail sent.
+			// set fragment requester's admitter in temporary.
+			whom.getHealth().setAdmitter(fragment);
+//			whom.getHealth().setJoined(stamp);
+			updateHealth(whom.getHealth());
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		}		
+	}
+	
+	@Transactional
+	public void updateHealth(Health health) {
+		userDao.update(health);
+	}
 	
 	public Nonce remind(String email, String url) {
 		User to = userDao.findByEmail(email);
@@ -263,22 +315,15 @@ public class AccountService implements Serializable {
 		}
 	}
 	
-	/**
-	 * request to attend a group.
-	 */
-	public void admit() {
-		
-	}
-	
 	@Transactional
-	public boolean activate(String id, Nonce nonce, String requestedNonce) {
+	public boolean activate(String email, Nonce nonce, String requestedNonce) {
 		boolean result = false;
-		if (id == null || nonce == null || requestedNonce == null) {
+		if (email == null || nonce == null || requestedNonce == null) {
 			logger.info("can't activate again, id is:{}, nonce:{}, requested:{}", 
-					new Object[]{id, nonce, requestedNonce});
+					new Object[]{email, nonce, requestedNonce});
 			return result;
 		}
-		User user = userDao.find(id);
+		User user = userDao.findByEmail(email);
 		if (user == null)
 			return result;
 		

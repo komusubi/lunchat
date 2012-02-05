@@ -27,6 +27,7 @@ import jp.dip.komusubi.lunch.wicket.panel.Header.HeaderBean;
 import org.apache.log4j.MDC;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -102,5 +103,16 @@ public class VariationBase extends WebPage {
 		bean.order = null;
 		bean.history = null;
 		return bean;
+	}
+	
+	protected String getPageUrl(Class<? extends WebPage> clazz) {
+		// get this page's url
+		String targetPath = getRequestCycle().urlFor(clazz, null).toString();
+		String ownUrl = getRequestCycle().getUrlRenderer().renderFullUrl(getRequest().getClientUrl());
+		return RequestUtils.toAbsolutePath(ownUrl, targetPath);
+	}
+	
+	protected String getPageUrl(WebPage page) {
+		return getPageUrl(page.getClass());
 	}
 }

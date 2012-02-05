@@ -76,16 +76,18 @@ public class AccountServiceTest {
 	
 	@Test
 	public void signInSuccess() {
-		String id = "komusubi";
+		Integer id = 1;
+		String email = "komusubi@email.com";
 		DigestResolver resolver = new DigestResolver();
 		String plainPassword = "password";
 		String password = resolver.resolve(plainPassword);
 		User komusubi = new User(id)
-								.setPassword(password);
+		                    .setEmail(email)
+		                    .setPassword(password);
 		komusubi.getHealth().setActive(true);
 		
 		UserDao mock = Mockito.mock(UserDao.class);
-		when(mock.find(id)).thenReturn(komusubi);
+		when(mock.findByEmail(email)).thenReturn(komusubi);
 
 		AccountService target = new AccountService(mock, 
 									new DigestResolver(), 
@@ -98,16 +100,16 @@ public class AccountServiceTest {
 				// nothing to do
 			}
 		};
-		assertTrue(target.signIn(id, plainPassword));
+		assertTrue(target.signIn(email, plainPassword));
 		
-		verify(mock).find(id);
+		verify(mock).findByEmail(email);
 	}
 	
 	@Test
 	public void applyNormal() throws Throwable {
 		AccountService target = new AccountService(null, new DigestResolver(), new MockSmtpServer());
 		
-		User user = new User("komusubi")
+		User user = new User(1)
 						.setName("こむすび")
 						.setEmail("komusubi@email.com");
 		

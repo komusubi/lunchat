@@ -18,6 +18,8 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
+import java.util.Date;
+
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
@@ -39,30 +41,32 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.validation.validator.StringValidator;
+import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 public class Profile extends Panel {
 
 	private static final long serialVersionUID = 8916168233528784779L;
 	private static final Logger logger = LoggerFactory.getLogger(Profile.class);
-	@Inject 
-	private transient AccountService account;
-	private String segment;
+	@Inject private transient AccountService account;
+	@Inject @Named("date") private transient Resolver<Date> dateResolver;
+	private String fragment;
 	
 	public Profile(String id) {
 		this(id, null, true);
 	}
 	
-	public Profile(String id, String segment) {
-		this(id, segment, false);
+	public Profile(String id, String fragment) {
+		this(id, fragment, false);
 	}
 	
-	public Profile(String id, String segment, boolean modify) {
+	public Profile(String id, String fragment, boolean modify) {
 		super(id);
-		this.segment = segment;
+		this.fragment = fragment;
 		if (modify)
 			add(new ModificationProfileForm("profile.form"));
 		else
@@ -89,7 +93,7 @@ public class Profile extends Panel {
 			super(id);
 			user = loadUser();
 			this.setDefaultModel(new CompoundPropertyModel<User>(user));
-			add(behaveId(new TextField<String>("id")));
+			add(behaveNickname(new TextField<String>("nickname")));
 			add(behaveName(new TextField<String>("name")));
 			add(behavePassword(password = new PasswordTextField("password")));
 			add(behavePassword(confirm = new PasswordTextField("confirm", 
@@ -98,7 +102,7 @@ public class Profile extends Panel {
 			add(passwordMatchValidator());
 		}
 
-		private FormComponent<String> behaveId(TextField<String> text) {
+		private FormComponent<String> behaveNickname(TextField<String> text) {
 //			new FormComponentFeedbackBorder(text)
 			text = SpecificBehavior.behaveIdField(text);
 			return text;
@@ -220,10 +224,10 @@ public class Profile extends Panel {
 						setResponsePage(new ErrorPage("session time over"));
 						return;
 					}
-					if (!segment.equals(nonce.get(emailField.getInput()))) {
+					if (!fragment.equals(nonce.get(emailField.getInput()))) {
 						if (logger.isDebugEnabled())
 							logger.debug("segment is {}, nonce is {}", 
-									segment, nonce.get(emailField.getInput()));
+									fragment, nonce.get(emailField.getInput()));
 						error(emailField);	
 					}
 				}
@@ -239,6 +243,7 @@ public class Profile extends Panel {
 			user.getHealth().setActive(true);
 			//TODO  Hash値はここで設定する。saltはどうする？
 			user.setPassword(new DigestResolver().resolve(getConfirmPassword()));
+			user.setJoined(dateResolver.resolve());
 			try {
 				getAccountService().create(user);
 			} catch (LunchException e) {

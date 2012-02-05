@@ -25,7 +25,7 @@ import jp.dip.komusubi.lunch.model.Group;
 public class MockGroupDao implements GroupDao {
 
 	@Override
-	public Group find(String pk) {
+	public Group find(Integer pk) {
 		return null;
 	}
 
@@ -35,7 +35,7 @@ public class MockGroupDao implements GroupDao {
 	}
 
 	@Override
-	public String persist(Group instance) {
+	public Integer persist(Group instance) {
 		return null;
 	}
 
@@ -48,5 +48,10 @@ public class MockGroupDao implements GroupDao {
 	public void update(Group instance) {
 
 	}
+
+    @Override
+    public Group findByCode(String code) {
+        return null;
+    }
 
 }

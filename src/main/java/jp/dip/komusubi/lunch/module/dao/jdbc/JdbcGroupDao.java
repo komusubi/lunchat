@@ -42,10 +42,11 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 public class JdbcGroupDao implements GroupDao {
 	
 	private static final Logger logger = LoggerFactory.getLogger(JdbcGroupDao.class);
-	private static final String COLUMNS = "id, name, lastOrder, place, phoneNumber";
+	private static final String COLUMNS = "id, code, name, lastOrder, place, phoneNumber";
 	private static final String SELECT_RECORD_QUERY = "select " + COLUMNS + " from groups where id = ?";
 	private static final String SELECT_RECORD_ALL = "select " + COLUMNS + " from groups";
-	private static final String INSERT_RECORD = "insert into groups (" + COLUMNS + ") values (?, ?, ?, ?, ?)";
+	private static final String SELECT_RECORD_BY_CODE = "select " + COLUMNS + " from groups where code = ?";
+	private static final String INSERT_RECORD = "insert into groups (" + COLUMNS + ") values (?, ?, ?, ?, ?, ?)";
 //	private static final String SELECT_QUERY_CONTRACTS = "select id, shopId from"
 	@Inject private ContractDao contractDao;
 	private SimpleJdbcTemplate template;
@@ -55,17 +56,28 @@ public class JdbcGroupDao implements GroupDao {
 		this.template = new SimpleJdbcTemplate(dataSource);
 	}
 	
-	@Override
-	public Group find(String pk) {
-		Group group = null;
-		try {
-			group = template.queryForObject(SELECT_RECORD_QUERY, groupRowMapper, pk);
-		} catch (EmptyResultDataAccessException e) {
-			logger.info("nof found group, pk is {}", pk);
-		}
-		return group;
-	}
+    @Override
+    public Group find(Integer pk) {
+        Group group = null;
+        try {
+            group = template.queryForObject(SELECT_RECORD_QUERY, groupRowMapper, pk);
+        } catch (EmptyResultDataAccessException e) {
+            logger.info("nof found group, pk is {}", pk);
+        }
+        return group;
+    }
 
+    @Override
+    public Group findByCode(String code) {
+        Group group = null;
+        try {
+            group = template.queryForObject(SELECT_RECORD_BY_CODE, groupRowMapper, code);
+        } catch (EmptyResultDataAccessException e) {
+            logger.info("not found group, code is {}", code);
+        } 
+        return group;
+    }
+	
 	@Override
 	public List<Group> findAll() {
 		List<Group> list = template.query(SELECT_RECORD_ALL, groupRowMapper);
@@ -77,17 +89,23 @@ public class JdbcGroupDao implements GroupDao {
 	}
 
 	@Override
-	public String persist(Group instance) {
+	public Integer persist(Group instance) {
+	    Group group = null;
 		try {
 			template.update(INSERT_RECORD, instance.getId(),
-												instance.getName(),
-												instance.getLastOrder(),
-												null,
-												instance.getPhoneNumber());
+			                                instance.getCode(),
+			                                instance.getName(),
+			                                instance.getLastOrder(),
+			                                null,
+			                                instance.getPhoneNumber());
+			// find group because id is auto increment.
+			group = findByCode(instance.getCode());
 		} catch (DataAccessException e) {
 			throw new LunchException(e);
 		}
-		return instance.getId();
+		if (group == null)
+		    throw new IllegalStateException("fail persistence, could NOT find Group: " + instance);
+		return group.getId();
 	}
 
 	@Override
@@ -106,10 +124,11 @@ public class JdbcGroupDao implements GroupDao {
 		@Override
 		public Group mapRow(ResultSet rs, int rowNum) throws SQLException {
 			
-			Group group = new Group(rs.getString("id"))
-									.setName(rs.getString("name"))
-									.setLastOrder(rs.getTime("lastOrder", cal))
-									.setPhoneNumber(rs.getString("phoneNumber"));
+			Group group = new Group(rs.getInt("id"))
+			                    .setCode(rs.getString("code"))
+			                    .setName(rs.getString("name"))
+			                    .setLastOrder(rs.getTime("lastOrder", cal))
+			                    .setPhoneNumber(rs.getString("phoneNumber"));
 //									.setContracts(contractDao.findByGroupId(rs.getString("id")));
 			return group;
 		}

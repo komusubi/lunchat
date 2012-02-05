@@ -63,17 +63,19 @@ public class SignIn extends SignInPanel {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void onInitialize() {
-//		SignInForm form = getForm();
-//		if (WicketSession.VARIATION_JQUERY_MOBILE.equals(getVariation())) {
-//			form.add(new AttributeModifier("data-ajax", false));
-//		}
-		
+
+		// wicket id from sign in component, but actual value is email address. 
 		FormComponent<String> text = (FormComponent<String>) getForm().get("username");
+		// TODO change email field, cann't understand swap model of "username".
+//		getForm().remove(text);
+//		EmailTextField email;
+//		getForm().add(email = new EmailTextField("username", Model.of(getUsername())));
 		FormComponent<String> password = (FormComponent<String>) getForm().get("password");
 		// remember cookie
 		setRememberMe(false);
 		
-		SpecificBehavior.behaveIdField(text);
+		SpecificBehavior.behaveEmailField(text);
+//		SpecificBehavior.behaveEmailField(email);
 		SpecificBehavior.behavePasswordField(password);
 		// activate again ?
 		if (activate) {

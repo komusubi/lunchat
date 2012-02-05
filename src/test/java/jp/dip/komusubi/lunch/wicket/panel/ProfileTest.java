@@ -18,6 +18,7 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import jp.dip.komusubi.lunch.model.User;
@@ -28,13 +29,13 @@ import jp.dip.komusubi.lunch.module.dao.MockContractDao;
 import jp.dip.komusubi.lunch.module.dao.MockGroupDao;
 import jp.dip.komusubi.lunch.module.dao.MockUserDao;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
-import jp.dip.komusubi.lunch.module.resolver.DateResolver;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketTesterResource;
 import jp.dip.komusubi.lunch.wicket.page.error.ErrorPage;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.tester.FormTester;
@@ -67,7 +68,7 @@ public class ProfileTest {
 					bind(new TypeLiteral<Resolver<String>>(){ })
 						.annotatedWith(Names.named("digest")).toInstance(new DigestResolver());
 					bind(new TypeLiteral<Resolver<Date>>(){ })
-						.annotatedWith(Names.named("date")).toInstance(new DateResolver());
+						.annotatedWith(Names.named("date")).toInstance(new SpecificDateResolver());
 					bind(Nonce.class).to(DefaultNonce.class);
 				}
 				
@@ -79,9 +80,33 @@ public class ProfileTest {
 		} 
 	};
 	
+	/**
+	 * specific date resolver. 
+	 * @author jun.ozeki
+	 */
+	private class SpecificDateResolver implements Resolver<Date> {
+
+        @Override
+        public Date resolve() {
+            try {
+                return DateUtils.parseDate(ymd, new String[]{"yyyy/MM/dd HH:mm:ss"});
+            } catch (ParseException e) {
+                return null;
+            }
+        }
+
+        @Override
+        public Date resolve(Date value) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+	    
+	}
+	
 	private Nonce nonce = new DefaultNonce();
 	private String email = "mail@example.com";
 	private String digest = nonce.get(email);
+	private String ymd = "2012/02/04 18:01:00";
 	private static final String wicketFormId = "profile:profile.form";
 	
 	@Rule
@@ -99,22 +124,25 @@ public class ProfileTest {
 	
 	@Test
 	public void registerSuccess() {
-
-		User user = new User("komusubi");
+	    Integer id = new Integer(1);
+		User user = new User((Integer) null);
 		user.setPassword(new DigestResolver().resolve("vulnerable"))
 			.setName("こむすび")
+			.setNickname("komusubi")
 			.setEmail(email)
+			.setJoined(new SpecificDateResolver().resolve())
 			.getHealth().setActive(true);
-		Mockito.when(mock.create(user)).thenReturn("komusubi");
+		
+		Mockito.when(mock.create(user)).thenReturn(id);
 		
 		WicketTester tester = wicketResource.getTester();
 		
 		tester.getSession().setAttribute(Nonce.class.getName(), nonce);
 		
 		tester.startPage(new ProfileTestPage(digest));
-		
+
 		FormTester formTester = tester.newFormTester(wicketFormId);
-		formTester.setValue("id", "komusubi");
+		formTester.setValue("nickname", "komusubi");
 		formTester.setValue("password", "vulnerable");
 		formTester.setValue("confirm", "vulnerable");
 		formTester.setValue("name", "こむすび");
@@ -135,7 +163,7 @@ public class ProfileTest {
 		tester.startPage(new ProfileTestPage(digest));
 		
 		FormTester formTester = tester.newFormTester(wicketFormId);
-		formTester.setValue("id", "komusubi");
+		formTester.setValue("nickname", "komusubi");
 		formTester.setValue("password", "vulnerable");
 		formTester.setValue("confirm", "vulnerable");
 		formTester.setValue("name", "こむすび");
@@ -156,7 +184,7 @@ public class ProfileTest {
 		tester.startPage(new ProfileTestPage(digest));
 		
 		FormTester formTester = tester.newFormTester(wicketFormId);
-		formTester.setValue("id", "");
+		formTester.setValue("nickname", "");
 		formTester.setValue("password", "");
 		formTester.setValue("confirm", "");
 		formTester.setValue("name", "");
@@ -181,7 +209,7 @@ public class ProfileTest {
 		tester.startPage(new ProfileTestPage(digest));
 		
 		FormTester formTester = tester.newFormTester(wicketFormId);
-		formTester.setValue("id", "komusubi");
+		formTester.setValue("nickname", "komusubi");
 		formTester.setValue("password", "password");
 		formTester.setValue("confirm", "passwordd");
 		formTester.setValue("name", "こむすび");

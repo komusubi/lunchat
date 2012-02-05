@@ -21,6 +21,7 @@ package jp.dip.komusubi.lunch.wicket.panel;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.LunchException;
@@ -34,9 +35,6 @@ import jp.dip.komusubi.lunch.wicket.component.TimeField;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
-import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
@@ -47,13 +45,17 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.Response;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.AbstractValidator;
 import org.apache.wicket.validation.validator.DateValidator;
+import org.apache.wicket.validation.validator.PatternValidator;
 import org.apache.wicket.validation.validator.StringValidator;
+import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 /**
  * group registry.
@@ -97,23 +99,25 @@ public abstract class GroupRegistry extends Panel {
 	protected class GroupRegistryForm extends Form<Void> {
 
 		private static final long serialVersionUID = -7593471899292529129L;
-		private Group group = new Group(null);
+		private Group group = new Group();
 		private List<Shop> selection;
+		@Inject @Named("date") private transient Resolver<Date> dateResolver;
 		
 		public GroupRegistryForm(String id) {
 			super(id);
 			setDefaultModel(new CompoundPropertyModel<Group>(group));
-			add(getIdField("id"));
+			add(getCodeField("code"));
 			add(getNameField("name"));
 			add(getLastOrderField("lastOrder"));
 //			add(getShopList("shop.item"));
 			add(getShopMultiChoice("choice.shop"));
 		}
 
-		private TextField<String> getIdField(String id) {
+		private TextField<String> getCodeField(String id) {
 			TextField<String> text = new TextField<String>(id);
 			text.setRequired(true)
-				.add(new StringValidator.LengthBetweenValidator(2, 64))
+				.add(new StringValidator.LengthBetweenValidator(2, 128))
+				.add(new PatternValidator(Pattern.compile("[a-zA-Z0-9\\.']+")))
 				.add(getSpecificWordValidator());
 			return text;
 		}
@@ -121,7 +125,7 @@ public abstract class GroupRegistry extends Panel {
 		private TextField<String> getNameField(String id) {
 			TextField<String> text = new TextField<String>(id);
 			text.setRequired(true)
-				.add(new StringValidator.LengthBetweenValidator(2, 64));
+				.add(new StringValidator.LengthBetweenValidator(2, 128));
 			return text;
 		}
 
@@ -180,20 +184,23 @@ public abstract class GroupRegistry extends Panel {
 		public void onSubmit() {
 			User user = WicketSession.get().getLoggedInUser();
 			try {
+			    // clear ozeki
 				for (Shop shop: selection) {
 					if (logger.isDebugEnabled())
 						logger.debug("selection shop:{}", shop);
 					group.addContract(shop);
 				}
 				AccountService accountService = Configuration.getInstance(AccountService.class);
-				user.setGroup(group);
+				user.getHealth().setGroup(group);
+				user.getHealth().setGroupJoined(dateResolver.resolve());
 				accountService.referTo(user);
 				// notice session
 				WicketSession.get().dirty();
 				onRegistered();
 			} catch (LunchException e) {
 				// group set null again.
-				user.setGroup(null); 
+				user.getHealth().setGroup(null); 
+				user.getHealth().setGroupJoined(null);
 				error(getLocalizer().getString("registry.failed", GroupRegistry.this));
 				return;
 			}

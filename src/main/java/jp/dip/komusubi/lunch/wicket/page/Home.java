@@ -52,7 +52,7 @@ public class Home extends VariationBase {
 	private User user = WicketSession.get().getLoggedInUser();
 	private String username = user == null ? "" : user.getName();
 	private String pageTitle = getString("page.title");
-	@Inject @Named("calendar") Resolver<Calendar> resolver;
+	@Inject @Named("calendar") private Resolver<Calendar> resolver;
 	
     public Home() {
     	HeaderBean bean = getDefaultHeaderBean(getLocalizer().getString("page.title", this));

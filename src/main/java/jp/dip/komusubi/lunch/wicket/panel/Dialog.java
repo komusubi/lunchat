@@ -18,6 +18,8 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
+import java.util.Date;
+
 import jp.dip.komusubi.lunch.model.User;
 
 import org.apache.wicket.markup.ComponentTag;
@@ -28,8 +30,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * dialog.
@@ -43,8 +43,9 @@ public abstract class Dialog extends Panel {
 	
 	public Dialog(String id, Model<User> model) {
 		super(id);
-		add(new Label("message", model.getObject().getName()));
+		add(new Label("message", model.getObject().getName() + "さん にグループ参加の承認依頼通知を送信します。"));
 		add(new FeedbackPanel("feedback"));
+		// FIXME double click affect prevent to formKey implementation.
 //		add(new DialogForm("confirm.form"));
 		add(getAgreeLink("agree"));
 		add(getCancelLink("cancel"));
@@ -63,6 +64,7 @@ public abstract class Dialog extends Panel {
 			@Override
 			public void onComponentTag(ComponentTag tag) {
 				super.onComponentTag(tag);
+				// build fail url in jquery mobile dialog view. just fix.
 				tag.put("href", "wicket/" + getURL());
 			}
 		};
@@ -94,7 +96,7 @@ public abstract class Dialog extends Panel {
 			add(getAgreeButton("agree"));
 			add(getCancelButton("cancel"));
 		}
-		
+				
 		public Button getAgreeButton(String id) {
 			return new Button(id) {
 				

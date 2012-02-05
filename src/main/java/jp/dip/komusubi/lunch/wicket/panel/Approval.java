@@ -23,6 +23,11 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
+/**
+ * approval.
+ * @author jun.ozeki
+ * @since 2012/01/26
+ */
 public class Approval extends Panel {
 
 	private static final long serialVersionUID = -4176824939454988839L;

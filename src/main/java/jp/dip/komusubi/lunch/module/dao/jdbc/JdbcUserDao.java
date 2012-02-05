@@ -26,7 +26,6 @@ import javax.sql.DataSource;
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Health;
 import jp.dip.komusubi.lunch.model.User;
-import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.module.dao.HealthDao;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
 
@@ -44,15 +43,15 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
  */
 public class JdbcUserDao implements UserDao {
 	private static final Logger logger = LoggerFactory.getLogger(JdbcUserDao.class);
-	private static String COLUMNS = "id, groupId, password, name, email";
+	private static String COLUMNS = "email, id, password, nickname, name, joined";
 	private static final String SELECT_RECORD_QUERY = "select " + COLUMNS + " from users where id = ?";
-	private static final String INSERT_RECORD_QUERY = "insert into users (" + COLUMNS + ") values (?, ?, ?, ?, ?)";
-	private static final String UPDATE_RECORD_QUERY = "update users set password = ?, name = ?, email = ?, groupId = ?"
+	private static final String INSERT_RECORD_QUERY = "insert into users (" + COLUMNS + ") values (?, ?, ?, ?, ?, ?)";
+	private static final String UPDATE_RECORD_QUERY = "update users set password = ?, name = ?, email = ?"
 					+ " where id = ?";
 	private static final String SELECT_RECORD_BY_EMAIL = "select " + COLUMNS + " from users where email = ?";
-	private static final String SELECT_RECORD_BY_GROUPID = "select " + COLUMNS + " from users where groupId = ?";
-	@Inject private HealthDao healthDao;
-	@Inject private GroupDao groupDao;
+	private static final String SELECT_RECORD_BY_GROUPID = "select " + COLUMNS + " from users, health"
+					+ " where health.groupId = ?";
+	private HealthDao healthDao;
 	private SimpleJdbcTemplate template;
 	
 	@Inject
@@ -61,7 +60,7 @@ public class JdbcUserDao implements UserDao {
 		this.healthDao = healthDao;
 	}
 	
-	public User find(String pk) {
+	public User find(Integer pk) {
 		User user = null;
 		try {
 			user = template.queryForObject(SELECT_RECORD_QUERY, userRowMapper, pk);
@@ -75,21 +74,27 @@ public class JdbcUserDao implements UserDao {
 		throw new UnsupportedOperationException("findAll");
 	}
 
-	public String persist(User instance) {
-		if (instance == null || instance.getId() == null)
-			throw new IllegalArgumentException("user: wrong instance " + instance);
+	public Integer persist(User instance) {
+	    User user = null;
 		try {
+			validate(instance);
 			template.update(INSERT_RECORD_QUERY, 
+					instance.getEmail(),
 					instance.getId(), 
-					instance.getGroupId(),
 					instance.getPassword(),
+					instance.getNickname(),
 					instance.getName(),	
-					instance.getEmail());
+					instance.getJoined());
+			// health 
 			healthDao.persist(instance.getHealth());
+			// find user for get user id, because auto increment.
+			user = findByEmail(instance.getEmail());
 		} catch (DataAccessException e) {
 			throw new LunchException(e);
 		}
-		return instance.getId();
+		if (user == null)
+		    throw new IllegalStateException("fail persistence, could NOT find User: " + instance);
+		return user.getId();
 	}
 
 	public void remove(User instance) {
@@ -98,7 +103,7 @@ public class JdbcUserDao implements UserDao {
 
 	public void update(User instance) {
 		// groupId is nullable.
-		String groupId = null;
+		Integer groupId = null;
 		if (instance.getGroup() != null)
 			groupId = instance.getGroup().getId();
 		template.update(UPDATE_RECORD_QUERY, 
@@ -122,21 +127,27 @@ public class JdbcUserDao implements UserDao {
 		return user;
 	}
 
-	public List<User> findByGroupId(String groupId) {
+	public List<User> findByGroupId(Integer groupId) {
 		List<User> list;
 		list = template.query(SELECT_RECORD_BY_GROUPID, userRowMapper, groupId);
 		logger.info("findByGroupId find: {}", list.size());
 		return list;
 	}
 	
+	private void validate(User user) {
+		if (user == null || user.getEmail() == null)
+			throw new IllegalArgumentException("user: wrong instance " + user);
+	}
+	
 	private RowMapper<User> userRowMapper = new RowMapper<User>() {
 		public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Health health = healthDao.find(rs.getString("id"));
+			Health health = healthDao.find(rs.getInt("id"));
 			User user = health.getUser();
-			user.setGroup(groupDao.find(rs.getString("groupId")))
-				.setPassword(rs.getString("password"))
+			user.setPassword(rs.getString("password"))
 				.setName(rs.getString("name"))
-				.setEmail(rs.getString("email"));
+				.setNickname(rs.getString("nickname"))
+				.setEmail(rs.getString("email"))
+				.setJoined(rs.getTimestamp("joined"));
 //			User user = new User(rs.getString("id"))
 //							.setGroupId(rs.getString("groupId"))
 //							.setGroup(groupDao.find(rs.getString("groupId")))

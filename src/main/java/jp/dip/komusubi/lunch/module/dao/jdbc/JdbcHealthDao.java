@@ -28,6 +28,7 @@ import javax.sql.DataSource;
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Health;
 import jp.dip.komusubi.lunch.model.User;
+import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.module.dao.HealthDao;
 
 import org.springframework.dao.DataAccessException;
@@ -37,20 +38,23 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 public class JdbcHealthDao implements HealthDao {
 	
 //	private static final Logger logger = LoggerFactory.getLogger(JdbcHealthDao.class);
-	private static final String COLUMNS = "userId, login, lastLogin, loginFail, active"; 
+	private static final String COLUMNS = "userId, login, lastLogin, loginFail, admitted, active, groupId, groupJoined"; 
 	private static final String SELECT_QUERY_PK = "select " + COLUMNS + " from health where userId = ?";
 	private static final String UPDATE_QUERY = "update health set login = ?, lastLogin = ?, loginFail = ?,"
-														+ " active = ? where userId = ?";
-	private static final String INSERT_QUERY = "insert into health (" + COLUMNS + ") values (?, ?, ?, ?, ?)";
+													+ " admitted = ?, active = ?, groupId = ?, groupJoined = ? where userId = ?";
+	private static final String INSERT_QUERY = "insert into health (" + COLUMNS + ") values (" +
+			"(select id from users where email = ?), ?, ?, ?, ?, ?, ?, ?)";
 	private SimpleJdbcTemplate template;
+	private GroupDao groupDao;
 
 	@Inject
-	public JdbcHealthDao(DataSource dataSource) {
+	public JdbcHealthDao(DataSource dataSource, GroupDao groupDao) {
 		template = new SimpleJdbcTemplate(dataSource);
+		this.groupDao = groupDao;
 	}
 	
 	@Override
-	public Health find(String pk) {
+	public Health find(Integer pk) {
 		Health health = null;
 		try {
 			health = template.queryForObject(SELECT_QUERY_PK, healthRowMapper, pk);
@@ -66,17 +70,21 @@ public class JdbcHealthDao implements HealthDao {
 	}
 
 	@Override
-	public String persist(Health instance) {
+	public Integer persist(Health instance) {
+		validate(instance);
 		try {
-			template.update(INSERT_QUERY, instance.getUserId(),
+			template.update(INSERT_QUERY, instance.getUser().getEmail(),
 											instance.getLogin(),
 											instance.getLastLogin(),
 											instance.getLoginFail(),
-											instance.isActive());
+											instance.getAdmitter(),
+											instance.isActive(),
+											instance.getGroup() != null ? instance.getGroup().getId() : null,
+											instance.getGroupJoined());
 		} catch (DataAccessException e) {
 			throw new LunchException(e);
 		}
-		return instance.getUserId();									
+		return instance.getUser().getId();									
 	}
 
 	@Override
@@ -86,30 +94,42 @@ public class JdbcHealthDao implements HealthDao {
 
 	@Override
 	public void update(Health instance) {
+		validate(instance);
 		try {
 			template.update(UPDATE_QUERY, instance.getLogin(),
 											instance.getLastLogin(),
 											instance.getLoginFail(),
+											instance.getAdmitter(),
 											instance.isActive(),
-											instance.getUserId());
+											instance.getGroup() != null ? instance.getGroup().getId() : null,
+											instance.getGroupJoined(),
+											instance.getUser().getId());
 		} catch (DataAccessException e) {
 			throw new LunchException(e);
 		}
 	}
 
-	private static RowMapper<Health> healthRowMapper = new RowMapper<Health>() {
+	private void validate(Health health) {
+		if (health.getUser() == null)
+			throw new IllegalArgumentException("health.User object must NOT be null");
+	}
+	
+	private RowMapper<Health> healthRowMapper = new RowMapper<Health>() {
 
 		@Override
 		public Health mapRow(ResultSet rs, int rowNum) throws SQLException {
 			// TODO NOTICE!! health and user has cross reference, 
 			// this Health instance has empty property user.
-			User user = new User(rs.getString("userId"));
+			User user = new User(rs.getInt("userId"));
 			Health health = user.getHealth()
 //			Health health = new Health(rs.getString("userId"))
 									.setLogin(rs.getInt("login"))
 									.setLoginFail(rs.getInt("loginFail"))
 									.setLastLogin(rs.getDate("lastLogin"))
-									.setActive(rs.getBoolean("active"));
+									.setAdmitter(rs.getString("admitted"))
+									.setActive(rs.getBoolean("active"))
+									.setGroup(groupDao.find(rs.getInt("groupId")))
+									.setGroupJoined(rs.getDate("groupJoined"));
 			return health;
 		}
 		

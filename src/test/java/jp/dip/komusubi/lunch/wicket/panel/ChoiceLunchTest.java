@@ -245,7 +245,7 @@ public class ChoiceLunchTest {
 		
 		assertTrue(listView.get(1).getDefaultModelObject() instanceof Product);
 		Product product = (Product) listView.get(1).getDefaultModelObject();
-		assertEquals("BENTOは 1/10(火)の注文の受付を終了しました。", product.getName());
+		assertEquals("BENTOは 1/10(火)の注文受付を終了しました。", product.getName());
 		
 		assertTrue(listView.get(2).getDefaultModelObject() instanceof Shop);
 		shop = (Shop) listView.get(2).getDefaultModelObject();
@@ -253,7 +253,7 @@ public class ChoiceLunchTest {
 		
 		assertTrue(listView.get(3).getDefaultModelObject() instanceof Product);
 		product = (Product) listView.get(3).getDefaultModelObject();
-		assertEquals("和食弁当は 1/10(火)の注文の受付を終了しました。", product.getName());
+		assertEquals("和食弁当は 1/10(火)の注文受付を終了しました。", product.getName());
 	}
 
 	@Ignore

@@ -37,13 +37,13 @@ public class Registry extends VariationBase {
 		this.params = params;
 		// FIXME literal string set resource file. 
 		add(new Header("header", Model.of(getDefaultHeaderBean("ユーザー登録"))));
-		add(new Profile("profile", params.get("segment").toString()));
+		add(new Profile("profile", params.get("fragment").toString()));
 		add(new Footer("footer"));
 	}
 
 	@Override
 	protected void onInitialize() {
-		if (params.get("segment").isEmpty()) {
+		if (params.get("fragment").isEmpty()) {
 			logger.info("malformed url {}", getRequest().getClientUrl().toAbsoluteString());
 			setResponsePage(new ErrorPage("不正なURLです。"));
 		}

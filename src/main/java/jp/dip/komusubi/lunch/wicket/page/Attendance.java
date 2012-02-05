@@ -28,24 +28,31 @@ import jp.dip.komusubi.lunch.wicket.panel.Header;
 
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
- * participation group.
+ * group attendance.
  * @author jun.ozeki
  * @since 2011/11/19
  */
-public class Participation extends VariationBase {
+public class Attendance extends AuthorizedPage {
 
 	private static final long serialVersionUID = 1242588429737776047L;
 	private final User applyTo;
 	
-	public Participation(User applyTo) {
+	public Attendance(User applyTo) {
 		this.applyTo = applyTo;
 		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
 		add(new Approval("approval", new CompoundPropertyModel<ApprovalBean>(getApprovalBean())));
 		add(new Footer("footer"));
 	}
 	
+	public Attendance(PageParameters params) {
+		applyTo = null;
+	}
+	
+	// 1. 既にグループに所属していないか？(複数人に参加要請をした場合の考慮)(別のグループの場合あり？)
+
 	protected ApprovalBean getApprovalBean() {
 		ApprovalBean bean = new ApprovalBean() {
 
@@ -57,14 +64,13 @@ public class Participation extends VariationBase {
 
 			@Override
 			public void onCancel() {
-				// TODO Auto-generated method stub
 				
 			}
 			
 		};
 		
 		bean.noticeLabel = MessageFormat.format(
-				getLocalizer().getString("message", Participation.this),
+				getLocalizer().getString("message", Attendance.this),
 				applyTo.getName(), "");
 //		bean.applyButton = getLocalizer().getString("", Participation.this);
 //		bean.cancelButton = getLocalizer().getString("", Participation.this);

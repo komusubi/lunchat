@@ -18,6 +18,7 @@ package jp.dip.komusubi.lunch.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.komusubi.common.protocol.smtp.Destination;
@@ -29,13 +30,15 @@ import org.komusubi.common.protocol.smtp.Destination;
  */
 public class User implements Serializable, Destination {
 	private static final long serialVersionUID = 8305012931385761901L;
-	private String id;
-//	private String groupId;
-	private Group group;
-	private String name;
-	private String password;
 	private String email;
+	private Integer id;
+	private String name;
+	private String nickname;
+	private String password;
+	private Date joined;
+	private List<Notice> notices;
 	private List<Role> roles = new ArrayList<Role>();
+	
 	private Health health;
 
 	public User() {
@@ -43,10 +46,12 @@ public class User implements Serializable, Destination {
 	}
 
 	public User(Health health) {
+	    if (health == null)
+	        throw new IllegalArgumentException("health must NOT be null.");
 		this.health = health;
 	}
-
-	public User(String id) {
+	
+	public User(Integer id) {
 		this();
 		this.id = id;
 	}
@@ -56,32 +61,100 @@ public class User implements Serializable, Destination {
 		return this;
 	}
 
+	@Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof User))
+            return false;
+        User other = (User) obj;
+        if (email == null) {
+            if (other.email != null)
+                return false;
+        } else if (!email.equals(other.email))
+            return false;
+        if (health == null) {
+            if (other.health != null)
+                return false;
+        } else if (!health.equals(other.health))
+            return false;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (joined == null) {
+            if (other.joined != null)
+                return false;
+        } else if (!joined.equals(other.joined))
+            return false;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        if (nickname == null) {
+            if (other.nickname != null)
+                return false;
+        } else if (!nickname.equals(other.nickname))
+            return false;
+        if (notices == null) {
+            if (other.notices != null)
+                return false;
+        } else if (!notices.equals(other.notices))
+            return false;
+        if (password == null) {
+            if (other.password != null)
+                return false;
+        } else if (!password.equals(other.password))
+            return false;
+        if (roles == null) {
+            if (other.roles != null)
+                return false;
+        } else if (!roles.equals(other.roles))
+            return false;
+        return true;
+    }
+
 	public String getEmail() {
 		return email;
 	}
 
-	public String getGroupId() {
+	public Group getGroup() {
+		if (health == null)
+			return null;
+		return health.getGroup();
+	}
+
+	public Integer getGroupId() {
 //		return groupId;
-		String groupId = null;
+		Group group = getGroup();
+		Integer groupId = null;
 		if (group != null)
 			groupId = group.getId();
 		return groupId;
-	}
-
-	public Group getGroup() {
-		return group;
 	}
 
 	public Health getHealth() {
 		return health;
 	}
 
-	public String getId() {
+	public Integer getId() {
 		return id;
+	}
+
+	public Date getJoined() {
+		return joined;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public String getNickname() {
+		return nickname;
 	}
 
 	public String getPassword() {
@@ -92,12 +165,40 @@ public class User implements Serializable, Destination {
 		return roles;
 	}
 
+	@Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((email == null) ? 0 : email.hashCode());
+        result = prime * result + ((health == null) ? 0 : health.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((joined == null) ? 0 : joined.hashCode());
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((nickname == null) ? 0 : nickname.hashCode());
+        result = prime * result + ((notices == null) ? 0 : notices.hashCode());
+        result = prime * result + ((password == null) ? 0 : password.hashCode());
+        result = prime * result + ((roles == null) ? 0 : roles.hashCode());
+        return result;
+    }
+
 	public boolean hasRole(Role role) {
 		return roles.contains(role);
 	}
 
+//	public User setId(String id) {
+//		this.id = id;
+//		this.health.setUserId(id);
+//		return this;
+//	}
+
 	public User setEmail(String email) {
 		this.email = email;
+		return this;
+	}
+
+	public User setGroup(Group group) {
+//		this.group = group;
+		health.setGroup(group);
 		return this;
 	}
 
@@ -107,25 +208,29 @@ public class User implements Serializable, Destination {
 		return this;
 	}
 
-	public User setGroup(Group group) {
-		this.group = group;
-		return this;
-	}
-
 	@Deprecated
 	public User setHealth(Health health) {
 		this.health = health;
 		return this;
 	}
 
-//	public User setId(String id) {
-//		this.id = id;
-//		this.health.setUserId(id);
-//		return this;
+//	public User setId(Integer id) {
+//	    this.id = id;
+//	    return this;
 //	}
+
+	public User setJoined(Date joined) {
+		this.joined = joined;
+		return this;
+	}
 
 	public User setName(String name) {
 		this.name = name;
+		return this;
+	}
+
+	public User setNickname(String nickname) {
+		this.nickname = nickname;
 		return this;
 	}
 
@@ -137,75 +242,15 @@ public class User implements Serializable, Destination {
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
-
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("User [id=").append(id).append(", group=").append(group).append(", name=")
-				.append(name).append(", password=").append(password).append(", email=")
-				.append(email).append(", roles=").append(roles).append(", health=").append(health)
-				.append("]");
+		builder.append("User [email=").append(email).append(", id=").append(id).append(", name=")
+				.append(name).append(", nickname=").append(nickname).append(", password=")
+				.append(password).append(", joined=").append(joined).append(", notices=")
+				.append(notices).append(", roles=").append(roles).append(", health=")
+				.append(health).append("]");
 		return builder.toString();
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((group == null) ? 0 : group.hashCode());
-		result = prime * result + ((health == null) ? 0 : health.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		User other = (User) obj;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
-		if (group == null) {
-			if (other.group != null)
-				return false;
-		} else if (!group.equals(other.group))
-			return false;
-		if (health == null) {
-			if (other.health != null)
-				return false;
-		} else if (!health.equals(other.health))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (password == null) {
-			if (other.password != null)
-				return false;
-		} else if (!password.equals(other.password))
-			return false;
-		if (roles == null) {
-			if (other.roles != null)
-				return false;
-		} else if (!roles.equals(other.roles))
-			return false;
-		return true;
 	}
 }

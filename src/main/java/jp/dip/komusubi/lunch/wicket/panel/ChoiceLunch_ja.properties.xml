@@ -2,7 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>ChoiceLunch Panel Properties</comment>
-<entry key="order.closed.message">{0}は {1}の注文の受付を終了しました。</entry>
+<entry key="order.closed.message">{0}は {1}の注文受付を終了しました。</entry>
 <entry key="not.found.product.in.period">{0} の商品は見つかりませんでした。</entry>
 <entry key="amount.label">料金</entry>
 <entry key="amount.unit">円</entry>

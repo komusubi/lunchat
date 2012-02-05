@@ -159,7 +159,7 @@ public class JdbcOrderDao implements OrderDao {
 		@Override
 		public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Order order = new Order(rs.getInt("id"))
-			.setUser(userDao.find(rs.getString("userId")))
+			.setUser(userDao.find(rs.getInt("userId")))
 			.setShop(shopDao.find(rs.getString("shopId")))
 			.setAmount(rs.getInt("amount"))
 			.addOrderLines(orderLineDao.findByOrderId(rs.getInt("id")))

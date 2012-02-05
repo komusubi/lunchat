@@ -25,9 +25,9 @@ import jp.dip.komusubi.lunch.model.User;
 
 import org.komusubi.common.persistence.GenericDao;
 
-public interface UserDao extends GenericDao<String, User> {
+public interface UserDao extends GenericDao<Integer, User> {
 
 	User findByEmail(String email);
 	void update(Health instance);
-	List<User> findByGroupId(String groupId);
+	List<User> findByGroupId(Integer groupId);
 }

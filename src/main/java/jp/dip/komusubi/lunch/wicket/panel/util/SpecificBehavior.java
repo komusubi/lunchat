@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.apache.wicket.validation.validator.PatternValidator;
 import org.apache.wicket.validation.validator.StringValidator;
 
@@ -44,6 +45,13 @@ public class SpecificBehavior {
 		return component;
 	}
 
+	public static FormComponent<String> behaveEmailField(FormComponent<String> component) {
+		component.add(EmailAddressValidator.getInstance())
+					.add(StringValidator.lengthBetween(3, 128))
+					.setRequired(true);
+		return component;
+	}
+	
 	public static PasswordTextField behavePasswordField(PasswordTextField password) {
 		return (PasswordTextField) behavePasswordField((FormComponent<String>) password);
 	}

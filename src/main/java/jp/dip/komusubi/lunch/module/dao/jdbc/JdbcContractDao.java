@@ -44,12 +44,14 @@ public class JdbcContractDao implements ContractDao {
 	private static final Logger logger = LoggerFactory.getLogger(JdbcContractDao.class);
 	private static final String COLUMNS = "id, groupId, shopId, contracted";
 	private static final String SELECT_RECORD_QUERY = "select " + COLUMNS + " from contracts where = ?";
-	private static final String INSERT_RECORD_QUERY = "insert into contracts (groupId, shopId, contracted) values (?, ?, ?)";
+	private static final String INSERT_RECORD_QUERY = "insert into contracts (groupId, shopId, contracted) values"
+	        + " ((select id from groups where code = ?), ?, ?)";
 	private static final String DELETE_RECORD_QUERY = "delete from contracts where id = ?";
 	private static final String UPDATE_RECORD_QUERY = 
 			"update contracts set groupId = ?, shopId = ?, contracted = ? where id = ?";
-	private static final String SELECT_RECORD_GROUPID_SHOPID = 
-			"select " + COLUMNS + " from contracts where groupId = ? and shopId = ?";
+	private static final String SELECT_RECORD_GROUPID_AND_SHOPID = "select " + COLUMNS + " from contracts where groupId = ? and shopId = ?"; 
+	private static final String SELECT_RECORD_GROUPCODE_AND_SHOPID = 
+			"select " + COLUMNS + " from contracts where groupId = (select id from groups where code = ?) and shopId = ?";
 	private static final String SELECT_QUERY_GROUPID = "select " + COLUMNS + " from contracts where groupId = ?";
 	private static final String SELECT_QUERY_SHOPID = "select " + COLUMNS + " from contracts where shopId = ?";
 	@Inject	private ShopDao shopDao;
@@ -77,24 +79,76 @@ public class JdbcContractDao implements ContractDao {
 		throw new UnsupportedOperationException("#findAll");
 	}
 
+    @Override
+    public List<Contract> findByGroupId(Integer groupId) {
+//	      Set<Contract> set = new HashSet<>();
+        List<Contract> list;
+        try {
+//	          set.addAll(template.query(SELECT_QUERY_GROUPID, contractRowMapper, groupId));
+            list = template.query(SELECT_QUERY_GROUPID, contractRowMapper, groupId);
+        } catch (EmptyResultDataAccessException e) {
+            logger.info("not found contract, groupId:{}", groupId);
+            list = Collections.emptyList();
+        }
+        return list;
+    }
+
+    @Override
+    public List<Contract> findByShopId(String shopId) {
+//	      Set<Contract> set = new HashSet<>();
+        List<Contract> list;
+        try {
+//	          set.addAll(template.query(SELECT_QUERY_SHOPID, contractRowMapper, shopId));
+            list = template.query(SELECT_QUERY_SHOPID, contractRowMapper, shopId);
+        } catch (EmptyResultDataAccessException e) {
+            logger.info("not found contract, shopId:{}", shopId);
+            list = Collections.emptyList();
+        }
+        return list;
+    }
+
+    @Override
+    public Contract findByGroupIdAndShopId(Integer groupId, String shopId) {
+        Contract contract = null;
+        try {
+            contract = template.queryForObject(SELECT_RECORD_GROUPID_AND_SHOPID, contractRowMapper, groupId, shopId);
+        } catch (EmptyResultDataAccessException e) {
+            logger.info("not found contract arguments are groupId:{} and shopId:{}", groupId, shopId);
+        }
+        return contract;
+    }
+
+    @Override
+    public Contract findByGroupCodeAndShopId(String groupCode, String shopId) {
+        Contract contract = null;
+        try {
+            contract = template.queryForObject(SELECT_RECORD_GROUPCODE_AND_SHOPID, contractRowMapper, groupCode, shopId);
+        } catch (EmptyResultDataAccessException e) {
+            logger.info("not found contract arguments are groupCode:{}, and shopId:{}", groupCode, shopId);
+        }
+        return contract;
+    }
 	@Override
 	public Integer persist(Contract instance) {
+	    validate(instance);
+	    Contract contract = null;
 		try {
-			template.update(INSERT_RECORD_QUERY, instance.getGroup().getId(), 
-										instance.getShop().getId(), 
-										instance.getContracted());
+			template.update(INSERT_RECORD_QUERY, instance.getGroup().getCode(), 
+										        instance.getShop().getId(), 
+										        instance.getContracted());
 			
+			contract = findByGroupCodeAndShopId(instance.getGroup().getCode(), instance.getShop().getId());
 		} catch (DataAccessException e) {
 			throw new LunchException(e);
 		}
-		Contract contract = findByGroupIdAndShopId(instance.getGroup().getId(), instance.getShop().getId());
+	    if (contract == null)
+	        throw new IllegalStateException("file presistence, could NOT find Contract: " + instance);
 		return contract.getId();
 	}
 
 	@Override
 	public void remove(Contract instance) {
-		if (instance != null && instance.getId() == 0)
-			throw new IllegalArgumentException("contract id MUST not be zero.");
+	    validate(instance);
 		try {
 			template.update(DELETE_RECORD_QUERY, instance.getId());
 		} catch (DataAccessException e) {
@@ -104,8 +158,7 @@ public class JdbcContractDao implements ContractDao {
 
 	@Override
 	public void update(Contract instance) {
-		if (instance != null && instance.getId() == 0)
-			throw new IllegalArgumentException("contract id MUST not be zero.");
+	    validate(instance);
 		try {
 			template.update(UPDATE_RECORD_QUERY, instance.getGroup().getId(), 
 										instance.getShop().getId(), 
@@ -116,51 +169,17 @@ public class JdbcContractDao implements ContractDao {
 		}
 	}
 
-	@Override
-	public List<Contract> findByGroupId(String groupId) {
-//		Set<Contract> set = new HashSet<>();
-		List<Contract> list;
-		try {
-//			set.addAll(template.query(SELECT_QUERY_GROUPID, contractRowMapper, groupId));
-			list = template.query(SELECT_QUERY_GROUPID, contractRowMapper, groupId);
-		} catch (EmptyResultDataAccessException e) {
-			logger.info("not found contract, groupId:{}", groupId);
-			list = Collections.emptyList();
-		}
-		return list;
+	private void validate(Contract contract) {
+	    if (contract == null || contract.getId() == null)
+	        throw new IllegalArgumentException("contract: wrong instance " + contract);
 	}
-
-	@Override
-	public List<Contract> findByShopId(String shopId) {
-//		Set<Contract> set = new HashSet<>();
-		List<Contract> list; 
-		try {
-//			set.addAll(template.query(SELECT_QUERY_SHOPID, contractRowMapper, shopId));
-			list = template.query(SELECT_QUERY_SHOPID, contractRowMapper, shopId);
-		} catch (EmptyResultDataAccessException e) {
-			logger.info("not found contract, shopId:{}", shopId);
-			list = Collections.emptyList();
-		}
-		return list;
-	}
-
-	@Override
-	public Contract findByGroupIdAndShopId(String groupId, String shopId) {
-		Contract contract = null;
-		try {
-			contract = template.queryForObject(SELECT_RECORD_GROUPID_SHOPID, contractRowMapper, groupId, shopId);
-		} catch (EmptyResultDataAccessException e) {
-			logger.info("not found contract arguments are groupId:{} and shopId:{}", groupId, shopId);
-		}
-		return contract;
-	}
-
+	
 	private final RowMapper<Contract> contractRowMapper = new RowMapper<Contract>() {
 		
 		@Override
 		public Contract mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Contract contract = new Contract(rs.getInt("id"))
-								.setGroup(groupDao.find(rs.getString("groupId")))
+								.setGroup(groupDao.find(rs.getInt("groupId")))
 								.setShop(shopDao.find(rs.getString("shopId")))
 								.setContracted(rs.getDate("contracted"));
 			return contract;

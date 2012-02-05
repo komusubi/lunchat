@@ -22,6 +22,7 @@ import jp.dip.komusubi.lunch.model.Group;
 
 import org.komusubi.common.persistence.GenericDao;
 
-public interface GroupDao extends GenericDao<String, Group>{
+public interface GroupDao extends GenericDao<Integer, Group>{
 
+    Group findByCode(String code);
 }

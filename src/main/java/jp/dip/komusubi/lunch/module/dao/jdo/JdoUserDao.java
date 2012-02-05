@@ -26,7 +26,7 @@ import jp.dip.komusubi.lunch.module.dao.UserDao;
 
 public class JdoUserDao implements UserDao {
 
-	public User find(String pk) {
+	public User find(Integer pk) {
 		return null;
 	}
 
@@ -35,7 +35,7 @@ public class JdoUserDao implements UserDao {
 		return null;
 	}
 
-	public String persist(User instance) {
+	public Integer persist(User instance) {
 
 		return null;
 	}
@@ -62,7 +62,7 @@ public class JdoUserDao implements UserDao {
 	}
 
 	@Override
-	public List<User> findByGroupId(String groupId) {
+	public List<User> findByGroupId(Integer groupId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

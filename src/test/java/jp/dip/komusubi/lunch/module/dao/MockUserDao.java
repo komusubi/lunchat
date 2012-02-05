@@ -25,7 +25,7 @@ import jp.dip.komusubi.lunch.model.User;
 
 public class MockUserDao implements UserDao {
 
-	public User find(String pk) {
+	public User find(Integer pk) {
 		return null;
 	}
 
@@ -34,7 +34,7 @@ public class MockUserDao implements UserDao {
 		return null;
 	}
 
-	public String persist(User instance) {
+	public Integer persist(User instance) {
 
 		return null;
 	}
@@ -58,7 +58,7 @@ public class MockUserDao implements UserDao {
 	}
 
 	@Override
-	public List<User> findByGroupId(String groupId) {
+	public List<User> findByGroupId(Integer groupId) {
 		return null;
 	}
 

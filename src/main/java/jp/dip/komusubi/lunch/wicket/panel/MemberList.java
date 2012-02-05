@@ -95,7 +95,7 @@ public abstract class MemberList extends Panel {
 				
 				private static final long serialVersionUID = -7932363259153679644L;
 				{
-					add(new Label("id", model.getObject().getId()));
+					add(new Label("nickname", model.getObject().getNickname()));
 					add(new Label("name", model.getObject().getName()));
 				}
 				@Override

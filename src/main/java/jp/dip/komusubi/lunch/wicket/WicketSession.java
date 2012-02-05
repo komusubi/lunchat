@@ -16,9 +16,13 @@
  */
 package jp.dip.komusubi.lunch.wicket;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.service.AccountService;
+import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.component.SimpleBrowserInfoPage;
 
 import org.apache.wicket.Session;
@@ -35,6 +39,7 @@ public class WicketSession extends AuthenticatedWebSession {
 	private static final long serialVersionUID = 2537313227105289690L;
 	private static final Logger logger = LoggerFactory.getLogger(WicketSession.class);
 	private User loggedInUser;
+	private Set<FormKey> formKeys = new HashSet<>();
 
 	public static WicketSession get() {
 		return (WicketSession) Session.get();
@@ -45,10 +50,10 @@ public class WicketSession extends AuthenticatedWebSession {
 	}
 
 	@Override
-	public boolean authenticate(final String userId, final String password) {
+	public boolean authenticate(final String email, final String password) {
 		AccountService accountService = Configuration.getInstance(AccountService.class);
-		if (accountService.signIn(userId, password)) {
-			loggedInUser = accountService.find(userId);
+		if (accountService.signIn(email, password)) {
+			loggedInUser = accountService.find(email);
 			return true;
 		} else {
 			return false;
@@ -77,4 +82,11 @@ public class WicketSession extends AuthenticatedWebSession {
 		return new SimpleBrowserInfoPage();
 	}
 
+	public void addFormKey(FormKey key) {
+		formKeys.add(key);
+	}
+	
+	public boolean removeFormKey(FormKey key) {
+		return formKeys.remove(key);
+	}
 }

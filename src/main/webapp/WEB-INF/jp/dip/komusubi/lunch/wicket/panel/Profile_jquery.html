@@ -20,7 +20,10 @@
         <span wicket:id="feedback">feedback</span>
         <form data-ajax="false" wicket:id="profile.form">
           <div data-role="fieldcontain">
-            <label for="id">ID</label><input type="text" id="id" wicket:id="id">
+            <label for="email">メールアドレス</label><input type="email" id="email" wicket:id="email">
+          </div>
+          <div data-role="fieldcontain">
+            <label for="nickname">ID</label><input type="text" id="nickname" wicket:id="nickname">
           </div>
           <div data-role="fieldcontain">
             <label for="name">名前</label><input type="text" id="name" wicket:id="name">
@@ -30,9 +33,6 @@
           </div>
           <div data-role="fieldcontain">
             <label for="confirm">パスワード(確認用)</label><input type="password" id="confirm" wicket:id="confirm">
-          </div>
-          <div data-role="fieldcontain">
-            <label for="email">メールアドレス</label><input type="email" id="email" wicket:id="email">
           </div>
           <div class="ui-grid-a">
             <span class="ui-block-a"><input type="submit" value="登録" data-theme="b"></span> <span

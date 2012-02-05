@@ -69,6 +69,7 @@ public class EmailEntry extends Panel {
 		@Override
 		public void onSubmit() {
 			// confirm page の absolute URLを取得
+			// FIXME apply to hollylwood principle
 			String targetPath = getRequestCycle().urlFor(nextPage, null).toString();
 			String ownUrl = getRequestCycle().getUrlRenderer().renderFullUrl(getRequest().getClientUrl());
 			String url = RequestUtils.toAbsolutePath(ownUrl, targetPath);

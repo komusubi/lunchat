@@ -50,7 +50,7 @@ public class MockContractDao implements ContractDao {
 	}
 
 	@Override
-	public List<Contract> findByGroupId(String groupId) {
+	public List<Contract> findByGroupId(Integer groupId) {
 		return null;
 	}
 
@@ -60,8 +60,13 @@ public class MockContractDao implements ContractDao {
 	}
 
 	@Override
-	public Contract findByGroupIdAndShopId(String groupId, String shopId) {
+	public Contract findByGroupIdAndShopId(Integer groupId, String shopId) {
 		return null;
 	}
+
+    @Override
+    public Contract findByGroupCodeAndShopId(String groupCode, String shopId) {
+        return null;
+    }
 
 }

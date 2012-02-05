@@ -26,7 +26,8 @@ import org.komusubi.common.persistence.GenericDao;
 
 public interface ContractDao extends GenericDao<Integer, Contract> {
 
-	List<Contract> findByGroupId(String groupId);
+	List<Contract> findByGroupId(Integer groupId);
 	List<Contract> findByShopId(String shopId);
-	Contract findByGroupIdAndShopId(String groupId, String shopId);
+	Contract findByGroupIdAndShopId(Integer groupId, String shopId);
+	Contract findByGroupCodeAndShopId(String groupCode, String shopId);
 }

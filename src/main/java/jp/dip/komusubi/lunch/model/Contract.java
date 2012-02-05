@@ -29,8 +29,8 @@ import java.util.Date;
 public class Contract implements Serializable {
 	
 	private static final long serialVersionUID = 7667124644145815969L;
-	public static final int DEFAULT_ID = -1;
-	private int id;
+	public static final Integer DEFAULT_ID = -1;
+	private Integer id;
 	private Group group;
 //	private String groupId;
 	private Shop shop;
@@ -41,8 +41,19 @@ public class Contract implements Serializable {
 		this(DEFAULT_ID);
 	}
 	
-	public Contract(int id) {
+	public Contract(Integer id) {
 		this.id = id;
+	}
+	
+	public Contract(Integer id, Shop shop, Group group) {
+	    this(id);
+	    setShop(shop);
+	    setGroup(group);
+	    setContracted(new Date());
+	}
+	
+	public Contract(Shop shop, Group group) {
+	    this(DEFAULT_ID, shop, group);
 	}
 	
 	public Date getContracted() {
@@ -56,7 +67,7 @@ public class Contract implements Serializable {
 //		return groupId;
 //	}
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
@@ -94,8 +105,8 @@ public class Contract implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Contract [id=").append(id).append(", group=").append(group)
-				.append(", shop=").append(shop).append(", contracted=").append(contracted)
+		builder.append("Contract [id=").append(id).append(", groupId=").append(group == null ? "null" : group.getId())
+				.append(", shopId=").append(shop == null ? "null" : shop.getId()).append(", contracted=").append(contracted)
 				.append("]");
 		return builder.toString();
 	}

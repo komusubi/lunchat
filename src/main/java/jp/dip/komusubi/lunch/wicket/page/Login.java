@@ -43,6 +43,7 @@ public class Login extends VariationBase {
 	
 	public Login(PageParameters params) {
 		StringValue activateValue = params.get("activate");
+		// FIXME should not change component any condition!
 		SignIn signIn;
 		if (!activateValue.isEmpty())
 			signIn = new SignIn("signInPanel", activateValue.toString());
