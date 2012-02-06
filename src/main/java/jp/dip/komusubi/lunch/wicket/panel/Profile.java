@@ -20,8 +20,10 @@ package jp.dip.komusubi.lunch.wicket.panel;
 
 import java.util.Date;
 
+import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.User;
+import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.util.Nonce;
@@ -81,6 +83,7 @@ public class Profile extends Panel {
 	private abstract class ProfileForm extends Form<Void> {
 		private static final long serialVersionUID = -752103310649689060L;
 		private String confirmPassword;
+		private TextField<String> nickname;
 		private PasswordTextField password;
 		private PasswordTextField confirm;
 		private EmailTextField email;
@@ -93,13 +96,14 @@ public class Profile extends Panel {
 			super(id);
 			user = loadUser();
 			this.setDefaultModel(new CompoundPropertyModel<User>(user));
-			add(behaveNickname(new TextField<String>("nickname")));
+			add(behaveNickname(nickname = new TextField<String>("nickname")));
 			add(behaveName(new TextField<String>("name")));
 			add(behavePassword(password = new PasswordTextField("password")));
 			add(behavePassword(confirm = new PasswordTextField("confirm", 
 											new PropertyModel<String>(this, "confirmPassword"))));
 			add(behaveEmail(email = new EmailTextField("email")));
 			add(passwordMatchValidator());
+			add(existsNicknameValidator());
 		}
 
 		private FormComponent<String> behaveNickname(TextField<String> text) {
@@ -139,6 +143,31 @@ public class Profile extends Panel {
 				}
 			};
 		}
+		// exist nickname ?
+		private AbstractFormValidator existsNicknameValidator() {
+		    return new AbstractFormValidator() {
+
+                private static final long serialVersionUID = -6400952775790379058L;
+
+                @Override
+                public FormComponent<?>[] getDependentFormComponents() {
+                    return new FormComponent[]{nickname};
+                }
+
+                @Override
+                public void validate(Form<?> form) {
+                    UserDao userDao = Configuration.getInstance(UserDao.class);
+                    if (userDao.findByNickname(nickname.getInput()) != null)
+                        error(nickname);
+                }
+                @Override
+                public String resourceKey() {
+                    return "nickname.has.existed.already";
+                }
+		        
+		    };
+		}
+		
 /*
 		private AbstractFormValidator confirmDigestValidator() {
 			return new AbstractFormValidator() {

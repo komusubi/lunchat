@@ -41,9 +41,9 @@ public class JdbcHealthDao implements HealthDao {
 	private static final String COLUMNS = "userId, login, lastLogin, loginFail, admitted, active, groupId, groupJoined"; 
 	private static final String SELECT_QUERY_PK = "select " + COLUMNS + " from health where userId = ?";
 	private static final String UPDATE_QUERY = "update health set login = ?, lastLogin = ?, loginFail = ?,"
-													+ " admitted = ?, active = ?, groupId = ?, groupJoined = ? where userId = ?";
-	private static final String INSERT_QUERY = "insert into health (" + COLUMNS + ") values (" +
-			"(select id from users where email = ?), ?, ?, ?, ?, ?, ?, ?)";
+			+ " admitted = ?, active = ?, groupId = (select id from groups where code = ?), groupJoined = ? where userId = ?";
+	private static final String INSERT_QUERY = "insert into health (" + COLUMNS + ") values ("
+			+ "(select id from users where email = ?), ?, ?, ?, ?, ?, (select id from groups where code = ?),  ?)";
 	private SimpleJdbcTemplate template;
 	private GroupDao groupDao;
 
@@ -79,7 +79,7 @@ public class JdbcHealthDao implements HealthDao {
 											instance.getLoginFail(),
 											instance.getAdmitter(),
 											instance.isActive(),
-											instance.getGroup() != null ? instance.getGroup().getId() : null,
+											instance.getGroup() != null ? instance.getGroup().getCode() : null,
 											instance.getGroupJoined());
 		} catch (DataAccessException e) {
 			throw new LunchException(e);
@@ -101,7 +101,7 @@ public class JdbcHealthDao implements HealthDao {
 											instance.getLoginFail(),
 											instance.getAdmitter(),
 											instance.isActive(),
-											instance.getGroup() != null ? instance.getGroup().getId() : null,
+											instance.getGroup() != null ? instance.getGroup().getCode() : null,
 											instance.getGroupJoined(),
 											instance.getUser().getId());
 		} catch (DataAccessException e) {

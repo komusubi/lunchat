@@ -62,4 +62,9 @@ public class MockUserDao implements UserDao {
 		return null;
 	}
 
+    @Override
+    public User findByNickname(String nickname) {
+        return null;
+    }
+
 }

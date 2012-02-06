@@ -15,6 +15,7 @@
 <entry key="email.unmatched.digest">メールアドレスが一致しません。</entry>
 <entry key="registry.completed">${name}さん、登録が完了しました。ログイン画面よりご利用ください。</entry>
 <entry key="registry.failed">アカウント登録処理でエラーが発生しました。</entry>
+<entry key="nickname.has.existed.already">${input}は既に利用されています。</entry>
 <!-- 
 <entry key="null">入力エラーが発生しています。</entry>
 -->

@@ -50,7 +50,8 @@ public class JdbcUserDao implements UserDao {
 					+ " where id = ?";
 	private static final String SELECT_RECORD_BY_EMAIL = "select " + COLUMNS + " from users where email = ?";
 	private static final String SELECT_RECORD_BY_GROUPID = "select " + COLUMNS + " from users, health"
-					+ " where health.groupId = ?";
+					+ " where health.groupId = ? and health.userId = id";
+	private static final String SELECT_RECORD_BY_NICKNAME = "select " + COLUMNS + " from users where nickname = ?";
 	private HealthDao healthDao;
 	private SimpleJdbcTemplate template;
 	
@@ -127,6 +128,15 @@ public class JdbcUserDao implements UserDao {
 		return user;
 	}
 
+	public User findByNickname(String nickname) {
+	    User user = null;
+	    try {
+	        user = template.queryForObject(SELECT_RECORD_BY_NICKNAME, userRowMapper, nickname);
+	    } catch (EmptyResultDataAccessException e) {
+	        logger.info("not found user nickname is {}", nickname);
+	    }
+	    return user;
+	}
 	public List<User> findByGroupId(Integer groupId) {
 		List<User> list;
 		list = template.query(SELECT_RECORD_BY_GROUPID, userRowMapper, groupId);
