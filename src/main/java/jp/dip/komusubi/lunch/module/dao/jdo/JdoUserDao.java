@@ -72,4 +72,9 @@ public class JdoUserDao implements UserDao {
         return null;
     }
 
+    @Override
+    public List<User> findByAdmitter(String name) {
+        return null;
+    }
+
 }

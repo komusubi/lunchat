@@ -130,7 +130,7 @@ public abstract class ChoiceLunch extends Panel {
 				for (Shop shop: shops) {
 					boolean found = false;
 					itemValues.add(shop);
-					if (current.before(todayLimit)) {
+					if (current.before(todayLimit) && !shop.isDayOff()) {
 						for (Product product: shopping.getDeadlineTimeProducts(shop, current.getTime())) {
 							itemValues.add(product);
 							found = true;
@@ -148,7 +148,7 @@ public abstract class ChoiceLunch extends Panel {
 						for (Calendar orderCalendar = getTomorrow(current);
 								(orderCalendar.getTimeInMillis() - current.getTimeInMillis()) / MILLISECONDS_DAY <= SEEK_PERIOD;
 								orderCalendar.add(Calendar.DATE, 1)) {
-							for (Product product: shopping.getDeadlineTimeProducts(shop, orderCalendar.getTime())) {
+						    for (Product product: shopping.getDeadlineProducts(shop, orderCalendar.getTime())) {
 								itemValues.add(product);
 								found = true;
 							}

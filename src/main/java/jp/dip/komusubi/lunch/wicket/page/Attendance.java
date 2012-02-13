@@ -18,17 +18,21 @@
  */
 package jp.dip.komusubi.lunch.wicket.page;
 
-import java.text.MessageFormat;
-
-import jp.dip.komusubi.lunch.model.User;
+import jp.dip.komusubi.lunch.Configuration;
+import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.wicket.panel.Approval;
-import jp.dip.komusubi.lunch.wicket.panel.Approval.ApprovalBean;
 import jp.dip.komusubi.lunch.wicket.panel.Footer;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
 
-import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.komusubi.common.util.Resolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 /**
  * group attendance.
@@ -38,43 +42,42 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 public class Attendance extends AuthorizedPage {
 
 	private static final long serialVersionUID = 1242588429737776047L;
-	private final User applyTo;
-	
-	public Attendance(User applyTo) {
-		this.applyTo = applyTo;
-		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
-		add(new Approval("approval", new CompoundPropertyModel<ApprovalBean>(getApprovalBean())));
-		add(new Footer("footer"));
-	}
+	private static final Logger logger = LoggerFactory.getLogger(Attendance.class);
+//	private PageParameters params;
+	@Inject @Named("digest") Resolver<String> digester;
 	
 	public Attendance(PageParameters params) {
-		applyTo = null;
+		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
+		add(new FeedbackPanel("feedback"));
+		add(getApproval("approval", params));
+		add(new Footer("footer"));
+	}
+
+	protected Approval getApproval(String id, PageParameters params) {
+	    return new Approval("approval", params) {
+
+            private static final long serialVersionUID = -6648237699896515215L;
+            private transient AccountService account = Configuration.getInstance(AccountService.class);
+
+            /**
+             * admit to become a member of group.
+             */
+            @Override
+            protected void onApproval() {
+               account.approve(getAdmitter(), getApplicant(), getMessageFromAdmitter(), getPageUrl(Home.class));
+               logger.info("{} was admitted to become a member of {}", getApplicant().getNickname(), 
+                        getAdmitter().getGroup().getCode());
+            }
+
+            @Override
+            protected void onCancel() {
+                account.decline(getAdmitter(), getApplicant(), getMessageFromAdmitter());
+                logger.info("{} denied {} join a member of {}", 
+                        new Object[]{ getAdmitter().getNickname(), 
+                                        getApplicant().getNickname(), 
+                                        getAdmitter().getGroup().getCode() });
+            }
+	    };
 	}
 	
-	// 1. 既にグループに所属していないか？(複数人に参加要請をした場合の考慮)(別のグループの場合あり？)
-
-	protected ApprovalBean getApprovalBean() {
-		ApprovalBean bean = new ApprovalBean() {
-
-			@Override
-			public void onApply() {
-				
-				
-			}
-
-			@Override
-			public void onCancel() {
-				
-			}
-			
-		};
-		
-		bean.noticeLabel = MessageFormat.format(
-				getLocalizer().getString("message", Attendance.this),
-				applyTo.getName(), "");
-//		bean.applyButton = getLocalizer().getString("", Participation.this);
-//		bean.cancelButton = getLocalizer().getString("", Participation.this);
-		
-		return bean;
-	}
 }

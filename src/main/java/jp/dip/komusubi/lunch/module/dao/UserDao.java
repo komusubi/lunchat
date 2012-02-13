@@ -29,7 +29,8 @@ public interface UserDao extends GenericDao<Integer, User> {
 
 	User findByEmail(String email);
 	User findByNickname(String nickname);
-	void update(Health instance);
 	List<User> findByGroupId(Integer groupId);
+	List<User> findByAdmitter(String name);
+	void update(Health instance);
 	
 }

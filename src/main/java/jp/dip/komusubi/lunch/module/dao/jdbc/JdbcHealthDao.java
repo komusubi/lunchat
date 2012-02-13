@@ -80,7 +80,7 @@ public class JdbcHealthDao implements HealthDao {
 											instance.getAdmitter(),
 											instance.isActive(),
 											instance.getGroup() != null ? instance.getGroup().getCode() : null,
-											instance.getGroupJoined());
+											JdbcDateConverter.toTimestamp(instance.getGroupJoined()));
 		} catch (DataAccessException e) {
 			throw new LunchException(e);
 		}
@@ -102,7 +102,7 @@ public class JdbcHealthDao implements HealthDao {
 											instance.getAdmitter(),
 											instance.isActive(),
 											instance.getGroup() != null ? instance.getGroup().getCode() : null,
-											instance.getGroupJoined(),
+											JdbcDateConverter.toTimestamp(instance.getGroupJoined()),
 											instance.getUser().getId());
 		} catch (DataAccessException e) {
 			throw new LunchException(e);
@@ -125,11 +125,11 @@ public class JdbcHealthDao implements HealthDao {
 //			Health health = new Health(rs.getString("userId"))
 									.setLogin(rs.getInt("login"))
 									.setLoginFail(rs.getInt("loginFail"))
-									.setLastLogin(rs.getDate("lastLogin"))
+									.setLastLogin(rs.getTimestamp("lastLogin"))
 									.setAdmitter(rs.getString("admitted"))
 									.setActive(rs.getBoolean("active"))
 									.setGroup(groupDao.find(rs.getInt("groupId")))
-									.setGroupJoined(rs.getDate("groupJoined"));
+									.setGroupJoined(rs.getTimestamp("groupJoined"));
 			return health;
 		}
 		

@@ -31,7 +31,6 @@ import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Contract;
 import jp.dip.komusubi.lunch.model.Group;
-import jp.dip.komusubi.lunch.model.Health;
 import jp.dip.komusubi.lunch.model.Order;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.Transactional;
@@ -40,6 +39,7 @@ import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.util.Nonce;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.komusubi.common.protocol.smtp.MailContent;
 import org.komusubi.common.protocol.smtp.MailMessage;
 import org.komusubi.common.protocol.smtp.SmtpServer;
@@ -76,11 +76,9 @@ public class AccountService implements Serializable {
 	private SmtpServer smtp;
 	private transient Resolver<String> digester;
 	@Inject @Named("date") private transient Resolver<Date> dateResolver;
-	private User authedUser;
 	@Inject private GroupDao groupDao;
-//	@Inject private ShopDao shopDao;
-//	@Inject private OrderDao orderDao;
 	@Inject private ContractDao contractDao;
+	private User authedUser;
 	
 	@Inject
 	public AccountService(UserDao userDao, 
@@ -206,7 +204,7 @@ public class AccountService implements Serializable {
 	}
 	
 	/**
-	 * apply create account user.
+	 * apply to create a account for new user.
 	 * @param user for registry.
 	 * @param url temporary url for authentication.
 	 * @return
@@ -219,14 +217,13 @@ public class AccountService implements Serializable {
 		builder.append(nonce.get(user.getEmail()));
 		try {
 			MailContent content = new MailContent();
-			User from = new User();
-			from.setName(getString("confirm.mail.from.name")) //$NON-NLS-1$
-				.setEmail(getString("confirm.mail.from.address")); //$NON-NLS-1$
+//			admin.setName(getString("confirm.mail.from.name")) //$NON-NLS-1$
+//				.setEmail(getString("confirm.mail.from.address")); //$NON-NLS-1$
 			content.setSubject(getString("confirm.mail.title")); //$NON-NLS-1$
 			content.setBody(format("confirm.mail.body", builder.toString())); //$NON-NLS-1$
 			MailMessage mail = new MailMessage();
 			mail.setContent(content);
-			mail.setFrom(from);
+			mail.setFrom(getAdminUser());
 			mail.addToRecipient(user);
 			smtp.send(mail);
 			logger.info("send to {}, subject is {},", user.getEmail(), getString("confirm.mail.title"));
@@ -237,36 +234,34 @@ public class AccountService implements Serializable {
 	}
 
 	/**
-	 * admit to be a member.
+	 * apply to be a member of group.
 	 * @param who admit to member of group.
 	 * @param whom request to member of group.
 	 * @param url 
 	 */
-	public void admit(User who, User whom, String url) {
+	@Transactional
+	public void apply(User who, User whom, String url) {
 		StringBuilder builder = new StringBuilder(url);
 		if (!url.endsWith("/"))
 			builder.append("/");
 		try {
 			// nonce ?
 			Date stamp = dateResolver.resolve();
-			String fragment = digester.resolve(who.getEmail() 
-								+ Long.toString(stamp.getTime())
-								+ whom.getEmail());
+		    String fragment = digest(who, whom, stamp);
 			builder.append(fragment);
-			User from = new User();
 			MailContent content = new MailContent();
-			from.setName(getString("admit.mail.from.name"))
-				.setEmail(getString("admit.mail.from.address"));
+//			admin.setName(getString("admit.mail.from.name"))
+//				.setEmail(getString("admit.mail.from.address"));
 			content.setSubject(getString("admit.mail.title"));
 			content.setBody(format("admit.mail.body",
 					who.getName(),
 					who.getGroup().getName(),
 					whom.getName(),
-					whom.getId(),
+					whom.getNickname(),
 					builder.toString()));
 			MailMessage mail = new MailMessage();
 			mail.setContent(content);
-			mail.setFrom(from);
+			mail.setFrom(getAdminUser());
 			mail.addToRecipient(who);
 			smtp.send(mail);
 			logger.info("send to {}, subject is {}.", who.getEmail(), getString("admit.mail.title"));
@@ -274,17 +269,93 @@ public class AccountService implements Serializable {
 			// persist after mail sent.
 			// set fragment requester's admitter in temporary.
 			whom.getHealth().setAdmitter(fragment);
-//			whom.getHealth().setJoined(stamp);
-			updateHealth(whom.getHealth());
+			whom.getHealth().setGroupJoined(stamp);
+//			updateHealth(whom.getHealth());
+			userDao.update(whom.getHealth());
+		} catch (IllegalStateException e) {
+		    throw e;
 		} catch (Exception e) {
-			throw new IllegalStateException(e);
+	        throw new IllegalStateException(e);
 		}		
 	}
 	
+	/**
+	 * approve applicant to join a member of group. 
+	 * @param admitter 
+	 * @param applicant
+	 * @param message 
+	 */
 	@Transactional
-	public void updateHealth(Health health) {
-		userDao.update(health);
+	public void approve(User admitter, User applicant, String message, String url) {
+	    try {
+    	    applicant.getHealth().setGroup(admitter.getGroup());
+    	    applicant.getHealth().setGroupJoined(dateResolver.resolve());
+    	    applicant.getHealth().setAdmitter(admitter.getId().toString());
+    	    userDao.update(applicant.getHealth());
+    	    // mail
+    	    MailContent content = new MailContent();
+    	    content.setSubject(getString("approve.mail.subject"));
+    	    content.setBody(format("approve.mail.body",
+    	                            applicant.getName(),
+    	                            applicant.getGroup().getName(),
+    	                            applicant.getGroup().getCode(),
+    	                            admitter.getNickname(),
+    	                            message,
+    	                            url));
+    	    MailMessage mail = new MailMessage();
+    	    mail.setContent(content);
+    	    mail.setFrom(getAdminUser());
+    	    mail.addToRecipient(applicant);
+    	    smtp.send(mail);
+    	    logger.info("send to {}, subject is {}", applicant.getEmail(), getString("approve.mail.subject"));
+    	    
+	    } catch (IllegalStateException e) {
+	        throw e;
+	    } catch (Exception e) {
+	        throw new IllegalStateException(e);
+	    }
 	}
+	
+	/**
+	 * decline to join a member of group.
+	 * @param admitter
+	 * @param applicant
+	 * @param message
+	 */
+	public void decline(User admitter, User applicant, String message) {
+	    try {
+	        MailContent content = new MailContent();
+	        content.setSubject(getString("deny.mail.subject"));
+	        content.setBody(format("deny.mail.body",
+	                            applicant.getName(),
+	                            admitter.getGroup().getName(),
+	                            admitter.getGroup().getCode(),
+	                            admitter.getNickname(),
+	                            message));
+	        MailMessage mail = new MailMessage();
+	        mail.setContent(content);
+	        mail.setFrom(getAdminUser());
+	        mail.addToRecipient(applicant);
+	        smtp.send(mail);
+	        logger.info("send to {}, subject is {}", applicant.getEmail(), getString("deny.mail.subject"));
+	        
+	    } catch (IllegalStateException e) {
+	        throw e;
+	    } catch (Exception e) {
+	        throw new IllegalStateException(e);
+	    }
+	}
+	
+	private User getAdminUser() {
+	    return new User()
+	                .setName(getString("admin.name"))
+	                .setEmail(getString("admin.email"));
+	}
+	
+//	@Transactional
+//	public void updateHealth(Health health) {
+//		userDao.update(health);
+//	}
 	
 	public Nonce remind(String email, String url) {
 		User to = userDao.findByEmail(email);
@@ -359,5 +430,21 @@ public class AccountService implements Serializable {
 //		List<Order> orders = orderDao.findByUserAndDate(user.getId(), date);
 		List<Order> orders = new ArrayList<>();
 		return orders;
+	}
+	
+	public String digest(User who, User whom, Date stamp) {
+	    String groupCode = who.getGroup() != null ? who.getGroup().getCode() : "";
+	    String admitterEmail = who.getEmail();
+	    String timeStamp = DateFormatUtils.format(stamp, "yyyyMMddHHmmss");
+	    String applicantEmail = whom.getEmail();
+	    
+        String fragment = digester.resolve(new StringBuilder(groupCode)
+                                                .append(admitterEmail)
+                                                .append(timeStamp)
+                                                .append(applicantEmail).toString());
+        logger.info("digest value is groupCode:{}, admitter email:{}, stamp:{}, applicant email:{}",
+                new Object[]{ groupCode, admitterEmail, timeStamp, applicantEmail });
+
+        return fragment;
 	}
 }

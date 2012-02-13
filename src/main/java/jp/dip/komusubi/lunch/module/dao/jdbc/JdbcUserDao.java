@@ -46,12 +46,13 @@ public class JdbcUserDao implements UserDao {
 	private static String COLUMNS = "email, id, password, nickname, name, joined";
 	private static final String SELECT_RECORD_QUERY = "select " + COLUMNS + " from users where id = ?";
 	private static final String INSERT_RECORD_QUERY = "insert into users (" + COLUMNS + ") values (?, ?, ?, ?, ?, ?)";
-	private static final String UPDATE_RECORD_QUERY = "update users set password = ?, name = ?, email = ?"
+	private static final String UPDATE_RECORD_QUERY = "update users set password = ?, name = ?, email = ?, nickname = ?"
 					+ " where id = ?";
 	private static final String SELECT_RECORD_BY_EMAIL = "select " + COLUMNS + " from users where email = ?";
 	private static final String SELECT_RECORD_BY_GROUPID = "select " + COLUMNS + " from users, health"
 					+ " where health.groupId = ? and health.userId = id";
 	private static final String SELECT_RECORD_BY_NICKNAME = "select " + COLUMNS + " from users where nickname = ?";
+    private static final String SELECT_RECORD_BY_ADMITTER = "select " + COLUMNS + " from users, health where admitted = ? and health.userId = id"; 
 	private HealthDao healthDao;
 	private SimpleJdbcTemplate template;
 	
@@ -60,7 +61,41 @@ public class JdbcUserDao implements UserDao {
 		template = new SimpleJdbcTemplate(dataSource);
 		this.healthDao = healthDao;
 	}
-	
+
+    public User findByEmail(String email) {
+        User user = null;
+        try {
+            user = template.queryForObject(SELECT_RECORD_BY_EMAIL, userRowMapper, email);
+        } catch (EmptyResultDataAccessException e) {
+            logger.info("not found user email is {}", email);
+        }
+        return user;
+    }
+
+    public User findByNickname(String nickname) {
+        User user = null;
+        try {
+            user = template.queryForObject(SELECT_RECORD_BY_NICKNAME, userRowMapper, nickname);
+        } catch (EmptyResultDataAccessException e) {
+            logger.info("not found user nickname is {}", nickname);
+        }
+        return user;
+    }
+    
+    public List<User> findByGroupId(Integer groupId) {
+        List<User> list;
+        list = template.query(SELECT_RECORD_BY_GROUPID, userRowMapper, groupId);
+        logger.info("findByGroupId find: {}", list.size());
+        return list;
+    }
+    
+    public List<User> findByAdmitter(String name) {
+        List<User> users;
+        users = template.query(SELECT_RECORD_BY_ADMITTER, userRowMapper, name);
+        logger.info("findBYAdmitter find: {}", users.size());
+        return users;
+    }
+    
 	public User find(Integer pk) {
 		User user = null;
 		try {
@@ -79,13 +114,12 @@ public class JdbcUserDao implements UserDao {
 	    User user = null;
 		try {
 			validate(instance);
-			template.update(INSERT_RECORD_QUERY, 
-					instance.getEmail(),
-					instance.getId(), 
-					instance.getPassword(),
-					instance.getNickname(),
-					instance.getName(),	
-					instance.getJoined());
+			template.update(INSERT_RECORD_QUERY, instance.getEmail(),
+			                                    instance.getId(), 
+			                                    instance.getPassword(),
+			                                    instance.getNickname(),
+			                                    instance.getName(),	
+			                                    JdbcDateConverter.toTimestamp(instance.getJoined()));
 			// health 
 			healthDao.persist(instance.getHealth());
 			// find user for get user id, because auto increment.
@@ -107,41 +141,18 @@ public class JdbcUserDao implements UserDao {
 		Integer groupId = null;
 		if (instance.getGroup() != null)
 			groupId = instance.getGroup().getId();
-		template.update(UPDATE_RECORD_QUERY, 
-				instance.getPassword(), instance.getName(),
-				instance.getEmail(), groupId, instance.getId());
+		template.update(UPDATE_RECORD_QUERY, instance.getPassword(), 
+		                                    instance.getName(),
+		                                    instance.getEmail(),
+		                                    instance.getNickname(),
+		                                    groupId, 
+		                                    instance.getId());
 		// update user's health 
 		update(instance.getHealth());
 	}
 
 	public void update(Health instance) {
 		healthDao.update(instance);
-	}
-	
-	public User findByEmail(String email) {
-		User user = null;
-		try {
-			user = template.queryForObject(SELECT_RECORD_BY_EMAIL, userRowMapper, email);
-		} catch (EmptyResultDataAccessException e) {
-			logger.info("not found user email is {}", email);
-		}
-		return user;
-	}
-
-	public User findByNickname(String nickname) {
-	    User user = null;
-	    try {
-	        user = template.queryForObject(SELECT_RECORD_BY_NICKNAME, userRowMapper, nickname);
-	    } catch (EmptyResultDataAccessException e) {
-	        logger.info("not found user nickname is {}", nickname);
-	    }
-	    return user;
-	}
-	public List<User> findByGroupId(Integer groupId) {
-		List<User> list;
-		list = template.query(SELECT_RECORD_BY_GROUPID, userRowMapper, groupId);
-		logger.info("findByGroupId find: {}", list.size());
-		return list;
 	}
 	
 	private void validate(User user) {

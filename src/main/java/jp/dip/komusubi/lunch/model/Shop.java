@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -123,6 +124,21 @@ public class Shop implements Serializable {
 		return this;
 	}
 
+	public boolean isDayOff() {
+	    return isDayOff(new Date());
+	}
+	
+	public boolean isDayOff(Date date) {
+	    Calendar cal = Calendar.getInstance();
+	    cal.setTime(date);
+	    boolean dayOff = false;
+	    if (Calendar.SATURDAY == cal.get(Calendar.DAY_OF_WEEK)
+	            || Calendar.SUNDAY == cal.get(Calendar.DAY_OF_WEEK)) {
+	        dayOff = true;
+	    }
+	    return dayOff;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

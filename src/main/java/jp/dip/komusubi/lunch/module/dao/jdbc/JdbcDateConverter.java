@@ -35,6 +35,8 @@ public class JdbcDateConverter {
 	}
 
 	public static final Timestamp toTimestamp(java.util.Date date) {
+	    if (date == null)
+	        return null;
 		return new Timestamp(date.getTime());
 	}
 	

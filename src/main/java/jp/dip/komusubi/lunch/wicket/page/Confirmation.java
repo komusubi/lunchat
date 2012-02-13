@@ -82,9 +82,7 @@ public class Confirmation extends AuthorizedPage {
 						AccountService service = Configuration.getInstance(AccountService.class);
 						String url = getPageUrl(Attendance.class);
 
-
-
-						service.admit(model.getObject(),
+						service.apply(model.getObject(),
 										WicketSession.get().getLoggedInUser(),
 										url);
 						// FIXME literal string move to localize resource. 
