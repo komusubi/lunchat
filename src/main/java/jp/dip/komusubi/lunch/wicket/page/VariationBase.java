@@ -107,6 +107,8 @@ public class VariationBase extends WebPage {
 	
 	protected String getPageUrl(Class<? extends WebPage> clazz) {
 		// get this page's url
+	    // MEMO cann't get "http://localhost:8080/" it's example for "http://localhost:8080/group/.."
+	    // I don't know if bug, because it is not clear mistake.
 		String targetPath = getRequestCycle().urlFor(clazz, null).toString();
 		String ownUrl = getRequestCycle().getUrlRenderer().renderFullUrl(getRequest().getClientUrl());
 		return RequestUtils.toAbsolutePath(ownUrl, targetPath);
@@ -115,4 +117,16 @@ public class VariationBase extends WebPage {
 	protected String getPageUrl(WebPage page) {
 		return getPageUrl(page.getClass());
 	}
+	
+//	protected String getPageAbsoluteUrl(Class<? extends WebPage> clazz) {
+//	    return getPageAbsoluteUrl(clazz, null);
+//	}
+//	
+//	protected String getPageAbsoluteUrl(Class<? extends WebPage> clazz, String relatedPath) {
+//	    String related = "";
+//	    if (relatedPath != null)
+//	        related = relatedPath;
+//	    String path = getRequestCycle().urlFor(clazz, null).toString();
+//	    return RequestUtils.toAbsolutePath(path, related);
+//	}
 }

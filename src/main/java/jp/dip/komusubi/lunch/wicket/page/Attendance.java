@@ -26,6 +26,7 @@ import jp.dip.komusubi.lunch.wicket.panel.Header;
 
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
@@ -43,7 +44,6 @@ public class Attendance extends AuthorizedPage {
 
 	private static final long serialVersionUID = 1242588429737776047L;
 	private static final Logger logger = LoggerFactory.getLogger(Attendance.class);
-//	private PageParameters params;
 	@Inject @Named("digest") Resolver<String> digester;
 	
 	public Attendance(PageParameters params) {
@@ -64,8 +64,10 @@ public class Attendance extends AuthorizedPage {
              */
             @Override
             protected void onApproval() {
-               account.approve(getAdmitter(), getApplicant(), getMessageFromAdmitter(), getPageUrl(Home.class));
-               logger.info("{} was admitted to become a member of {}", getApplicant().getNickname(), 
+                // FIXME Home.class can't get "http://localhost:8080/" 
+//                account.approve(getAdmitter(), getApplicant(), getMessageFromAdmitter(), getPageUrl(Home.class));
+                account.approve(getAdmitter(), getApplicant(), getMessageFromAdmitter(), null);
+                logger.info("{} was admitted to become a member of {}", getApplicant().getNickname(), 
                         getAdmitter().getGroup().getCode());
             }
 

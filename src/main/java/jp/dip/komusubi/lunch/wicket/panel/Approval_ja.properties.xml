@@ -7,6 +7,7 @@
 <entry key="unmatch.admitter.and.applicant">${name} さんはこの依頼を承認することはできません。</entry>
 <entry key="not.found.applicant">URLが不正であるか、この承認依頼は既に無効となっています。</entry>
 <entry key="welcome.message">ようこそ。${name}へ。</entry>
-<entry key="decline.message">{name}への加入は認められません。</entry>
+<entry key="decline.message">${name}への加入は認められません。</entry>
+<entry key="only.decline.message">このグループへの参加は承認できませんでした。</entry>
 <entry key="url.invalid">不正なURLです。</entry>
 </properties>

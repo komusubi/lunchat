@@ -117,8 +117,10 @@ public class Approval extends Panel {
         approval.setEnabled(greetingVisible);
         if (greetingVisible)
             message = getString("welcome.message", Model.of(admitter.getGroup()));
-        else
+        else if (admitter.getGroup() != null)
             message = getString("decline.message", Model.of(admitter.getGroup()));
+        else 
+            message = getString("only.decline.message");
         form.add(new TextField<String>("message", Model.of(message)));
 
         super.onInitialize();

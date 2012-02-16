@@ -300,8 +300,8 @@ public class AccountService implements Serializable {
     	                            applicant.getGroup().getName(),
     	                            applicant.getGroup().getCode(),
     	                            admitter.getNickname(),
-    	                            message,
-    	                            url));
+    	                            message));
+//    	                            url));
     	    MailMessage mail = new MailMessage();
     	    mail.setContent(content);
     	    mail.setFrom(getAdminUser());
@@ -325,13 +325,22 @@ public class AccountService implements Serializable {
 	public void decline(User admitter, User applicant, String message) {
 	    try {
 	        MailContent content = new MailContent();
-	        content.setSubject(getString("deny.mail.subject"));
-	        content.setBody(format("deny.mail.body",
-	                            applicant.getName(),
-	                            admitter.getGroup().getName(),
-	                            admitter.getGroup().getCode(),
-	                            admitter.getNickname(),
-	                            message));
+	        content.setSubject(getString("decline.mail.subject"));
+	        String body;
+	        if (admitter.getGroup() != null) {
+	            body = format("decline.mail.body",
+    	                    applicant.getName(),
+    	                    admitter.getGroup().getName(),
+    	                    admitter.getGroup().getCode(),
+    	                    admitter.getNickname(),
+    	                    message);
+	        } else {
+	            body = format("decline.simple.mail.body",
+	                        applicant.getName(),
+	                        admitter.getNickname(),
+	                        message);
+	        }
+	        content.setBody(body);
 	        MailMessage mail = new MailMessage();
 	        mail.setContent(content);
 	        mail.setFrom(getAdminUser());
