@@ -62,8 +62,8 @@ public class Member extends AuthorizedPage {
 
 			@Override
 			protected void onSelectedMember(User user) {
-				Confirmation page = new Confirmation(Model.of(user));
-				setResponsePage(page);
+//				Confirmation page = new Confirmation(Model.of(user));
+				setResponsePage(new MemberConfirmation(Model.of(user)));
 			}
 			
 		};

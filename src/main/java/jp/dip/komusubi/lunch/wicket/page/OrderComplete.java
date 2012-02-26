@@ -18,24 +18,20 @@
  */
 package jp.dip.komusubi.lunch.wicket.page;
 
-import jp.dip.komusubi.lunch.module.dao.OrderDao;
-import jp.dip.komusubi.lunch.service.Shopping;
+import jp.dip.komusubi.lunch.model.Product;
 
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.Model;
 
-import com.google.inject.Inject;
-
-public class CompleteOrder extends AuthorizedPage {
+public class OrderComplete extends AuthorizedPage {
 
 	private static final long serialVersionUID = -6096514197924442740L;
-	@Inject
-	private transient OrderDao orderDao;
-	private transient Shopping shopping;
+//	@Inject
+//	private transient OrderDao orderDao;
+//	private transient Shopping shopping;
 	
-	public CompleteOrder(Shopping shopping) {
-		this.shopping = shopping;
-//		Order order = shopping.iterator().next();
-//		add(new Label("name", order.getProduct().getName() + " " + order.getAmount() + "円"));
-		add(new Label("name", "dummy"));
+	public OrderComplete(Model<Product> model) {
+	    add(new Label("name", "dummy"));
 	}
+
 }

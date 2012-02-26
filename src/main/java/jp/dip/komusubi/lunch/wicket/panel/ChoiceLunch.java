@@ -191,10 +191,12 @@ public abstract class ChoiceLunch extends Panel {
 				@Override
 				protected void populateItem(ListItem<Object> item) {
 					Object itemValue = item.getModelObject();
-					if (itemValue instanceof Shop)
+					if (itemValue instanceof Shop) {
 						item.add(new AttributeModifier("data-role", "list-divider"));
-					else
+					} else {
 						item.add(AttributeModifier.remove("data-role"));
+//						item.add(AttributeModifier.append("data-rel", "dialog"));
+					}
 					item.add(getLinkOfItem("item.link", itemValue));
 					item.add(getLabelOfItem("item.name", itemValue));
 					item.add(getLabelOfAmount("amount.label", itemValue));
@@ -230,24 +232,11 @@ public abstract class ChoiceLunch extends Panel {
 			} else if (itemValue instanceof Product) {
 				final Product product = (Product) itemValue;
 				link = new Link<String>(id) {
-
-					private static final long serialVersionUID = 3680360043205992841L;
+					private static final long serialVersionUID = 1L;
 
 					@Override
 					public void onClick() {
 						onChoiceProduct(product);
-//						Shopping shopping = Configuration.getInstance(Shopping.class);
-//						Basket basket = shopping.getBasket(WicketSession.get().getLoggedInUser());
-//						basket.add(product);
-//						try {
-//							shopping.order(true);
-//						} catch (DuplicatedOrderException e) {
-//							// FIXME message
-//							error("duplicate order " + e.getDuplictedOrders().get(0));
-//							setResponsePage(new Notice(shopping, e.getDuplictedOrders()));
-//							return;
-//						}
-//						setResponsePage(new Confirm(basket));
 					}
 				};
 				link.add(new Label("link.name", product.getName()));
@@ -255,7 +244,8 @@ public abstract class ChoiceLunch extends Panel {
 						+ getLocalizer().getString("amount.unit", ChoiceLunch.this);
 				link.add(new Label("amount.value", amount)
 								.setVisible(!Product.DEFAULT_ID.equals(product.getId())));
-
+				// view dialog style
+				link.add(AttributeModifier.append("data-rel", "dialog"));
 			} else {
 				throw new IllegalStateException("itemValue dosen't object Shop or Product");
 			}

@@ -73,11 +73,14 @@ public class Home extends VariationBase {
 
 			@Override
 			protected void onChoiceProduct(Product product) {
-				if (!WicketSession.get().isSignedIn()) {
+			    WicketSession session = WicketSession.get();
+				if (!session.isSignedIn()) {
 					// FIXME it should hold in choice product.
 					setResponsePage(Login.class);
-				} else if (WicketSession.get().getLoggedInUser().getGroup() == null){
+				} else if (session.getLoggedInUser().getGroup() == null){
 					setResponsePage(Home.this);
+				} else {
+				    setResponsePage(new OrderConfirmation(Model.of(product)));
 				}
 			}
     		

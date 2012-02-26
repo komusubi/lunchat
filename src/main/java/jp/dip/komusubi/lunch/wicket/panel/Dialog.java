@@ -18,34 +18,29 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
-import java.util.Date;
-
-import jp.dip.komusubi.lunch.model.User;
-
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.IModel;
 
 /**
  * dialog.
  * @author jun.ozeki
  * @since 2012/01/15
  */
-public abstract class Dialog extends Panel {
+public abstract class Dialog<T> extends Panel {
 	
 	private static final long serialVersionUID = 6968078827891651580L;
 //	private static final Logger logger = LoggerFactory.getLogger(Dialog.class);
 	
-	public Dialog(String id, Model<User> model) {
+	public Dialog(String id, IModel<T> model) {
+//	public Dialog(String id, Model<T> model) {
 		super(id);
-		add(new Label("message", model.getObject().getName() + "さん にグループ参加の承認依頼通知を送信します。"));
+		add(new Label("message", model));
+//		add(new Label("message", model.getObject().getName() + "さん にグループ参加の承認依頼通知を送信します。"));
 		add(new FeedbackPanel("feedback"));
-		// FIXME double click affect prevent to formKey implementation.
 //		add(new DialogForm("confirm.form"));
 		add(getAgreeLink("agree"));
 		add(getCancelLink("cancel"));
@@ -82,11 +77,12 @@ public abstract class Dialog extends Panel {
 		};
 	}
 	
-	/**
+	/*
 	 * dialog form.
 	 * @author jun.ozeki
 	 * @since 2012/01/15
 	 */
+/*
 	public class DialogForm extends Form<Void> {
 		
 		private static final long serialVersionUID = -3788490402589716737L;
@@ -121,7 +117,7 @@ public abstract class Dialog extends Panel {
 			};
 		}
 	}
-	
+*/	
 	protected abstract void onAgree();
 	protected abstract void onCancel();
 }

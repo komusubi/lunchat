@@ -18,94 +18,12 @@
  */
 package jp.dip.komusubi.lunch.wicket.page;
 
-import java.util.Date;
-
-import jp.dip.komusubi.lunch.Configuration;
-import jp.dip.komusubi.lunch.model.User;
-import jp.dip.komusubi.lunch.service.AccountService;
-import jp.dip.komusubi.lunch.wicket.WicketSession;
-import jp.dip.komusubi.lunch.wicket.component.FormKey;
-import jp.dip.komusubi.lunch.wicket.panel.Dialog;
-
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.Model;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * confirm page. 
  * @author jun.ozeki
+ * @since 2012/02/26
  */
 public class Confirmation extends AuthorizedPage {
 
-	private static final Logger logger = LoggerFactory.getLogger(Confirmation.class);
-	private static final long serialVersionUID = 6448297553843014369L;
-	private FormKey key;
-//	private String pageTitle = getString("page.title");
-	
-	public Confirmation() {
-//		add(new Header("header", Model.of(getDefaultHeaderBean(pageTitle))));
-//		add(new OrderList("basket", basket));
-//		add(new Footer("footer"));
-	}
-	
-	public Confirmation(Model<User> model) {
-		this();
-		// FIXME localized message move to resource file.
-		add(new Label("header.title", "タイトル"));
-		add(getDialog("confirm", model));
-	}
+    private static final long serialVersionUID = -4536966286982523675L;
 
-	@Override
-	protected void onInitialize() {
-		super.onInitialize();
-		this.key = new FormKey(getPageId(), getId(), new Date());
-	}
-	
-	@Override
-	protected void onConfigure() {
-		super.onConfigure();
-		WicketSession.get().addFormKey(key);
-	}
-	
-	protected Dialog getDialog(String id, final Model<User> model) {
-//		StringResourceModel message = new StringResourceModel("", model, );
-		return new Dialog(id, model) {
-
-			private static final long serialVersionUID = 1351931925422304411L;
-			
-			@Override
-			protected void onAgree() {
-				Member member;
-				try {
-					if (WicketSession.get().removeFormKey(key)) {
-						AccountService service = Configuration.getInstance(AccountService.class);
-						String url = getPageUrl(Attendance.class);
-
-						service.apply(model.getObject(),
-										WicketSession.get().getLoggedInUser(),
-										url);
-						// FIXME literal string move to localize resource. 
-						member = new Member(Model.of(model.getObject().getGroup()),
-											Model.of(model.getObject().getName() + " さんに承認依頼を送信しました。"));
-					} else {
-						// FIXME warning double submit.
-						error("double submit!!");
-						return;
-					}
-				} catch (Exception e) {
-					logger.warn("exception: {}", e);
-					member = new Member(Model.of(model.getObject().getGroup()),
-										Model.of(model.getObject().getName() + " さんへ承認依頼でエラーが発生しました。　"));
-				}
-				setResponsePage(member);
-			}
-
-			@Override
-			protected void onCancel() {
-				Member member = new Member(Model.of(model.getObject().getGroup()));
-				setResponsePage(member);
-			}
-		};
-	}
 }
