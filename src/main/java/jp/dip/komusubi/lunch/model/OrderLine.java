@@ -28,27 +28,26 @@ public class OrderLine implements Serializable {
 
 	/**
 	 * order line primary key.
-	 * 
 	 * @author jun.ozeki
 	 * @since 2011/11/23
 	 */
 	public static class OrderLineKey implements Serializable {
 
 		private static final long serialVersionUID = -9158460336546810565L;
-		private int id;
 		private int orderId;
+		private int no;
 
 		public OrderLineKey() {
 			this(0, 0);
 		}
 		
-		public OrderLineKey(int id, int orderId) {
-			this.id = id;
+		public OrderLineKey(int orderId, int no) {
 			this.orderId = orderId;
+			this.no = no;
 		}
 		
-		public int getId() {
-			return id;
+		public int getNo() {
+			return no;
 		}
 		
 		public int getOrderId() {
@@ -56,12 +55,12 @@ public class OrderLine implements Serializable {
 		}
 
 		@Override
-		public String toString() {
-			StringBuilder builder = new StringBuilder();
-			builder.append("OrderLineKey [id=").append(id).append(", orderId=").append(orderId)
-					.append("]");
-			return builder.toString();
-		}
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("OrderLineKey [orderId=").append(orderId).append(", no=").append(no)
+                    .append("]");
+            return builder.toString();
+        }
 
 	}
 	private static final long serialVersionUID = 4918522454881089820L;
@@ -106,21 +105,30 @@ public class OrderLine implements Serializable {
 		return quantity;
 	}
 
+	public int increment(int i) {
+		setQuantity(getQuantity() + i);
+		return quantity;
+	}
+	
 	public OrderLine setAmount(int fixedAmount) {
 		this.fixedAmount = fixedAmount;
 		return this;
 	}
-	
+
 	public OrderLine setDatetime(Date datetime) {
 		this.datetime = datetime;
 		return this;
 	}
 
+	public void setOrderLineKey(OrderLineKey primaryKey) {
+        this.primaryKey = primaryKey;
+    }
+
 	public OrderLine setProduct(Product product) {
 		this.product = product;
 		return this;
 	}
-
+	
 	public OrderLine setQuantity(int quantity) {
 		if (quantity <= 0)
 			throw new IllegalArgumentException("quantity MUST not be under zero: " + quantity);
@@ -128,12 +136,7 @@ public class OrderLine implements Serializable {
 		return this;
 	}
 
-	public int increment(int i) {
-		setQuantity(getQuantity() + i);
-		return quantity;
-	}
-	
-	@Override
+    @Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("OrderLine [product=").append(product).append(", primaryKey=")

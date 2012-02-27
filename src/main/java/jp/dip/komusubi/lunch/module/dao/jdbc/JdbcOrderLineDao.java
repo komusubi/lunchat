@@ -38,18 +38,17 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 /**
  * order line dao.
- * 
  * @author jun.ozeki
  * @since 2011/11/20
  */
 public class JdbcOrderLineDao implements OrderLineDao {
 
 	private static final Logger logger = LoggerFactory.getLogger(JdbcOrderLineDao.class);
-	private static final String COLUMNS = "id, orderId, productId, quantity, amount";
+	private static final String COLUMNS = "orderId, no, productId, quantity, amount, datetime";
 	private static final String SELECT_QUERY_RECORD = "select " + COLUMNS
-			+ " from orderLine where orderId = ? and userId = ? and productId = ?";
-	private static final String INSERT_QUERY_RECORD = "insert into ( " + COLUMNS + " ) values ( ?, ?, ?, ?, ? )";
-	private static final String SELECT_QUERY_BY_ORDERID = "select " + COLUMNS + " from orderLine where orderId = ?";
+			+ " from orderLines where orderId = ? and userId = ? and productId = ?";
+	private static final String INSERT_QUERY_RECORD = "insert into orderLines ( " + COLUMNS + " ) values ( ?, ?, ?, ?, ?, ? )";
+	private static final String SELECT_QUERY_BY_ORDERID = "select " + COLUMNS + " from orderLines where orderId = ?";
 	private SimpleJdbcTemplate template;
 	@Inject
 	private ProductDao productDao;
@@ -64,7 +63,7 @@ public class JdbcOrderLineDao implements OrderLineDao {
 		OrderLine orderLine = null;
 		try {
 			orderLine = template.queryForObject(SELECT_QUERY_RECORD, orderLineRowMapper,
-									pk.getId(),
+									pk.getNo(),
 									pk.getOrderId());
 		} catch (EmptyResultDataAccessException e) {
 			logger.info("not found order line: {}", pk);
@@ -87,12 +86,12 @@ public class JdbcOrderLineDao implements OrderLineDao {
 	@Override
 	public OrderLineKey persist(OrderLine instance) {
 		try {
-			template.update(INSERT_QUERY_RECORD, instance.getPrimaryKey().getId(),
+			template.update(INSERT_QUERY_RECORD, instance.getPrimaryKey().getNo(),
 													instance.getPrimaryKey().getOrderId(),
 													instance.getProduct().getId(),
 													instance.getQuantity(),
-													instance.getAmount());
-													
+													instance.getAmount(),
+													instance.getDatetime());
 
 		} catch (DataAccessException e) {
 			throw new LunchException(e);
@@ -115,7 +114,7 @@ public class JdbcOrderLineDao implements OrderLineDao {
 		@Override
 		public OrderLine mapRow(ResultSet rs, int rowNum) throws SQLException {
 			OrderLineKey primaryKey = new OrderLineKey(
-											rs.getInt("id"),
+											rs.getInt("no"),
 											rs.getInt("orderId"));
 				
 			OrderLine orderLine = new OrderLine(primaryKey)

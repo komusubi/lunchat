@@ -22,6 +22,7 @@ import java.util.Calendar;
 
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.model.User;
+import jp.dip.komusubi.lunch.module.dao.OrderDao;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.component.AuthenticatedLabel;
 import jp.dip.komusubi.lunch.wicket.panel.ChoiceLunch;
@@ -53,6 +54,7 @@ public class Home extends VariationBase {
 	private String username = user == null ? "" : user.getName();
 	private String pageTitle = getString("page.title");
 	@Inject @Named("calendar") private Resolver<Calendar> resolver;
+	@Inject private OrderDao orderDao;
 	
     public Home() {
     	HeaderBean bean = getDefaultHeaderBean(getLocalizer().getString("page.title", this));
@@ -79,6 +81,7 @@ public class Home extends VariationBase {
 					setResponsePage(Login.class);
 				} else if (session.getLoggedInUser().getGroup() == null){
 					setResponsePage(Home.this);
+//				} else if (orderDao.find){
 				} else {
 				    setResponsePage(new OrderConfirmation(Model.of(product)));
 				}

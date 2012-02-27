@@ -137,7 +137,8 @@ public class Shopping implements Serializable {
 	
 	public List<Product> getRegularProduct(String shopId) {
 		// user が nullの場合の考慮必要あり。
-		return null;
+	    throw new UnsupportedOperationException("not implemented");
+
 	}
 
 	public Basket getBasket(User user) {
@@ -148,7 +149,7 @@ public class Shopping implements Serializable {
 	@Transactional
 	public void order(Basket basket) {
 		for (Order order: basket) {
-			// order date
+			// set order date when ordered.
 			order.setDatetime(dateResolver.resolve());
 			orderDao.persist(order);
 		}

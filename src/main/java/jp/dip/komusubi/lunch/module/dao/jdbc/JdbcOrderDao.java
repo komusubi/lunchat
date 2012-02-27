@@ -29,6 +29,7 @@ import javax.sql.DataSource;
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Order;
 import jp.dip.komusubi.lunch.model.OrderLine;
+import jp.dip.komusubi.lunch.model.OrderLine.OrderLineKey;
 import jp.dip.komusubi.lunch.module.dao.OrderDao;
 import jp.dip.komusubi.lunch.module.dao.OrderLineDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
@@ -38,7 +39,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 
 /**
  * jdbc order dao.
@@ -49,24 +52,22 @@ public class JdbcOrderDao implements OrderDao {
 	
 	private static final Logger logger = LoggerFactory.getLogger(JdbcOrderDao.class);
 	private static String COLUMNS = "id, userId, shopId, amount, geoId, datetime";
-	private static final String INSERT_QUERY = "insert into orders ( " + COLUMNS + " ) values (?, ?, ?, ?, ?, ?)";
-	private static final String SELECT_QUERY_BY_USER = "select " + COLUMNS + " from orders where userId = ?";
+	private static final String INSERT_QUERY = "insert into orders ( " + COLUMNS + " ) values (:id, :userId, :shopId, :amount, :geoId, :datetime)";
+	private static final String SELECT_QUERY_BY_USER = "select " + COLUMNS + " from orders where userId = :userId";
 //	private static final String SELECT_QUERY_ORDER_DATE = "select " + COLUMNS + " from orders where datetime = ?";
 //	private static final String SELECT_QUERY_BY_NOT_ORDRED = "select " + COLUMNS 
 //			+ " from orders where groupId = ? and shopId = ? and datetime is null";
 //	private static final String SELECT_QUERY_BY_UNIQUE = "select " + COLUMNS 
 //			+ " from orders where groupId = ? and shopId = ? and datetime = ?";
-	private SimpleJdbcTemplate template;
-	@Inject
-	private OrderLineDao orderLineDao;
-	@Inject 
-	private ShopDao shopDao;
-	@Inject
-	private UserDao userDao;
+	private NamedParameterJdbcTemplate template;
+	@Inject	private OrderLineDao orderLineDao;
+	@Inject	private ShopDao shopDao;
+	@Inject	private UserDao userDao;
 	
 	@Inject
 	public JdbcOrderDao(DataSource dataSource) {
-		this.template = new SimpleJdbcTemplate(dataSource);
+	    // get auto increment value 
+	    this.template = new NamedParameterJdbcTemplate(dataSource);
 	}
 	
 	public Order find(Integer pk) {
@@ -78,14 +79,21 @@ public class JdbcOrderDao implements OrderDao {
 	}
 	
 	public Integer persist(Order instance) {
+	    GeneratedKeyHolder holder = new GeneratedKeyHolder();
 		try {
-			template.update(INSERT_QUERY, instance.getId(),
-											instance.getUser().getId(),
-											instance.getShop().getId(),
-											instance.getAmount(),
-											null,
-											instance.getDatetime());
+		    MapSqlParameterSource sqlParameter = new MapSqlParameterSource()
+		                                                .addValue("id", instance.getId())
+		                                                .addValue("userId", instance.getUser().getId())
+		                                                .addValue("shopId", instance.getShop().getId())
+		                                                .addValue("amount", instance.getAmount())
+		                                                .addValue("geoId", null)
+		                                                .addValue("datetime", instance.getDatetime());
+		    template.update(INSERT_QUERY, sqlParameter, holder); 
+		    
+		    int i = 1;
 			for (OrderLine o: instance) {
+			    OrderLineKey primaryKey = new OrderLineKey(holder.getKey().intValue(), i++);
+			    o.setOrderLineKey(primaryKey);
 				orderLineDao.persist(o);
 			}
 			logger.info("persisted: {}", instance);
@@ -93,7 +101,7 @@ public class JdbcOrderDao implements OrderDao {
 			throw new LunchException(e);
 		}
 		// return to auto boxing 
-		return instance.getId();
+		return holder.getKey().intValue();
 	}
 
 	public void remove(Order instance) {
@@ -134,9 +142,10 @@ public class JdbcOrderDao implements OrderDao {
 
 	@Override
 	public List<Order> findByUser(String userId) {
-		List<Order> order = template.query(SELECT_QUERY_BY_USER, orderRowMapper, userId);
-		logger.info("findByUser userId:{}, count:{}", userId, order.size());
-		return order;
+//		List<Order> order = template.query(SELECT_QUERY_BY_USER, orderRowMapper, userId);
+	    List<Order> orders = template.query(SELECT_QUERY_BY_USER, new MapSqlParameterSource().addValue("userId", userId), orderRowMapper);
+		logger.info("findByUser userId:{}, count:{}", userId, orders.size());
+		return orders;
 	}
 
 	@Override
@@ -158,12 +167,12 @@ public class JdbcOrderDao implements OrderDao {
 		
 		@Override
 		public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Order order = new Order(rs.getInt("id"))
-			.setUser(userDao.find(rs.getInt("userId")))
-			.setShop(shopDao.find(rs.getString("shopId")))
-			.setAmount(rs.getInt("amount"))
-			.addOrderLines(orderLineDao.findByOrderId(rs.getInt("id")))
-			.setDatetime(rs.getDate("datetime"));
+			Order order = new Order(rs.getInt("no"))
+                        			.setUser(userDao.find(rs.getInt("userId")))
+                        			.setShop(shopDao.find(rs.getString("shopId")))
+                        			.setAmount(rs.getInt("amount"))
+                        			.addOrderLines(orderLineDao.findByOrderId(rs.getInt("no")))
+                        			.setDatetime(rs.getDate("datetime"));
 			return order;
 		}
 		

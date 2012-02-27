@@ -20,7 +20,10 @@ package jp.dip.komusubi.lunch.wicket.page;
 
 import java.util.Date;
 
+import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.Product;
+import jp.dip.komusubi.lunch.module.Basket;
+import jp.dip.komusubi.lunch.service.Shopping;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.panel.Dialog;
@@ -66,6 +69,11 @@ public class OrderConfirmation extends Confirmation {
 			protected void onAgree() {
 				try {
 					if (WicketSession.get().removeFormKey(key)) {
+					    // FIXME shopping with a basket !! 
+					    Shopping shopping = Configuration.getInstance(Shopping.class);
+					    Basket basket = shopping.getBasket(WicketSession.get().getLoggedInUser());
+					    basket.add(model.getObject());
+					    shopping.order(basket);
 					    setResponsePage(new OrderComplete(model));
 					} else {
 						// FIXME warning double submit.

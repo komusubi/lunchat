@@ -18,10 +18,12 @@ package jp.dip.komusubi.lunch.module;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import jp.dip.komusubi.lunch.model.Order;
 import jp.dip.komusubi.lunch.model.OrderLine;
@@ -32,6 +34,7 @@ import jp.dip.komusubi.lunch.module.dao.OrderDao;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
 
+import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,13 +49,11 @@ public class Basket implements Iterable<Order>, Serializable {
 	private static final Logger logger = LoggerFactory.getLogger(Basket.class);
 	private User user;
 	private List<Order> orders;
-	@Inject
-	private OrderDao orderDao;
-	@Inject
-	private ProductDao productDao;
-	@Inject
-	private ShopDao shopDao;
-
+	@Inject	private OrderDao orderDao;
+	@Inject	private ProductDao productDao;
+	@Inject	private ShopDao shopDao;
+	@Inject @Named("date") private Resolver<Date> dateResolver; 
+	
 	public Basket() {
 		this(null);
 	}
@@ -104,13 +105,14 @@ public class Basket implements Iterable<Order>, Serializable {
 		if (!found) {
 			order = new Order()
 							.setUser(user)
-							.setShop(shopDao.find(product.getShopId()));
+							.setShop(product.getShop());
+//							.setShop(shopDao.find(product.getShopId()));
 			orders.add(order);
 		}
 		// 同じProductが既に存在しても1明細として追加。 数量を加算すべき？
 		order.addOrderLine(new OrderLine()
 								.setProduct(product)
-								.setDatetime(null)
+								.setDatetime(dateResolver.resolve())
 								.setQuantity(quantity));
 	}
 	
