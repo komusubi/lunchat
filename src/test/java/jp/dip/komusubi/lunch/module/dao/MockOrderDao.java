@@ -51,12 +51,12 @@ public class MockOrderDao implements OrderDao {
 	}
 
 	@Override
-	public List<Order> findByUserAndDate(String userId, Date date) {
+	public List<Order> findByUserAndDate(Integer userId, Date date) {
 		return null;
 	}
 
 	@Override
-	public List<Order> findByUser(String userIde) {
+	public List<Order> findByUser(Integer userIde) {
 		return null;
 	}
 
@@ -66,7 +66,7 @@ public class MockOrderDao implements OrderDao {
 	}
 
 	@Override
-	public List<Order> findByUserAndProductAndDate(String userId, String productId, Date date) {
+	public List<Order> findByUserAndProductAndDate(Integer userId, String productId, Date date) {
 		return null;
 	}
 

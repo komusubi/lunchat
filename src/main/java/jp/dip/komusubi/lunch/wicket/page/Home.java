@@ -19,12 +19,13 @@
 package jp.dip.komusubi.lunch.wicket.page;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.model.User;
-import jp.dip.komusubi.lunch.module.dao.OrderDao;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.component.AuthenticatedLabel;
+import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.panel.ChoiceLunch;
 import jp.dip.komusubi.lunch.wicket.panel.Footer;
 import jp.dip.komusubi.lunch.wicket.panel.GroupList;
@@ -54,7 +55,8 @@ public class Home extends VariationBase {
 	private String username = user == null ? "" : user.getName();
 	private String pageTitle = getString("page.title");
 	@Inject @Named("calendar") private Resolver<Calendar> resolver;
-	@Inject private OrderDao orderDao;
+    private FormKey key;
+//	@Inject transient private OrderDao orderDao;
 	
     public Home() {
     	HeaderBean bean = getDefaultHeaderBean(getLocalizer().getString("page.title", this));
@@ -68,6 +70,16 @@ public class Home extends VariationBase {
     	add(new Footer("footer"));
     }
     
+    public void onInitialize() {
+        super.onInitialize();
+        this.key = new FormKey(getPageId(), getId(), new Date());
+    }
+    
+    public void onConfigure() {
+        super.onConfigure();
+        WicketSession.get().addFormKey(key);
+    }
+    
     protected ChoiceLunch getChoiceLunch(String id) {
     	return new ChoiceLunch(id) {
 
@@ -75,15 +87,21 @@ public class Home extends VariationBase {
 
 			@Override
 			protected void onChoiceProduct(Product product) {
+			    if (!WicketSession.get().removeFormKey(key)) {
+			        // double submit
+			        logger.info("double submit onChoiceProduct");
+			        return;
+			    }
 			    WicketSession session = WicketSession.get();
 				if (!session.isSignedIn()) {
 					// FIXME it should hold in choice product.
 					setResponsePage(Login.class);
-				} else if (session.getLoggedInUser().getGroup() == null){
-					setResponsePage(Home.this);
-//				} else if (orderDao.find){
 				} else {
-				    setResponsePage(new OrderConfirmation(Model.of(product)));
+				    if (session.getLoggedInUser().getGroup() == null){
+				        setResponsePage(Home.this);
+				    } else {
+				        setResponsePage(new OrderConfirmation(Model.of(product)));
+				    }
 				}
 			}
     		

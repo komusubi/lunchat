@@ -48,8 +48,10 @@ public enum Configuration {
 	}
 
 	public static RuntimeMode mode() {
-		return RuntimeMode.DEVELOPMENT;
-//		return RuntimeMode.DEPLOYMENT;
+	    if (Boolean.valueOf(getParameter("wicket.release.mode")))
+	        return RuntimeMode.DEPLOYMENT;
+	    else
+	        return RuntimeMode.DEVELOPMENT;
 	}
 
 	static final void setServletContext(ServletContext servletContext) {

@@ -33,10 +33,10 @@ import org.komusubi.common.persistence.GenericDao;
 public interface OrderDao extends GenericDao<Integer, Order> {
 
 //	List<Order> findByDate(Date date);
-	List<Order> findByUserAndDate(String userId, Date date);
-	List<Order> findByUser(String userIde);
+	List<Order> findByUserAndDate(Integer userId, Date date);
+	List<Order> findByUser(Integer userId);
 	List<Order> findByProduct(String productId);
-	List<Order> findByUserAndProductAndDate(String userId, String productId, Date date);
+	List<Order> findByUserAndProductAndDate(Integer userId, String productId, Date date);
 	// 
 	List<Order> findByGroupId(String groupId);
 //	Order findByUnique(String groupId, String shopId, Date orderd);

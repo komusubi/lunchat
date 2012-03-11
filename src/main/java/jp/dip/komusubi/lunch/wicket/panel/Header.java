@@ -125,7 +125,8 @@ public class Header extends Panel {
 
 			@Override
 			public boolean isVisible() {
-				return WicketSession.get().isSignedIn();
+//				return WicketSession.get().isSignedIn();
+			    return false;
 			}
 			
 		};

@@ -2,6 +2,7 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <wicket:remove>
   <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
   <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
@@ -10,11 +11,34 @@
 </head>
 <body>
   <div data-role="page" data-theme="a">
-    <div data-role="header"><h1>注文完了</h1></div>
-    <div data-role="content">
-      <span wicket:id="name">XX</span>の注文を承りました。
+    <div data-role="header">
+      <h1>注文を受け付けました</h1>
     </div>
-    <div data-role="footer"><h1>komusubi</h1></div>
+    <div data-role="content">
+    <span wicket:id="order.lines"></span>
+      <wicket:remove>
+        <h2>注文明細</h2>
+        <ul data-role="listview" data-inset="true">
+
+          <li>3/8(木)のお弁当<span class="ui-li-count">1</span></li>
+          <li data-role="list-divider">合計<span class="ui-li-aside">10円</span></li>
+        </ul>
+        <h2>XXグループ</h2>
+        <ul data-role="listview" data-inset="true" data-count-theme="e">
+          <li data-role="list-divider">たまご屋</li>
+          <li>3/8(木)のお弁当<span class="ui-li-count">4</span></li>
+          <li>3/8(木)のおかず<span class="ui-li-count">20</span></li>
+          <li data-role="list-divider" data-theme="e">合計</li>
+        </ul>
+        <ul data-role="listview" data-inset="true">
+          <li data-role="list-divider">フレッシュランチ</li>
+          <li>3/8(木)のお弁当<span class="ui-li-count">10</span></li>
+        </ul>
+      </wicket:remove>
+    </div>
+    <div data-role="footer">
+      <h1>komusubi</h1>
+    </div>
   </div>
 </body>
 </html>

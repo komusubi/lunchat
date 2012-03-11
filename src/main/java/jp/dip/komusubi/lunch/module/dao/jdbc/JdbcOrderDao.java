@@ -54,6 +54,7 @@ public class JdbcOrderDao implements OrderDao {
 	private static String COLUMNS = "id, userId, shopId, amount, geoId, datetime";
 	private static final String INSERT_QUERY = "insert into orders ( " + COLUMNS + " ) values (:id, :userId, :shopId, :amount, :geoId, :datetime)";
 	private static final String SELECT_QUERY_BY_USER = "select " + COLUMNS + " from orders where userId = :userId";
+	private static final String SELECT_QUERY_BY_USER_AND_DATE = "select " + COLUMNS + " from orders where userId = :userId and date(datetime) = :datetime";
 //	private static final String SELECT_QUERY_ORDER_DATE = "select " + COLUMNS + " from orders where datetime = ?";
 //	private static final String SELECT_QUERY_BY_NOT_ORDRED = "select " + COLUMNS 
 //			+ " from orders where groupId = ? and shopId = ? and datetime is null";
@@ -136,12 +137,18 @@ public class JdbcOrderDao implements OrderDao {
 //	}
 	
 	@Override
-	public List<Order> findByUserAndDate(String userId, Date date) {
-		throw new UnsupportedOperationException("JdbcOrderDao#findByUserAndDate");
+	public List<Order> findByUserAndDate(Integer userId, Date date) {
+        MapSqlParameterSource sqlParameter = new MapSqlParameterSource()
+                                        .addValue("userId", userId)
+                                        .addValue("datetime", JdbcDateConverter.toSqlDate(date));
+	    
+	    List<Order> orders = template.query(SELECT_QUERY_BY_USER_AND_DATE, sqlParameter, orderRowMapper);
+	    logger.info("findByUserAndDate count:{}", orders.size());
+	    return orders;
 	}
 
 	@Override
-	public List<Order> findByUser(String userId) {
+	public List<Order> findByUser(Integer userId) {
 //		List<Order> order = template.query(SELECT_QUERY_BY_USER, orderRowMapper, userId);
 	    List<Order> orders = template.query(SELECT_QUERY_BY_USER, new MapSqlParameterSource().addValue("userId", userId), orderRowMapper);
 		logger.info("findByUser userId:{}, count:{}", userId, orders.size());
@@ -154,7 +161,7 @@ public class JdbcOrderDao implements OrderDao {
 	}
 
 	@Override
-	public List<Order> findByUserAndProductAndDate(String userId, String productId, Date date) {
+	public List<Order> findByUserAndProductAndDate(Integer userId, String productId, Date date) {
 		throw new UnsupportedOperationException("JdbcOrderDao#findByUserAndProductAndDate");
 	}
 

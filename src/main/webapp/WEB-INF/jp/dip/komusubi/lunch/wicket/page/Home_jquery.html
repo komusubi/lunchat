@@ -2,6 +2,7 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <wicket:remove>
   <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
   <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
@@ -21,10 +22,12 @@
     <div wicket:id="header">
     </div>
     <div data-role="content">
+        <h2 wicket:id="greeting">XXさん、いらっしゃいませ。</h2>
+    <!-- 
       <h4>
-        <span wicket:id="greeting">XXさん、いらっしゃいませ。</span>
       </h4>
       <p>注文するお店のボタンを押して注文を決定してください。</p>
+      -->
       <span wicket:id="select.menu"></span>
       <span wicket:id="group.list">お店一覧</span>
       <span wicket:id="group.registry"></span>

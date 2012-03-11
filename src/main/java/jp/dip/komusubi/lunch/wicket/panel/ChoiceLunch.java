@@ -51,7 +51,7 @@ import com.google.inject.name.Named;
  * @author jun.ozeki
  * @since 2011/11/16
  */
-public abstract class ChoiceLunch extends Panel {
+public class ChoiceLunch extends Panel {
 
 	private static final long serialVersionUID = -4318541322169808309L;
 	private static final Logger logger = LoggerFactory.getLogger(ChoiceLunch.class);
@@ -244,8 +244,10 @@ public abstract class ChoiceLunch extends Panel {
 						+ getLocalizer().getString("amount.unit", ChoiceLunch.this);
 				link.add(new Label("amount.value", amount)
 								.setVisible(!Product.DEFAULT_ID.equals(product.getId())));
-				// view dialog style
-				link.add(AttributeModifier.append("data-rel", "dialog"));
+				if (WicketSession.get().isSignedIn()) {
+    				// view dialog style confirm
+    				link.add(AttributeModifier.append("data-rel", "dialog"));
+				}
 			} else {
 				throw new IllegalStateException("itemValue dosen't object Shop or Product");
 			}
@@ -296,5 +298,8 @@ public abstract class ChoiceLunch extends Panel {
 		}
 	}
 	
-	protected abstract void onChoiceProduct(Product product);
+	protected void onChoiceProduct(Product product) {
+	    logger.info("choice product is {}", product);
+	}
+	
 }
