@@ -154,7 +154,7 @@ public class AccountService implements Serializable {
 		return isDeadline(user, dateResolver.resolve());
 	}
 	
-	public User readByEmail(String email) {
+	public User findByEmail(String email) {
 		return userDao.findByEmail(email);
 	}
 	
