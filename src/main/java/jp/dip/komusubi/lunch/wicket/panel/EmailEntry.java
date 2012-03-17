@@ -19,8 +19,6 @@
 package jp.dip.komusubi.lunch.wicket.panel;
 
 import jp.dip.komusubi.lunch.model.User;
-import jp.dip.komusubi.lunch.service.AccountService;
-import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 
 import org.apache.wicket.markup.html.WebPage;
@@ -28,11 +26,8 @@ import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.protocol.http.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
 
 /**
  * registry panel. 
@@ -43,14 +38,18 @@ public class EmailEntry extends Panel {
 	private static final long serialVersionUID = 3071722265831129774L;
 	private static final Logger logger = LoggerFactory.getLogger(EmailEntry.class);
 	private User user = new User();
-	@Inject
-	private transient AccountService account;
-	private Class<? extends WebPage> nextPage;
+//	@Inject
+//	private transient AccountService account;
+//	private Class<? extends WebPage> nextPage;
 	
 	public EmailEntry(String id, Class<? extends WebPage> nextPage) {
 		super(id);
-		this.nextPage = nextPage;
+//		this.nextPage = nextPage;
 		add(new RegistryForm("registryForm"));
+	}
+	
+	public EmailEntry(String id) {
+	    this(id, null);
 	}
 	
 	@Override
@@ -68,7 +67,9 @@ public class EmailEntry extends Panel {
 		}
 		@Override
 		public void onSubmit() {
-			// confirm page の absolute URLを取得
+		    onRegister();
+/*
+		    // confirm page の absolute URLを取得
 			// FIXME apply to hollylwood principle
 			String targetPath = getRequestCycle().urlFor(nextPage, null).toString();
 			String ownUrl = getRequestCycle().getUrlRenderer().renderFullUrl(getRequest().getClientUrl());
@@ -83,6 +84,15 @@ public class EmailEntry extends Panel {
 				WicketSession.get().setAttribute(Nonce.class.getName(), nonce);
 				info(getLocalizer().getString("send.confirm", this, "send confirm email."));
 			}
+*/			
 		}
+	}
+	
+	protected void onRegister() {
+	    logger.info("RegisterForm#onRegister");
+	}
+	
+	protected User getUser() {
+	    return user;
 	}
 }
