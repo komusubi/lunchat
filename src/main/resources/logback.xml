@@ -7,9 +7,9 @@
     </encoder>
   </appender>
   <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>logs/lunch.log</file>
+    <file>logs/lunchat.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-      <FileNamePattern>lunch-%i.log</FileNamePattern>
+      <FileNamePattern>lunchat-%i.log</FileNamePattern>
       <MinIndex>1</MinIndex>
       <MaxIndex>5</MaxIndex>
     </rollingPolicy>
