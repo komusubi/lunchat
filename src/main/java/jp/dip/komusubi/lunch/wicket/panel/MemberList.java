@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * @author jun.ozeki
  * @since 2011/12/11
  */
-public abstract class MemberList extends Panel {
+public class MemberList extends Panel {
 
 	private static final long serialVersionUID = 695094056051480395L;
 	private static final Logger logger = LoggerFactory.getLogger(MemberList.class);
@@ -101,12 +101,12 @@ public abstract class MemberList extends Panel {
 				@Override
 				public void onClick() {
 					onSelectedMember(model.getObject());
-					logger.info("onClick: {}", model.getObject());
 				}
-				
 			};
 		}
 	}
 	
-	protected abstract void onSelectedMember(User user);
+	protected void onSelectedMember(User user) {
+	    logger.info("submit onSelectedMember");
+	}
 }

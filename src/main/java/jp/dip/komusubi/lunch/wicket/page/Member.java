@@ -18,14 +18,20 @@
  */
 package jp.dip.komusubi.lunch.wicket.page;
 
+import java.util.Date;
+
 import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.model.User;
+import jp.dip.komusubi.lunch.wicket.WicketSession;
+import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.panel.Footer;
 import jp.dip.komusubi.lunch.wicket.panel.Header;
 import jp.dip.komusubi.lunch.wicket.panel.MemberList;
 
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * member page. 
@@ -33,8 +39,10 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * @since 2011/11/16
  */
 public class Member extends AuthorizedPage {
-
+    
+    private static final Logger logger = LoggerFactory.getLogger(Member.class);
 	private static final long serialVersionUID = 4784071743684739829L;
+    private FormKey key;
 	
 	public Member(Group group) {
 		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
@@ -55,6 +63,18 @@ public class Member extends AuthorizedPage {
 		
 	}
 	
+	@Override
+	protected void onInitialize() {
+	    super.onInitialize();
+	    this.key = new FormKey(getPageId(), getId(), new Date());
+	}
+	
+	@Override
+	protected void onConfigure() {
+	    super.onConfigure();
+	    WicketSession.get().addFormKey(key);
+	}
+	
 	protected MemberList getMemberList(String id, Group group) {
 		return new MemberList(id, group) {
 
@@ -62,8 +82,12 @@ public class Member extends AuthorizedPage {
 
 			@Override
 			protected void onSelectedMember(User user) {
-//				Confirmation page = new Confirmation(Model.of(user));
-				setResponsePage(new MemberConfirmation(Model.of(user)));
+			    if (WicketSession.get().removeFormKey(key)) {
+//    				Confirmation page = new Confirmation(Model.of(user));
+    				setResponsePage(new MemberConfirmation(Model.of(user)));
+			    } else {
+			        logger.info("double submit on MemberList#getMemberList");
+			    }
 			}
 			
 		};

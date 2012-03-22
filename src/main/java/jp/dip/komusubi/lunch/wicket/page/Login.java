@@ -54,13 +54,13 @@ public class Login extends VariationBase {
 	}
 	
 	@Override
-	public void onInitialize() {
+	protected void onInitialize() {
 	    super.onInitialize();
         this.key = new FormKey(getPageId(), getId(), new Date());
 	}
 	
 	@Override
-	public void onConfigure() {
+	protected void onConfigure() {
 	    super.onConfigure();
         WicketSession.get().addFormKey(key);
 	}

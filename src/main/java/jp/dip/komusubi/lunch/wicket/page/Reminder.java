@@ -18,12 +18,15 @@
  */
 package jp.dip.komusubi.lunch.wicket.page;
 
+import java.util.Date;
+
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.service.NotFoundEmailException;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
+import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.panel.EmailSender;
 import jp.dip.komusubi.lunch.wicket.panel.EmailSender.EmailSenderBean;
 import jp.dip.komusubi.lunch.wicket.panel.Footer;
@@ -31,7 +34,6 @@ import jp.dip.komusubi.lunch.wicket.panel.Header;
 
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,11 +41,24 @@ public class Reminder extends VariationBase {
 
 	private static final long serialVersionUID = -6010319871215878007L;
 	private static final Logger logger = LoggerFactory.getLogger(Reminder.class);
+    private FormKey key;
 	
 	public Reminder() {
 		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
 		add(new EmailSender("email.reminder", new CompoundPropertyModel<EmailSenderBean>(getEmailSenderBean())));
 		add(new Footer("footer"));
+	}
+
+	@Override
+	protected void onInitialize() {
+	    super.onInitialize();
+	    this.key = new FormKey(getPageId(), getId(), new Date());
+	}
+	
+	@Override
+	protected void onConfigure() {
+	    super.onConfigure();
+	    WicketSession.get().addFormKey(key);
 	}
 	
 	private EmailSenderBean getEmailSenderBean() {
@@ -52,14 +67,15 @@ public class Reminder extends VariationBase {
 			private static final long serialVersionUID = 4984027733469660821L;
 
 			public void onSubmit() {
-				String targetPath = getRequestCycle().urlFor(Login.class, null).toString();
-				String ownUrl = getRequestCycle().getUrlRenderer().renderFullUrl(getRequest().getClientUrl());
-				String url = RequestUtils.toAbsolutePath(ownUrl, targetPath);
 				try {
-					AccountService account = Configuration.getInstance(AccountService.class);
-					Nonce nonce = account.remind(email, url);
-					// save nonce in session 
-					WicketSession.get().setAttribute(Nonce.class.getName(), nonce);
+				    if (WicketSession.get().removeFormKey(key)) {
+						AccountService account = Configuration.getInstance(AccountService.class);
+    					Nonce nonce = account.remind(email, getPageUrl(Login.class));
+    					// save nonce in session 
+    					WicketSession.get().setAttribute(Nonce.class.getName(), nonce);
+				    } else {
+				        logger.info("double submit on EmailSenderBean#onSubmit");
+				    }
 					
 				} catch (NotFoundEmailException e) {
 					// sniffing mail address ? or just wrong ?

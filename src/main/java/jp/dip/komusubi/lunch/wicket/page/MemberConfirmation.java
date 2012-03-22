@@ -81,7 +81,7 @@ public class MemberConfirmation extends Confirmation {
                                             Model.of(model.getObject().getName() + " さんに承認依頼を送信しました。"));
                     } else {
                         // FIXME warning double submit.
-                        error("double submit!!");
+                        error("double submit !!"); // on Dialog#onAgree");
                         return;
                     }
                 } catch (Exception e) {

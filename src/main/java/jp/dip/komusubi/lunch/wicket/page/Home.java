@@ -70,12 +70,14 @@ public class Home extends VariationBase {
     	add(new Footer("footer"));
     }
     
-    public void onInitialize() {
+    @Override
+    protected void onInitialize() {
         super.onInitialize();
         this.key = new FormKey(getPageId(), getId(), new Date());
     }
     
-    public void onConfigure() {
+    @Override
+    protected void onConfigure() {
         super.onConfigure();
         WicketSession.get().addFormKey(key);
     }
@@ -89,7 +91,7 @@ public class Home extends VariationBase {
 			protected void onChoiceProduct(Product product) {
 			    if (!WicketSession.get().removeFormKey(key)) {
 			        // double submit
-			        logger.info("double submit onChoiceProduct");
+			        logger.info("double submit ChoiceLunch#onChoiceProduct");
 			        return;
 			    }
 			    WicketSession session = WicketSession.get();
