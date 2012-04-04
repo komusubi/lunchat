@@ -34,7 +34,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 
 /**
  * user dao implemented by jdbc.
@@ -45,7 +48,7 @@ public class JdbcUserDao implements UserDao {
 	private static final Logger logger = LoggerFactory.getLogger(JdbcUserDao.class);
 	private static String COLUMNS = "email, id, password, nickname, name, joined";
 	private static final String SELECT_RECORD_QUERY = "select " + COLUMNS + " from users where id = ?";
-	private static final String INSERT_RECORD_QUERY = "insert into users (" + COLUMNS + ") values (?, ?, ?, ?, ?, ?)";
+	private static final String INSERT_RECORD_QUERY = "insert into users (" + COLUMNS + ") values (:email, :id, :password, :nickname, :name, :joined)";
 	private static final String UPDATE_RECORD_QUERY = "update users set password = ?, name = ?, email = ?, nickname = ?"
 					+ " where id = ?";
 	private static final String SELECT_RECORD_BY_EMAIL = "select " + COLUMNS + " from users where email = ?";
@@ -54,18 +57,20 @@ public class JdbcUserDao implements UserDao {
 	private static final String SELECT_RECORD_BY_NICKNAME = "select " + COLUMNS + " from users where nickname = ?";
     private static final String SELECT_RECORD_BY_ADMITTER = "select " + COLUMNS + " from users, health where admitted = ? and health.userId = id"; 
 	private HealthDao healthDao;
-	private SimpleJdbcTemplate template;
+	private SimpleJdbcTemplate simple;
+	private NamedParameterJdbcTemplate template;
 	
 	@Inject
 	public JdbcUserDao(DataSource dataSource, HealthDao healthDao) {
-		template = new SimpleJdbcTemplate(dataSource);
+		simple = new SimpleJdbcTemplate(dataSource);
+	    template = new NamedParameterJdbcTemplate(dataSource);
 		this.healthDao = healthDao;
 	}
 
     public User findByEmail(String email) {
         User user = null;
         try {
-            user = template.queryForObject(SELECT_RECORD_BY_EMAIL, userRowMapper, email);
+            user = simple.queryForObject(SELECT_RECORD_BY_EMAIL, userRowMapper, email);
         } catch (EmptyResultDataAccessException e) {
             logger.info("not found user email is {}", email);
         }
@@ -75,7 +80,7 @@ public class JdbcUserDao implements UserDao {
     public User findByNickname(String nickname) {
         User user = null;
         try {
-            user = template.queryForObject(SELECT_RECORD_BY_NICKNAME, userRowMapper, nickname);
+            user = simple.queryForObject(SELECT_RECORD_BY_NICKNAME, userRowMapper, nickname);
         } catch (EmptyResultDataAccessException e) {
             logger.info("not found user nickname is {}", nickname);
         }
@@ -84,14 +89,14 @@ public class JdbcUserDao implements UserDao {
     
     public List<User> findByGroupId(Integer groupId) {
         List<User> list;
-        list = template.query(SELECT_RECORD_BY_GROUPID, userRowMapper, groupId);
+        list = simple.query(SELECT_RECORD_BY_GROUPID, userRowMapper, groupId);
         logger.info("findByGroupId find: {}", list.size());
         return list;
     }
     
     public List<User> findByAdmitter(String name) {
         List<User> users;
-        users = template.query(SELECT_RECORD_BY_ADMITTER, userRowMapper, name);
+        users = simple.query(SELECT_RECORD_BY_ADMITTER, userRowMapper, name);
         logger.info("findBYAdmitter find: {}", users.size());
         return users;
     }
@@ -99,7 +104,7 @@ public class JdbcUserDao implements UserDao {
 	public User find(Integer pk) {
 		User user = null;
 		try {
-			user = template.queryForObject(SELECT_RECORD_QUERY, userRowMapper, pk);
+			user = simple.queryForObject(SELECT_RECORD_QUERY, userRowMapper, pk);
 		} catch (EmptyResultDataAccessException e) {
 			logger.info("not found user is {}", pk);
 		}
@@ -111,25 +116,26 @@ public class JdbcUserDao implements UserDao {
 	}
 
 	public Integer persist(User instance) {
-	    User user = null;
+	    GeneratedKeyHolder holder = new GeneratedKeyHolder();
 		try {
 			validate(instance);
-			template.update(INSERT_RECORD_QUERY, instance.getEmail(),
-			                                    instance.getId(), 
-			                                    instance.getPassword(),
-			                                    instance.getNickname(),
-			                                    instance.getName(),	
-			                                    JdbcDateConverter.toTimestamp(instance.getJoined()));
+			MapSqlParameterSource sqlParameter = new MapSqlParameterSource()
+			                                        .addValue("email", instance.getEmail())
+			                                        .addValue("id", instance.getId())
+			                                        .addValue("password", instance.getPassword())
+			                                        .addValue("nickname", instance.getNickname())
+			                                        .addValue("name", instance.getName())
+			                                        .addValue("joined", instance.getJoined());
+			template.update(INSERT_RECORD_QUERY, sqlParameter, holder);
+
 			// health 
 			healthDao.persist(instance.getHealth());
-			// find user for get user id, because auto increment.
-			user = findByEmail(instance.getEmail());
+			logger.info("persisted: {}", instance);
 		} catch (DataAccessException e) {
 			throw new LunchException(e);
 		}
-		if (user == null)
-		    throw new IllegalStateException("fail persistence, could NOT find User: " + instance);
-		return user.getId();
+		// return to auto boxing
+		return holder.getKey().intValue();
 	}
 
 	public void remove(User instance) {
@@ -141,7 +147,7 @@ public class JdbcUserDao implements UserDao {
 		Integer groupId = null;
 		if (instance.getGroup() != null)
 			groupId = instance.getGroup().getId();
-		template.update(UPDATE_RECORD_QUERY, instance.getPassword(), 
+		simple.update(UPDATE_RECORD_QUERY, instance.getPassword(), 
 		                                    instance.getName(),
 		                                    instance.getEmail(),
 		                                    instance.getNickname(),
