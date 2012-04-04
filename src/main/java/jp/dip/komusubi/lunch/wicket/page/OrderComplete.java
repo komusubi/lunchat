@@ -20,12 +20,14 @@ package jp.dip.komusubi.lunch.wicket.page;
 
 import java.util.Date;
 
-import jp.dip.komusubi.lunch.model.Product;
+import jp.dip.komusubi.lunch.Configuration;
+import jp.dip.komusubi.lunch.model.Order;
+import jp.dip.komusubi.lunch.service.Shopping;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.panel.OrderLines;
 
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,17 +35,16 @@ public class OrderComplete extends AuthorizedPage {
     private static final Logger logger = LoggerFactory.getLogger(OrderComplete.class);
 	private static final long serialVersionUID = -6096514197924442740L;
     private FormKey key;
-//	@Inject
-//	private transient OrderDao orderDao;
-//	private transient Shopping shopping;
-	
-	public OrderComplete(Model<Product> model) {
+
+    public OrderComplete() {
+        // FIXME default constructor for direct url access.
+        logger.error("error!! direct access OrderComplete Page.");
+    }
+    
+    public OrderComplete(IModel<Order> model) {
 	    add(getOrderLines("order.lines", model));
 	}
 
-//	public OrderComplete(Model<List<OrderLine>> orderModel) {
-	    
-//	}
     @Override
 	protected void onInitialize() {
 	    super.onInitialize();
@@ -61,27 +62,39 @@ public class OrderComplete extends AuthorizedPage {
 	 * @param model
 	 * @return
 	 */
-	private OrderLines getOrderLines(String id, Model<Product> model) {
+	protected OrderLines getOrderLines(String id, IModel<Order> model) {
 	    return new OrderLines(id, model) {
 	        private static final long serialVersionUID = 7930054187191919478L;
 
             @Override
-	        protected void onEating() {
+	        protected void onEat() {
                 if (WicketSession.get().removeFormKey(key)) {
                     logger.info("いただきまーす");
                 } else {
-                    logger.info("double submit onEating()");
+                    logger.info("double submit onEat()");
                 }
 	        }
-	        
+
 	        @Override
-	        protected void onFinished() {
+	        protected void onFinish() {
 	            if (WicketSession.get().removeFormKey(key)) {
 	                logger.info("ごちそうさま");
 	            } else {
-	                logger.info("double submit onFinished()");
+	                logger.info("double submit onFinish()");
 	            }
-	            
+	        }
+	        
+	        @Override
+	        protected void onCancel() {
+	            if (WicketSession.get().removeFormKey(key)) {
+	                logger.info("キャンセル");
+//	                AccountService account = Configuration.getInstance(AccountService.class);
+	                Shopping shopping = Configuration.getInstance(Shopping.class);
+	                Order order = ((IModel<Order>) getDefaultModel()).getObject(); 
+	                shopping.cancel(order);
+	            } else {
+	                logger.info("double submit onCancel()");
+	            }
 	        }
 	    };
 	}
