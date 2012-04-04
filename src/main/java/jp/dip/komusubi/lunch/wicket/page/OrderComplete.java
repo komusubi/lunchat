@@ -91,7 +91,7 @@ public class OrderComplete extends AuthorizedPage {
 //	                AccountService account = Configuration.getInstance(AccountService.class);
 	                Shopping shopping = Configuration.getInstance(Shopping.class);
 	                Order order = ((IModel<Order>) getDefaultModel()).getObject(); 
-	                shopping.cancel(order);
+//	                shopping.cancel(order);
 	            } else {
 	                logger.info("double submit onCancel()");
 	            }
