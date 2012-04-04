@@ -19,11 +19,14 @@
 package jp.dip.komusubi.lunch.wicket.page;
 
 import java.util.Date;
+import java.util.List;
 
 import jp.dip.komusubi.lunch.Configuration;
+import jp.dip.komusubi.lunch.model.Order;
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.module.Basket;
 import jp.dip.komusubi.lunch.service.Shopping;
+import jp.dip.komusubi.lunch.wicket.WicketApplication;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.panel.Dialog;
@@ -74,7 +77,9 @@ public class OrderConfirmation extends Confirmation {
 					    Basket basket = shopping.getBasket(WicketSession.get().getLoggedInUser());
 					    basket.add(model.getObject());
 					    shopping.order(basket);
-					    setResponsePage(new OrderComplete(model));
+					    List<Order> orders = basket.getOrders();
+					    Order order = orders.get(0);
+					    setResponsePage(new OrderComplete(Model.of(order)));
 					} else {
 						// FIXME warning double submit.
 						error("double submit!!");
@@ -88,7 +93,12 @@ public class OrderConfirmation extends Confirmation {
 
 			@Override
 			protected void onCancel() {
-			    logger.info("order canceled.");
+			    setResponsePage(WicketApplication.get().getHomePage());
+			}
+			
+			@Override
+			protected Label getLabel(String id) {
+			    return new Label(id, model.getObject().getName() + " を注文します。");
 			}
 		};
 	}

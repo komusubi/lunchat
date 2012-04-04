@@ -36,10 +36,8 @@ public abstract class Dialog<T> extends Panel {
 //	private static final Logger logger = LoggerFactory.getLogger(Dialog.class);
 	
 	public Dialog(String id, IModel<T> model) {
-//	public Dialog(String id, Model<T> model) {
-		super(id);
-		add(new Label("message", model));
-//		add(new Label("message", model.getObject().getName() + "さん にグループ参加の承認依頼通知を送信します。"));
+		super(id, model);
+		add(getLabel("message"));
 		add(new FeedbackPanel("feedback"));
 //		add(new DialogForm("confirm.form"));
 		add(getAgreeLink("agree"));
@@ -73,6 +71,12 @@ public abstract class Dialog<T> extends Panel {
 			@Override
 			public void onClick() {
 				onCancel();
+			}
+			
+			@Override
+			public void onComponentTag(ComponentTag tag) {
+			    super.onComponentTag(tag);
+			    tag.put("href", "wicket/" + getURL());
 			}
 		};
 	}
@@ -120,4 +124,8 @@ public abstract class Dialog<T> extends Panel {
 */	
 	protected abstract void onAgree();
 	protected abstract void onCancel();
+	
+	protected Label getLabel(String id) {
+	    return new Label(id, "ラベル");
+	}
 }
