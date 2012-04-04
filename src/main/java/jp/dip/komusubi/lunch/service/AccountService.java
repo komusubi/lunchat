@@ -18,7 +18,6 @@ package jp.dip.komusubi.lunch.service;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.MissingResourceException;
@@ -36,6 +35,7 @@ import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.Transactional;
 import jp.dip.komusubi.lunch.module.dao.ContractDao;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
+import jp.dip.komusubi.lunch.module.dao.OrderDao;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.util.Nonce;
 
@@ -78,6 +78,7 @@ public class AccountService implements Serializable {
 	@Inject @Named("date") private transient Resolver<Date> dateResolver;
 	@Inject private GroupDao groupDao;
 	@Inject private ContractDao contractDao;
+	@Inject private OrderDao orderDao;
 	private User authedUser;
 	
 	@Inject
@@ -435,9 +436,12 @@ public class AccountService implements Serializable {
 //		return shops;
 //	}
 	
-	public List<Order> getOrders(User user, Date date) {
-//		List<Order> orders = orderDao.findByUserAndDate(user.getId(), date);
-		List<Order> orders = new ArrayList<>();
+//	public List<Order> getOrderHistory(User user) {
+//	    return null;
+//	}
+	
+	public List<Order> getOrderHistory(User user, Date date) {
+		List<Order> orders = orderDao.findByUserAndDate(user.getId(), date);
 		return orders;
 	}
 	
@@ -456,4 +460,6 @@ public class AccountService implements Serializable {
 
         return fragment;
 	}
+	
+	
 }
