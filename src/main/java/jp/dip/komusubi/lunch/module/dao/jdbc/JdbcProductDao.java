@@ -50,7 +50,7 @@ public class JdbcProductDao implements ProductDao {
 	private static final Logger logger = LoggerFactory.getLogger(JdbcProductDao.class);
 	private static final String COLUMNS = "id, refId, shopId, name, amount, start, finish";
 	private static final String SELECT_RECORDS_SHOPID = "select " + COLUMNS + " from products where shopId = ?";
-	private static final String SELECT_RECORD_PK = "select " + COLUMNS + " from proeucts where id = ?";
+	private static final String SELECT_RECORD_PK = "select " + COLUMNS + " from products where id = ?";
 	private static final String SELECT_RECORDS_SHOPID_SALABLE = "select " + COLUMNS 
 											+ " from products where shopId = ? and start <= ? and finish >= ?";
 	private static final String SELECT_RECORDS_SHOPID_FINISH_DATE = "select " + COLUMNS
