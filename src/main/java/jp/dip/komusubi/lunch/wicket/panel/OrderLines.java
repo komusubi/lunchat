@@ -18,19 +18,26 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
-import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
+import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.Order;
-import jp.dip.komusubi.lunch.model.Product;
+import jp.dip.komusubi.lunch.model.OrderLine;
+import jp.dip.komusubi.lunch.model.User;
+import jp.dip.komusubi.lunch.service.AccountService;
+import jp.dip.komusubi.lunch.wicket.WicketApplication;
+import jp.dip.komusubi.lunch.wicket.WicketSession;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.Url;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,76 +49,141 @@ import org.slf4j.LoggerFactory;
 public class OrderLines extends Panel {
     private static final Logger logger = LoggerFactory.getLogger(OrderLines.class);
     private static final long serialVersionUID = 2352788625691496266L;
-
+    
     /**
      * @param id
      * @param model
      */
-    public OrderLines(String id, IModel<Product> model) {
-        super(id);
-        add(getProductViews("order.line", Arrays.asList(model.getObject())));
-        add(getEating("eat"));
-        add(getFinished("finish"));
+    public OrderLines(String id, IModel<Order> model) {
+        super(id, model);
+        add(getOrderLineViews("order.line", new PropertyModel<List<OrderLine>>(model, "orderLines")));
+        add(new Label("total.amount", new PropertyModel<String>(model, "amount")));
+        add(getEatLink("eat"));
+        add(getFinishedLink("finish"));
+        add(getCancelLink("cancel"));
     }
 
-    // change after order view
-    public OrderLines(String id, Order order) {
-        super(id);
-        throw new UnsupportedOperationException("not supported.");
+    public OrderLines(String id) {
+        this(id, Model.of(getTodayOrder()));
     }
+            
+    @Override
+    protected void onConfigure() {
+        if (!WicketSession.get().isSignedIn()) {
+            logger.info("access {} but not login.", new Url());
+            setResponsePage(WicketApplication.get().getHomePage());
+            return;
+        }
+        User user = WicketSession.get().getLoggedInUser();
+        if (user.getGroup() == null) {
+            setResponsePage(WicketApplication.get().getHomePage());
+            return;
+        }
+        IModel<Order> model = (IModel<Order>) getDefaultModel();
+        model.getObject();
         
-    /**
-     * @param model
-     * @return
-     */
-    protected ListView<Product> getProductViews(String id, final List<Product> products) {
-        ListView<Product> listView = new ListView<Product>(id, products) {
+    }
+    
+    private static Order getTodayOrder() {
+        if (!WicketSession.get().isSignedIn())
+            return new Order();
+        User user = WicketSession.get().getLoggedInUser();
+        return getTodayOrder(user);
+    }
+    
+    private static Order getTodayOrder(User user) {
+        if (user == null)
+            return new Order();
+        AccountService account = Configuration.getInstance(AccountService.class);
+        List<Order> orders = account.getOrderHistory(user, new Date());
+        Order order;
+        if (orders.size() > 0)
+            order = orders.get(0);
+        else
+            order = new Order();    
 
-            private static final long serialVersionUID = 650380468035641103L;
+        return order;
+    }
+    
+    protected ListView<OrderLine> getOrderLineViews(String id, PropertyModel<List<OrderLine>> model) {
+
+        ListView<OrderLine> listView = new ListView<OrderLine>(id, model) {
+
+            private static final long serialVersionUID = 8658283409782022862L;
 
             @Override
-            protected void populateItem(ListItem<Product> item) {
-                item.setDefaultModel(new CompoundPropertyModel<Product>(item.getModelObject()));
-                item.add(new Label("name"));
-                item.add(new Label("amount"));
+            protected void populateItem(ListItem<OrderLine> item) {
+                OrderLine orderLine = item.getModelObject();
+                item.add(new Label("name", orderLine.getProduct().getName()));
+                StringBuilder builder = new StringBuilder();
+                builder.append(orderLine.getQuantity()).append("個  ")
+                        .append(orderLine.getAmount()).append("円");
+                item.add(new Label("amount", builder.toString()));
             }
         };
         return listView;
     }
-
-    private Link<Void> getEating(String id) {
+    
+    private Link<Void> getEatLink(String id) {
         return new Link<Void>(id) {
 
             private static final long serialVersionUID = -5686997586137367253L;
             
             @Override
             public void onClick() {
-                onEating();
+                onEat();
                 setEnabled(false);
             }
         };
     }
     
-    private Link<Void> getFinished(String id) {
+    private Link<Void> getFinishedLink(String id) {
         return new Link<Void>(id) {
 
             private static final long serialVersionUID = 5285883179074101772L;
 
             @Override
             public void onClick() {
-                onFinished();
+                onFinish();
                 setEnabled(false);
             }
-            
         };
     }
     
-    protected void onEating() {
-        logger.info("on eating !");
+//    @Inject @Named("date") private Resolver<Date> resolver = Configuration.getInstance(Resolver.class);
+    
+    protected Link<Void> getCancelLink(String id) {
+        return new Link<Void>(id) {
+
+            private static final long serialVersionUID = 4670287317434201760L;
+
+            @Override
+            public void onClick() {
+                onCancel();
+                setEnabled(false);
+            }
+            
+            @Override
+            protected void onConfigure() {
+                User user = WicketSession.get().getLoggedInUser();
+                boolean visible = false;
+//                if (user.getGroup().getLastOrder().before(resolver.resolve()))
+//                    visible = true;
+//                setVisibilityAllowed(visible);
+            }
+
+        };
     }
     
-    protected void onFinished() {
-        logger.info("on finished !");
+    protected void onEat() {
+        logger.info("on eating !");
+    }
+        
+    protected void onFinish() {
+        logger.info("on finish !");
     }
 
+    protected void onCancel() {
+        logger.info("on cancel !");
+    }
 }
