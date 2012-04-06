@@ -20,7 +20,6 @@ package jp.dip.komusubi.lunch.module.dao.jdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +28,6 @@ import javax.sql.DataSource;
 
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Group;
-import jp.dip.komusubi.lunch.module.dao.ContractDao;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
 
 import org.slf4j.Logger;
@@ -42,13 +40,13 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 public class JdbcGroupDao implements GroupDao {
 	
 	private static final Logger logger = LoggerFactory.getLogger(JdbcGroupDao.class);
-	private static final String COLUMNS = "id, code, name, lastOrder, place, phoneNumber";
+	private static final String COLUMNS = "id, code, name, place, phoneNumber";
 	private static final String SELECT_RECORD_QUERY = "select " + COLUMNS + " from groups where id = ?";
 	private static final String SELECT_RECORD_ALL = "select " + COLUMNS + " from groups";
 	private static final String SELECT_RECORD_BY_CODE = "select " + COLUMNS + " from groups where code = ?";
-	private static final String INSERT_RECORD = "insert into groups (" + COLUMNS + ") values (?, ?, ?, ?, ?, ?)";
+	private static final String INSERT_RECORD = "insert into groups (" + COLUMNS + ") values (?, ?, ?, ?, ?)";
 //	private static final String SELECT_QUERY_CONTRACTS = "select id, shopId from"
-	@Inject private ContractDao contractDao;
+//	@Inject private ContractDao contractDao;
 	private SimpleJdbcTemplate template;
 
 	@Inject
@@ -95,7 +93,6 @@ public class JdbcGroupDao implements GroupDao {
 			template.update(INSERT_RECORD, instance.getId(),
 			                                instance.getCode(),
 			                                instance.getName(),
-			                                instance.getLastOrder(),
 			                                null,
 			                                instance.getPhoneNumber());
 			// find group because id is auto increment.
@@ -119,7 +116,6 @@ public class JdbcGroupDao implements GroupDao {
 	}
 	
 	private final RowMapper<Group> groupRowMapper = new RowMapper<Group>() {
-		private Calendar cal = Calendar.getInstance();
 		
 		@Override
 		public Group mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -127,9 +123,7 @@ public class JdbcGroupDao implements GroupDao {
 			Group group = new Group(rs.getInt("id"))
 			                    .setCode(rs.getString("code"))
 			                    .setName(rs.getString("name"))
-			                    .setLastOrder(rs.getTime("lastOrder", cal))
 			                    .setPhoneNumber(rs.getString("phoneNumber"));
-//									.setContracts(contractDao.findByGroupId(rs.getString("id")));
 			return group;
 		}
 		
