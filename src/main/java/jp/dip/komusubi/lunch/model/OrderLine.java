@@ -69,22 +69,23 @@ public class OrderLine implements Serializable {
 	private int quantity;
 	private int fixedAmount;
 	private Date datetime;
+	private boolean cancel;
 
-	public OrderLine() {
+    public OrderLine() {
 		this(new OrderLineKey());
 	}
 
-	public OrderLine(OrderLineKey primaryKey) {
+    public OrderLine(OrderLineKey primaryKey) {
 		this.primaryKey = primaryKey;
 		quantity = 1;
 	}
-
+	
 	public int getAmount() {
 		// FIXME fixed amount は確定後の注文金額なので加算（追加注文）のみ可能。
 		// その場合のProduct の修正不可とする対応が必要。
 //		int amount = fixedAmount;
 		int amount = 0;
-		if (getProduct() != null)
+		if (getProduct() != null && isCancel() != true)
 			amount += getProduct().getAmount() * getQuantity();
 		return amount;
 	}
@@ -109,11 +110,20 @@ public class OrderLine implements Serializable {
 		setQuantity(getQuantity() + i);
 		return quantity;
 	}
-	
+
+	public boolean isCancel() {
+        return cancel;
+    }
+
 	public OrderLine setAmount(int fixedAmount) {
 		this.fixedAmount = fixedAmount;
 		return this;
 	}
+	
+	public OrderLine setCancel(boolean cancel) {
+        this.cancel = cancel;
+        return this;
+    }
 
 	public OrderLine setDatetime(Date datetime) {
 		this.datetime = datetime;
@@ -137,11 +147,12 @@ public class OrderLine implements Serializable {
 	}
 
     @Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("OrderLine [product=").append(product).append(", primaryKey=")
-				.append(primaryKey).append(", quantity=").append(quantity).append(", fixedAmount=")
-				.append(fixedAmount).append(", datetime=").append(datetime).append("]");
-		return builder.toString();
-	}
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("OrderLine [product=").append(product).append(", primaryKey=")
+                .append(primaryKey).append(", quantity=").append(quantity).append(", fixedAmount=")
+                .append(fixedAmount).append(", datetime=").append(datetime).append(", cancel=")
+                .append(cancel).append("]");
+        return builder.toString();
+    }
 }

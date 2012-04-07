@@ -44,10 +44,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 public class JdbcOrderLineDao implements OrderLineDao {
 
 	private static final Logger logger = LoggerFactory.getLogger(JdbcOrderLineDao.class);
-	private static final String COLUMNS = "orderId, no, productId, quantity, amount, datetime";
+	private static final String COLUMNS = "orderId, no, productId, quantity, amount, datetime, cancel";
 	private static final String SELECT_QUERY_RECORD = "select " + COLUMNS
 			+ " from orderLines where orderId = ? and userId = ? and productId = ?";
-	private static final String INSERT_QUERY_RECORD = "insert into orderLines ( " + COLUMNS + " ) values ( ?, ?, ?, ?, ?, ? )";
+	private static final String INSERT_QUERY_RECORD = "insert into orderLines ( " + COLUMNS + " ) values ( ?, ?, ?, ?, ?, ?, ? )";
 	private static final String SELECT_QUERY_BY_ORDERID = "select " + COLUMNS + " from orderLines where orderId = ?";
 	private SimpleJdbcTemplate template;
 	@Inject
@@ -86,12 +86,13 @@ public class JdbcOrderLineDao implements OrderLineDao {
 	@Override
 	public OrderLineKey persist(OrderLine instance) {
 		try {
-			template.update(INSERT_QUERY_RECORD, instance.getPrimaryKey().getNo(),
-													instance.getPrimaryKey().getOrderId(),
+			template.update(INSERT_QUERY_RECORD, instance.getPrimaryKey().getOrderId(),
+			                                        instance.getPrimaryKey().getNo(),
 													instance.getProduct().getId(),
 													instance.getQuantity(),
 													instance.getAmount(),
-													instance.getDatetime());
+													instance.getDatetime(),
+													instance.isCancel());
 
 		} catch (DataAccessException e) {
 			throw new LunchException(e);
@@ -106,7 +107,8 @@ public class JdbcOrderLineDao implements OrderLineDao {
 
 	@Override
 	public void update(OrderLine instance) {
-		throw new UnsupportedOperationException("update");
+//		throw new UnsupportedOperationException("update");
+	    
 	}
 	
 	private final RowMapper<OrderLine> orderLineRowMapper = new RowMapper<OrderLine>() {
@@ -120,7 +122,8 @@ public class JdbcOrderLineDao implements OrderLineDao {
 			OrderLine orderLine = new OrderLine(primaryKey)
 										.setProduct(productDao.find(rs.getString("productId")))
 										.setQuantity(rs.getInt("quantity"))
-										.setDatetime(rs.getDate("datetime"));
+										.setDatetime(rs.getDate("datetime"))
+										.setCancel(rs.getBoolean("cancel"));
 										
 			return orderLine;
 		}
