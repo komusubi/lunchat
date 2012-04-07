@@ -59,6 +59,10 @@ public class Order implements Serializable, Iterable<OrderLine> {
 		return this;
 	}
 
+	public List<OrderLine> getOrderLines() {
+	    return lines;
+	}
+	
 	public void clear() {
 		lines.clear();
 	}
