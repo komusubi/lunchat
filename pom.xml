@@ -179,7 +179,7 @@
     <dependency>
       <groupId>net.sf.log4jdbc</groupId>
       <artifactId>log4jdbc4</artifactId>
-      <version>1.2beta2</version>
+      <version>1.2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.empire-db</groupId>
@@ -363,19 +363,19 @@
     <site>
       <id>komusubi-repo</id>
       <name>komusubi vps</name>
-      <url>scp://komusubi.org:3843/home/sites/komusubi.org/web/m2/site/lunch</url>
+      <url>scp://komusubi.org/home/jun/public/m2/sites/lunchat</url>
     </site>
     <repository>
       <uniqueVersion>false</uniqueVersion>
       <id>komusubi-repo</id>
       <name>komusubi vps</name>
-      <url>scp://komusubi.org:3843/home/sites/komusubi.org/web/m2/repo</url>
+      <url>scp://komusubi.org/home/jun/public/m2/repo</url>
       <layout>default</layout>
     </repository>
     <snapshotRepository>
       <id>komusubi-snapshot</id>
       <name>komusubi snapshot</name>
-      <url>scp://komusubi.org:3843/home/sites/komusubi.org/web/m2/snapshot</url>
+      <url>scp://komusubi.org/home/jun/public/m2/snapshot</url>
     </snapshotRepository>
   </distributionManagement>
   <inceptionYear>2011</inceptionYear>
