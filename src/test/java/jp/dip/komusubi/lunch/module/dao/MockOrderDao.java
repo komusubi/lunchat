@@ -75,4 +75,10 @@ public class MockOrderDao implements OrderDao {
 		return null;
 	}
 
+    @Override
+    public List<Order> findByGroupIdAndDate(Integer groupId, Date date, boolean summary) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
