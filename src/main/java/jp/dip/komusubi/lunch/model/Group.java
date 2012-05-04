@@ -152,6 +152,7 @@ public class Group implements Serializable {
 		return id;
 	}
 
+	@Deprecated
 	public Date getLastOrder() {
 		return lastOrder;
 	}
@@ -198,12 +199,19 @@ public class Group implements Serializable {
 		return this;
 	}
 
+	// TODO reconsider group's "ID" should be immutable.
+	public Group setId(Integer id) {
+	    this.id = id;
+        return this;
+    }
+
+	@Deprecated
 	public Group setLastOrder(Date lastOrder) {
 		this.lastOrder = lastOrder;
 		return this;
 	}
 
-	public Group setName(String name) {
+    public Group setName(String name) {
 		this.name = name;
 		return this;
 	}
@@ -212,6 +220,7 @@ public class Group implements Serializable {
 		this.phoneNumber = phoneNumber;
 		return this;
 	}
+
 
     @Override
     public String toString() {

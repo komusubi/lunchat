@@ -95,6 +95,7 @@ public class JdbcGroupDao implements GroupDao {
 			                                instance.getName(),
 			                                null,
 			                                instance.getPhoneNumber());
+			// FIXME change sql parameter source query and get auto incremented id.  
 			// find group because id is auto increment.
 			group = findByCode(instance.getCode());
 		} catch (DataAccessException e) {
@@ -102,6 +103,8 @@ public class JdbcGroupDao implements GroupDao {
 		}
 		if (group == null)
 		    throw new IllegalStateException("fail persistence, could NOT find Group: " + instance);
+		// FIXME ? group's ID is immutable? 
+		instance.setId(group.getId());
 		return group.getId();
 	}
 
