@@ -33,36 +33,62 @@ public class Order implements Serializable, Iterable<OrderLine> {
 
 	private static final long serialVersionUID = -6439746231384675399L;
 	private int id;
+	private Group group;
 	private User user;
 	private Shop shop;
+	private boolean summary;
+	private boolean cancel;
 	private int amount;
-	private Date datetime;
-	// private int geoId;
+    private Date datetime;
+    // private int geoId;
 	private List<OrderLine> lines;
 
-	public Order() {
+    public Order() {
 		this(0);
 	}
 
-	public Order(int id) {
+    public Order(int id) {
 		this.id = id;
 		lines = new ArrayList<OrderLine>();
 	}
-
-	public Order addOrderLine(OrderLine orderLine) {
-		lines.add(orderLine);
+    
+    public Order addLine(OrderLine orderLine, boolean summary) {
+        if (!summary) {
+            lines.add(orderLine);
+            return this;
+        }
+        boolean found = false;
+        for (OrderLine ol: lines) {
+            if (ol.getProduct().equals(orderLine.getProduct())) {
+                ol.increment(orderLine.getQuantity());
+                found = true;
+            } 
+        }
+        if (!found)
+            lines.add(orderLine);
+        return this;
+    }
+    
+	public Order addLine(OrderLine orderLine) {
+		addLine(orderLine, false);
 		return this;
-	}
-
-	public Order addOrderLines(Collection<OrderLine> orderLines) {
-		lines.addAll(orderLines);
-		return this;
-	}
-
-	public List<OrderLine> getOrderLines() {
-	    return lines;
 	}
 	
+	public Order addLines(Collection<OrderLine> orderLines, boolean summary) {
+	    if (!summary) {
+	        lines.addAll(orderLines);
+	        return this;
+	    }
+	    for (OrderLine o: orderLines) 
+	        addLine(o, summary);
+	    return this;
+	}
+	
+	public Order addLines(Collection<OrderLine> orderLines) {
+	    addLines(orderLines, false);
+		return this;
+	}
+
 	public void clear() {
 		lines.clear();
 	}
@@ -80,10 +106,14 @@ public class Order implements Serializable, Iterable<OrderLine> {
 		return datetime;
 	}
 
+	public Group getGroup() {
+        return group;
+    }
+
 	public int getId() {
 		return id;
 	}
-
+	
 	public OrderLine getOrderLine(int index) {
 		return lines.get(index);
 	}
@@ -99,6 +129,24 @@ public class Order implements Serializable, Iterable<OrderLine> {
 		return orderLine;
 	}
 
+	public List<OrderLine> getOrderLines() {
+	    return lines;
+	}
+
+	public List<OrderLine> getOrderLines(boolean canceled) {
+	    List<OrderLine> orderLines = new ArrayList<>();
+	    for (OrderLine o: lines) {
+	        if (canceled) {
+	            if (o.isCancel())
+	                orderLines.add(o);
+	        } else {
+	            if (!o.isCancel())
+	                orderLines.add(o);
+	        }
+	    }
+	    return orderLines;
+	}
+	
 	public Shop getShop() {
 		return shop;
 	}
@@ -106,6 +154,14 @@ public class Order implements Serializable, Iterable<OrderLine> {
 	public User getUser() {
 		return user;
 	}
+
+	public boolean isCancel() {
+        return cancel;
+    }
+
+	public boolean isSummary() {
+        return summary;
+    }
 
 	@Override
 	public Iterator<OrderLine> iterator() {
@@ -147,28 +203,120 @@ public class Order implements Serializable, Iterable<OrderLine> {
 		return this;
 	}
 
+	public Order setCancel(boolean cancel) {
+        this.cancel = cancel;
+        return this;
+    }
+
 	public Order setDatetime(Date datetime) {
 		this.datetime = datetime;
 		return this;
 	}
+
+	public Order setGroup(Group group) {
+        this.group = group;
+        return this;
+    }
 
 	public Order setShop(Shop shop) {
 		this.shop = shop;
 		return this;
 	}
 
-	public Order setUser(User user) {
+	public Order setSummary(boolean summary) {
+        this.summary = summary;
+        return this;
+    }
+
+    public Order setUser(User user) {
 		this.user = user;
 		return this;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Order [id=").append(id).append(", user=").append(user).append(", shop=")
-				.append(shop).append(", amount=").append(amount).append(", datetime=")
-				.append(datetime).append(", lines=").append(lines).append("]");
-		return builder.toString();
-	}
+    public Receipt toReceipt() {
+        Receipt receipt = new Receipt()
+                            .setAmount(getAmount())
+                            .setGroup(getGroup())
+                            .setOrderId(getId())
+                            .setShop(getShop())
+                            // FIXME change date resolver
+                            .setDatetime(new Date())
+                            .setUser(getUser());
+        for (OrderLine o: lines) 
+            receipt.addLine(o.toReceiptLine());
+        return receipt;
+    }
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + amount;
+        result = prime * result + (cancel ? 1231 : 1237);
+        result = prime * result + ((datetime == null) ? 0 : datetime.hashCode());
+        result = prime * result + ((group == null) ? 0 : group.hashCode());
+        result = prime * result + id;
+        result = prime * result + ((lines == null) ? 0 : lines.hashCode());
+        result = prime * result + ((shop == null) ? 0 : shop.hashCode());
+        result = prime * result + (summary ? 1231 : 1237);
+        result = prime * result + ((user == null) ? 0 : user.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Order other = (Order) obj;
+        if (amount != other.amount)
+            return false;
+        if (cancel != other.cancel)
+            return false;
+        if (datetime == null) {
+            if (other.datetime != null)
+                return false;
+        } else if (!datetime.equals(other.datetime))
+            return false;
+        if (group == null) {
+            if (other.group != null)
+                return false;
+        } else if (!group.equals(other.group))
+            return false;
+        if (id != other.id)
+            return false;
+        if (lines == null) {
+            if (other.lines != null)
+                return false;
+        } else if (!lines.equals(other.lines))
+            return false;
+        if (shop == null) {
+            if (other.shop != null)
+                return false;
+        } else if (!shop.equals(other.shop))
+            return false;
+        if (summary != other.summary)
+            return false;
+        if (user == null) {
+            if (other.user != null)
+                return false;
+        } else if (!user.equals(other.user))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Order [id=").append(id).append(", group=").append(group).append(", user=")
+                .append(user).append(", shop=").append(shop).append(", summary=").append(summary)
+                .append(", cancel=").append(cancel).append(", amount=").append(amount)
+                .append(", datetime=").append(datetime).append(", lines=").append(lines)
+                .append("]");
+        return builder.toString();
+    }
 
 }

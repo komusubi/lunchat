@@ -35,6 +35,7 @@ import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.module.dao.ReceiptDao;
 import jp.dip.komusubi.lunch.module.dao.ReceiptLineDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
+import jp.dip.komusubi.lunch.module.dao.UserDao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 
 
 /**
+ * receipt jdbc dao.
  * @author jun.ozeki
  * @since 2012/04/09
  */
@@ -60,6 +62,7 @@ public class JdbcReceiptDao implements ReceiptDao {
     private NamedParameterJdbcTemplate template;
     @Inject private GroupDao groupDao;
     @Inject private ShopDao shopDao;
+    @Inject private UserDao userDao;
     @Inject private ReceiptLineDao receiptLineDao;
     
     @Inject
@@ -146,6 +149,7 @@ public class JdbcReceiptDao implements ReceiptDao {
         public Receipt mapRow(ResultSet rs, int rowNum) throws SQLException {
             Receipt receipt = new Receipt(rs.getInt("id"))
                                 .setOrderId(rs.getInt("orderId"))
+                                .setUser(userDao.find(rs.getInt("userId")))
                                 .setGroup(groupDao.find(rs.getInt("groupId")))
                                 .setShop(shopDao.find(rs.getString("shopId")))
                                 .setAmount(rs.getInt("amount"))

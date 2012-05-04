@@ -19,6 +19,8 @@ package jp.dip.komusubi.lunch.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.komusubi.common.util.Resolver;
+
 /**
  * order line.
  * @author jun.ozeki
@@ -70,7 +72,7 @@ public class OrderLine implements Serializable {
 	private int fixedAmount;
 	private Date datetime;
 	private boolean cancel;
-
+		
     public OrderLine() {
 		this(new OrderLineKey());
 	}
@@ -146,6 +148,18 @@ public class OrderLine implements Serializable {
 		return this;
 	}
 
+	public ReceiptLine toReceiptLine() {
+	    if (this.product == null) throw new IllegalStateException("product must NOT be null.");
+	    if (this.primaryKey == null) throw new IllegalStateException("OrderLine key is must NOT be null.");
+	    ReceiptLine receiptLine = new ReceiptLine()
+	                                .setAmount(getAmount())
+                	                .setProduct(getProduct())
+                	                // FIXME change date resolver 
+                	                .setDatetime(new Date())
+                	                .setQuantity(getQuantity());
+	    return receiptLine;
+	}
+	
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

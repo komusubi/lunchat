@@ -37,7 +37,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
- class JdbcReceiptLineDao implements ReceiptLineDao {
+
+/**
+ * receipt line jdbc dao. 
+ * @author jun.ozeki
+ */
+public class JdbcReceiptLineDao implements ReceiptLineDao {
     
     private static final Logger logger = LoggerFactory.getLogger(JdbcReceiptLineDao.class);
     private static final String COLUMNS = "receiptId, no, productId, quantity, amount, memo, datetime";

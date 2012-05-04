@@ -21,6 +21,7 @@ package jp.dip.komusubi.lunch.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -59,6 +60,23 @@ public class Receipt implements Serializable, Iterable<ReceiptLine> {
     }
     public int getAmount() {
         return amount;
+    }
+    public ReceiptLine getLine(int index) {
+        return lines.get(index);
+    }
+    public List<ReceiptLine> getLines() {
+        return lines;
+    }
+    public List<ReceiptLine> getLines(Product product) {
+        if (product == null)
+            return Collections.emptyList();
+        List<ReceiptLine> receiptResult = new ArrayList<>();
+        for (ReceiptLine receiptLine: lines) {
+            if (receiptLine.getProduct().equals(product)) {
+                receiptResult.add(receiptLine);
+            }
+        }
+        return receiptResult;
     }
     public Date getDatetime() {
         return datetime;

@@ -35,19 +35,19 @@ import jp.dip.komusubi.lunch.module.dao.ContractDao;
 public class Shop implements Serializable {
 
 	public static final String DEFAULT_ID = "default";
-	private static final long serialVersionUID = -1020122183352301083L;
-	private String id;
+    private static final long serialVersionUID = -1020122183352301083L;
+
+    private String id;
 	private String name;
 	// private GeoLocation geoLocation;
 	private String url;
 	private String phoneNumber;
 	private Date lastOrder;
 	private List<Contract> contracts;
-
+	
 	public Shop() {
 		this(DEFAULT_ID);
 	}
-	
 	public Shop(String id) {
 		this.id = id;
 	}
@@ -59,6 +59,48 @@ public class Shop implements Serializable {
 		this.contracts.add(contract);
 		return this;
 	}
+	
+	@Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Shop other = (Shop) obj;
+        if (contracts == null) {
+            if (other.contracts != null)
+                return false;
+        } else if (!contracts.equals(other.contracts))
+            return false;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (lastOrder == null) {
+            if (other.lastOrder != null)
+                return false;
+        } else if (!lastOrder.equals(other.lastOrder))
+            return false;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        if (phoneNumber == null) {
+            if (other.phoneNumber != null)
+                return false;
+        } else if (!phoneNumber.equals(other.phoneNumber))
+            return false;
+        if (url == null) {
+            if (other.url != null)
+                return false;
+        } else if (!url.equals(other.url))
+            return false;
+        return true;
+    }
 
 	public List<Contract> getContracts() {
 		if (contracts == null) {
@@ -99,6 +141,34 @@ public class Shop implements Serializable {
 		return url;
 	}
 
+	@Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((contracts == null) ? 0 : contracts.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((lastOrder == null) ? 0 : lastOrder.hashCode());
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
+        result = prime * result + ((url == null) ? 0 : url.hashCode());
+        return result;
+    }
+
+	public boolean isDayOff() {
+	    return isDayOff(new Date());
+	}
+
+	public boolean isDayOff(Date date) {
+	    Calendar cal = Calendar.getInstance();
+	    cal.setTime(date);
+	    boolean dayOff = false;
+	    if (Calendar.SATURDAY == cal.get(Calendar.DAY_OF_WEEK)
+	            || Calendar.SUNDAY == cal.get(Calendar.DAY_OF_WEEK)) {
+	        dayOff = true;
+	    }
+	    return dayOff;
+	}
+
 	public Shop setContracts(List<Contract> contracts) {
 		this.contracts = contracts;
 		return this;
@@ -118,25 +188,10 @@ public class Shop implements Serializable {
 		this.phoneNumber = phoneNumber;
 		return this;
 	}
-
+	
 	public Shop setUrl(String url) {
 		this.url = url;
 		return this;
-	}
-
-	public boolean isDayOff() {
-	    return isDayOff(new Date());
-	}
-	
-	public boolean isDayOff(Date date) {
-	    Calendar cal = Calendar.getInstance();
-	    cal.setTime(date);
-	    boolean dayOff = false;
-	    if (Calendar.SATURDAY == cal.get(Calendar.DAY_OF_WEEK)
-	            || Calendar.SUNDAY == cal.get(Calendar.DAY_OF_WEEK)) {
-	        dayOff = true;
-	    }
-	    return dayOff;
 	}
 	
 	@Override
