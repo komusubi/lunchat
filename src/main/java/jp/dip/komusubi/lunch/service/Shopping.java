@@ -18,19 +18,25 @@ package jp.dip.komusubi.lunch.service;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import jp.dip.komusubi.lunch.Configuration;
+import jp.dip.komusubi.lunch.TransactionException;
+import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.model.Order;
+import jp.dip.komusubi.lunch.model.OrderLine;
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.model.Shop;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.Basket;
 import jp.dip.komusubi.lunch.module.Transactional;
 import jp.dip.komusubi.lunch.module.dao.OrderDao;
+import jp.dip.komusubi.lunch.module.dao.OrderLineDao;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
 
@@ -47,6 +53,7 @@ public class Shopping implements Serializable {
 	private Basket basket;
 	@Inject private ProductDao productDao;
 	@Inject private OrderDao orderDao;
+	@Inject private OrderLineDao orderLineDao;
 	@Inject private ShopDao shopDao;
 	@Inject @Named("date") private Resolver<Date> dateResolver;
 
@@ -63,9 +70,15 @@ public class Shopping implements Serializable {
 		basket.setUser(user);
 	}
 
-	Shopping(User user, Basket basket, OrderDao orderDao, ProductDao productDao) {
+	// package scope for unit test
+	Shopping(User user, Basket basket, OrderDao orderDao, 
+	        OrderLineDao orderLineDao, ProductDao productDao, ShopDao shopDao, Resolver<Date> resolver) {
 		this.basket = basket;
+		this.orderDao = orderDao;
+		this.orderLineDao = orderLineDao;
 		this.productDao = productDao;
+		this.shopDao = shopDao;
+		this.dateResolver = resolver;
 		basket.setUser(user);
 	}
 
@@ -159,6 +172,48 @@ public class Shopping implements Serializable {
 		order(this.basket);
 	}
 	
+	@Transactional
+	public void order(Group group) {
+	    if (group == null)
+	        throw new IllegalArgumentException("group must NOT be null.");
+	    if (basket.getUser() == null || basket.getUser().getId() == null)
+	        throw new IllegalStateException("user must NOT be null.");
+	    
+	    Map<Shop, Order> groupOrders = new HashMap<>();
+	    List<Order> orders = orderDao.findByGroupIdAndDate(group.getId(), dateResolver.resolve(), false);
+	    for (Order order: orders) {
+	        if (order.isCancel())
+	            continue;
+	        Order summary;
+	        if (groupOrders.containsKey(order.getShop())) {
+	            summary = groupOrders.get(order.getShop());
+	        } else {
+	            summary = new Order();
+	            summary.setGroup(order.getGroup());
+	            summary.setShop(order.getShop());
+	            summary.setUser(basket.getUser());
+	            summary.setDatetime(dateResolver.resolve());
+	            summary.setSummary(true);
+	        }
+   	        for (OrderLine orderLine: order) {
+   	            if (orderLine.isCancel())
+   	                continue;
+   	            summary.addLine(orderLine, true);
+   	        }
+   	        groupOrders.put(order.getShop(), summary);
+	    }
+
+	    List<Order> existOrder = orderDao.findByGroupIdAndDate(group.getId(), dateResolver.resolve(), true);
+	    if (existOrder.size() > 0) {
+	        throw new TransactionException("already ordered. groupId: " 
+	                + group.getId() + ", date: " + dateResolver.resolve());
+	    }
+	    
+	    // persist summary order. 
+	    for (Order order: groupOrders.values()) 
+	        orderDao.persist(order);
+	}
+	
 	public void purchase() {
 		throw new UnsupportedOperationException();
 	}
@@ -166,4 +221,20 @@ public class Shopping implements Serializable {
 	public List<Shop> getAvailableShops() {
 		return shopDao.findAll();
 	}
+
+	@Transactional
+    public void cancel(Order order) {
+        for (OrderLine line: order) { 
+            cancel(line);
+        }
+        order.setCancel(true);
+        orderDao.update(order);
+    }
+    
+	@Transactional
+    public void cancel(OrderLine orderLine) {
+        orderLine.setCancel(true);
+        orderLineDao.update(orderLine);
+    }
+	
 }
