@@ -114,7 +114,7 @@ public class ShoppingTest /* extends Shopping */ {
                         .setCancel(false)
                         .setDatetime(orderDate)
                         .setUser(user);
-        order1.addOrderLine(orderLine1);
+        order1.addLine(orderLine1);
         orders1.add(order1);
         
         when(dateResolver.resolve()).thenReturn(orderDate);
