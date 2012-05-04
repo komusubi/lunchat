@@ -75,6 +75,10 @@ public class Basket implements Iterable<Order>, Serializable {
 		this.user = user;
 	}
 	
+	public User getUser() {
+	    return user;
+	}
+	
 	public Iterator<Order> iterator() {
 		return orders.iterator();
 	}
@@ -110,7 +114,7 @@ public class Basket implements Iterable<Order>, Serializable {
 			orders.add(order);
 		}
 		// 同じProductが既に存在しても1明細として追加。 数量を加算すべき？
-		order.addOrderLine(new OrderLine()
+		order.addLine(new OrderLine()
 								.setProduct(product)
 								.setDatetime(dateResolver.resolve())
 								.setQuantity(quantity));
