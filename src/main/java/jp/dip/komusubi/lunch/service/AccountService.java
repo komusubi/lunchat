@@ -31,11 +31,15 @@ import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Contract;
 import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.model.Order;
+import jp.dip.komusubi.lunch.model.OrderLine;
+import jp.dip.komusubi.lunch.model.Receipt;
+import jp.dip.komusubi.lunch.model.ReceiptLine;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.Transactional;
 import jp.dip.komusubi.lunch.module.dao.ContractDao;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.module.dao.OrderDao;
+import jp.dip.komusubi.lunch.module.dao.ReceiptDao;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.util.Nonce;
 
@@ -72,14 +76,20 @@ public class AccountService implements Serializable {
 		}
 	}
 
-	private transient UserDao userDao;
+	private UserDao userDao;
 	private SmtpServer smtp;
-	private transient Resolver<String> digester;
-	@Inject @Named("date") private transient Resolver<Date> dateResolver;
+	private Resolver<String> digester;
+	@Inject @Named("date") private Resolver<Date> dateResolver;
 	@Inject private GroupDao groupDao;
 	@Inject private ContractDao contractDao;
 	@Inject private OrderDao orderDao;
+	@Inject private ReceiptDao receiptDao;
 	private User authedUser;
+	
+	// default constructor need from cglib.
+	protected AccountService() {
+	    
+	}
 	
 	@Inject
 	public AccountService(UserDao userDao, 
@@ -141,19 +151,19 @@ public class AccountService implements Serializable {
 		return user;
 	}
 	
-	public boolean isDeadline(User user, Date now) {
-		boolean result = false;
-		if (user.getGroupId() == null)
-			return result;
-		Group group = groupDao.find(user.getGroupId());
-		if (group.getLastOrder().before(now))
-			result = true;
-		return result;
-	}
-	
-	public boolean isDeadline(User user) {
-		return isDeadline(user, dateResolver.resolve());
-	}
+//	public boolean isDeadline(User user, Date now) {
+//		boolean result = false;
+//		if (user.getGroupId() == null)
+//			return result;
+//		Group group = groupDao.find(user.getGroupId());
+//		if (group.getLastOrder().before(now))
+//			result = true;
+//		return result;
+//	}
+//	
+//	public boolean isDeadline(User user) {
+//		return isDeadline(user, dateResolver.resolve());
+//	}
 	
 	public User findByEmail(String email) {
 		return userDao.findByEmail(email);
@@ -418,31 +428,87 @@ public class AccountService implements Serializable {
 		return result;
 	}
 	
-//	public List<Shop> getContractedShops(User user) {
-////		List<Shop> list = new ArrayList<>();
-////		Group group = groupDao.find(user.getGroupId());
-////		for (Contract c: group.getContracts()) {
-////			list.add(shopDao.find(c.getShopId()));
-////		}
-////		return list;
-//		if (user.getGroup() == null)
-//			return Collections.emptyList();
-//		
-//		List<Contract> contracts = user.getGroup().getContracts();
-//		List<Shop> shops = new ArrayList<>();
-//		for (Contract contract: contracts)
-//			shops.add(contract.getShop());
-//
-//		return shops;
-//	}
+	public List<OrderLine> remainOrderLine(Integer orderId) {
+	    return remainOrderLine(orderId, false);
+	}
 	
-//	public List<Order> getOrderHistory(User user) {
-//	    return null;
-//	}
+	// FIXME find order has not receive yet.
+	public List<OrderLine> remainOrderLine(Integer orderId, boolean canceled) {
+	    Order order = orderDao.find(orderId);
+	    List<Receipt> receipts = receiptDao.findByOrderId(order.getId());
+	    if (receipts.size() == 0)
+	        return order.getOrderLines(canceled);
+	    for (OrderLine orderLine: order) {
+	        for (Receipt receipt: receipts) {
+	            List<ReceiptLine> receiptLines = receipt.getLines(orderLine.getProduct());
+	        }
+	    }
+	    throw new UnsupportedOperationException("not implemnted.");
+	}
+	
+	public boolean hasOrder(User user) {
+	    return hasOrder(user, dateResolver.resolve());
+	}
+	
+	public boolean hasOrder(User user, Date date) {
+	    List<Order> orders = getOrderHistory(user, date);
+	    return orders.size() > 0 ? true : false; 
+	}
+
+	public boolean hasFinished(User user) {
+	    return hasFinished(user, dateResolver.resolve());
+	}
+	
+	public boolean hasFinished(User user, Date date) {
+	    List<Receipt> receipts = getReceiptHistory(user, date);
+	    return receipts.size() > 0 ? true : false;
+	}
+	
+	public boolean hasFinished(Integer orderId) {
+	    Order order = orderDao.find(orderId);
+	    order.getOrderLines().size();
+	    List<Receipt> receipts = getReceiptsByOrderId(orderId);
+	    
+	    return receipts.size() > 0 ? true : false;
+	}
+	
+	public List<Order> getOrderHistory(User user) {
+	    return getOrderHistory(user, dateResolver.resolve());
+	}
 	
 	public List<Order> getOrderHistory(User user, Date date) {
 		List<Order> orders = orderDao.findByUserAndDate(user.getId(), date);
 		return orders;
+	}
+	
+	public List<Receipt> getReceiptHistory(User user) {
+	    return getReceiptHistory(user, dateResolver.resolve());
+	}
+	
+	public List<Receipt> getReceiptHistory(User user, Date date) {
+	    List<Receipt> receipts = receiptDao.findByUserAndDate(user.getId(), date);
+	    return receipts;
+	}
+	
+	public List<Receipt> getReceiptsByOrderId(Integer orderId) {
+	    List<Receipt> receipts = receiptDao.findByOrderId(orderId);
+	    return receipts;
+	}
+	
+	@Transactional
+	public Receipt receive(User user, OrderLine orderLine, String memo) {
+	    Receipt receipt = new Receipt()
+	                        .setAmount(orderLine.getAmount())
+	                        .setOrderId(orderLine.getPrimaryKey().getOrderId())
+	                        .setDatetime(dateResolver.resolve())
+	                        .setUser(user)
+	                        .setGroup(user.getGroup())
+	                        .setShop(null);
+	    receipt.addLine(orderLine.toReceiptLine()
+	                            .setMemo(memo));
+	                            
+	    receiptDao.persist(receipt);
+	    return receipt;
 	}
 	
 	public String digest(User who, User whom, Date stamp) {

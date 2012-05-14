@@ -74,7 +74,7 @@ public class MemberConfirmation extends Confirmation {
                         String url = getPageUrl(Attendance.class);
 
                         service.apply(model.getObject(),
-                                        WicketSession.get().getLoggedInUser(),
+                                        WicketSession.get().getSignedInUser(),
                                         url);
                         // FIXME literal string move to localize resource. 
                         member = new Member(Model.of(model.getObject().getGroup()),
@@ -96,6 +96,11 @@ public class MemberConfirmation extends Confirmation {
             protected void onCancel() {
                 Member member = new Member(Model.of(model.getObject().getGroup()));
                 setResponsePage(member);
+            }
+            
+            @Override
+            protected Label getLabel(String id) {
+                return new Label(id, model.getObject().getName() + "さん へグループ参加の承認依頼通知を送信します。");
             }
         };
     }

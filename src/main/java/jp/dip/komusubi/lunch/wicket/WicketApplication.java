@@ -18,11 +18,11 @@ package jp.dip.komusubi.lunch.wicket;
 
 import jp.dip.komusubi.lunch.wicket.page.Attendance;
 import jp.dip.komusubi.lunch.wicket.page.AuthorizedPage;
-import jp.dip.komusubi.lunch.wicket.page.OrderComplete;
 import jp.dip.komusubi.lunch.wicket.page.Grouping;
 import jp.dip.komusubi.lunch.wicket.page.Home;
 import jp.dip.komusubi.lunch.wicket.page.Login;
 import jp.dip.komusubi.lunch.wicket.page.Member;
+import jp.dip.komusubi.lunch.wicket.page.OrderComplete;
 import jp.dip.komusubi.lunch.wicket.page.Receipt;
 import jp.dip.komusubi.lunch.wicket.page.Reminder;
 import jp.dip.komusubi.lunch.wicket.page.account.Registry;
@@ -66,7 +66,7 @@ public class WicketApplication extends AuthenticatedWebApplication {
 		// guice injector
 		getComponentInstantiationListeners().add(
 				new GuiceComponentInjector(this, (Injector) getServletContext().getAttribute(
-						Injector.class.getName()), false));
+						Injector.class.getName())));
 		// security
 		getSecuritySettings().setEnforceMounts(true);
 		getSecuritySettings().setAuthorizationStrategy(new SimplePageAuthorizationStrategy(AuthorizedPage.class, Login.class) {

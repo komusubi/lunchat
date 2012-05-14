@@ -40,6 +40,7 @@ import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.validation.validator.StringValidator;
@@ -54,25 +55,25 @@ public class Profile extends Panel {
 
 	private static final long serialVersionUID = 8916168233528784779L;
 	private static final Logger logger = LoggerFactory.getLogger(Profile.class);
-	@Inject private transient AccountService account;
-	@Inject @Named("date") private transient Resolver<Date> dateResolver;
-	private String fragment;
+	@Inject private AccountService account;
+	@Inject @Named("date") private Resolver<Date> dateResolver;
+//	private String fragment;
 	
 	public Profile(String id) {
 		this(id, null, true);
 	}
 	
-	public Profile(String id, String fragment) {
-		this(id, fragment, false);
+	public Profile(String id, IModel<String> model) {
+		this(id, model, false);
 	}
 	
-	public Profile(String id, String fragment, boolean modify) {
-		super(id);
-		this.fragment = fragment;
+	public Profile(String id, IModel<String> model, boolean modify) {
+		super(id, model);
+//		this.fragment = fragment;
 		if (modify)
 			add(new ModificationProfileForm("profile.form"));
 		else
-			add(new RegistryProfileForm("profile.form"));
+			add(new RegistryProfileForm("profile.form", model));
 		add(new FeedbackPanel("feedback"));
 	}
 
@@ -223,9 +224,9 @@ public class Profile extends Panel {
 		
 		private static final long serialVersionUID = 6156893782920074142L;
 		
-		public RegistryProfileForm(String id) {
+		public RegistryProfileForm(String id, IModel<String> model) {
 			super(id);
-			add(confirmDigestValidator());
+			add(confirmDigestValidator(model));
 		}
 
 		protected User loadUser() {
@@ -233,7 +234,7 @@ public class Profile extends Panel {
 		}
 		
 		@SuppressWarnings("unchecked")
-		private AbstractFormValidator confirmDigestValidator() {
+		private AbstractFormValidator confirmDigestValidator(final IModel<String> model) {
 			
 			return new AbstractFormValidator() {
 				
@@ -253,6 +254,7 @@ public class Profile extends Panel {
 						setResponsePage(new ErrorPage("session time over"));
 						return;
 					}
+					String fragment = model.getObject();
 					if (!fragment.equals(nonce.get(emailField.getInput()))) {
 						if (logger.isDebugEnabled())
 							logger.debug("segment is {}, nonce is {}", 
@@ -298,7 +300,7 @@ public class Profile extends Panel {
 		}
 	
 		protected User loadUser() {
-			User user = WicketSession.get().getLoggedInUser();
+			User user = WicketSession.get().getSignedInUser();
 			if (user == null)
 				user = new User();
 			return user;

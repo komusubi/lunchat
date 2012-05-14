@@ -30,7 +30,6 @@ import jp.dip.komusubi.lunch.wicket.WicketApplication;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -47,6 +46,7 @@ import org.slf4j.LoggerFactory;
  * @since 2012/03/10
  */
 public class OrderLines extends Panel {
+
     private static final Logger logger = LoggerFactory.getLogger(OrderLines.class);
     private static final long serialVersionUID = 2352788625691496266L;
     
@@ -58,9 +58,6 @@ public class OrderLines extends Panel {
         super(id, model);
         add(getOrderLineViews("order.line", new PropertyModel<List<OrderLine>>(model, "orderLines")));
         add(new Label("total.amount", new PropertyModel<String>(model, "amount")));
-        add(getEatLink("eat"));
-        add(getFinishedLink("finish"));
-        add(getCancelLink("cancel"));
     }
 
     public OrderLines(String id) {
@@ -74,20 +71,20 @@ public class OrderLines extends Panel {
             setResponsePage(WicketApplication.get().getHomePage());
             return;
         }
-        User user = WicketSession.get().getLoggedInUser();
+        User user = WicketSession.get().getSignedInUser();
         if (user.getGroup() == null) {
             setResponsePage(WicketApplication.get().getHomePage());
             return;
         }
-        IModel<Order> model = (IModel<Order>) getDefaultModel();
-        model.getObject();
+//        IModel<Order> model = (IModel<Order>) getDefaultModel();
+//        model.getObject();
         
     }
     
     private static Order getTodayOrder() {
         if (!WicketSession.get().isSignedIn())
             return new Order();
-        User user = WicketSession.get().getLoggedInUser();
+        User user = WicketSession.get().getSignedInUser();
         return getTodayOrder(user);
     }
     
@@ -124,66 +121,4 @@ public class OrderLines extends Panel {
         return listView;
     }
     
-    private Link<Void> getEatLink(String id) {
-        return new Link<Void>(id) {
-
-            private static final long serialVersionUID = -5686997586137367253L;
-            
-            @Override
-            public void onClick() {
-                onEat();
-                setEnabled(false);
-            }
-        };
-    }
-    
-    private Link<Void> getFinishedLink(String id) {
-        return new Link<Void>(id) {
-
-            private static final long serialVersionUID = 5285883179074101772L;
-
-            @Override
-            public void onClick() {
-                onFinish();
-                setEnabled(false);
-            }
-        };
-    }
-    
-//    @Inject @Named("date") private Resolver<Date> resolver = Configuration.getInstance(Resolver.class);
-    
-    protected Link<Void> getCancelLink(String id) {
-        return new Link<Void>(id) {
-
-            private static final long serialVersionUID = 4670287317434201760L;
-
-            @Override
-            public void onClick() {
-                onCancel();
-                setEnabled(false);
-            }
-            
-            @Override
-            protected void onConfigure() {
-                User user = WicketSession.get().getLoggedInUser();
-                boolean visible = false;
-//                if (user.getGroup().getLastOrder().before(resolver.resolve()))
-//                    visible = true;
-//                setVisibilityAllowed(visible);
-            }
-
-        };
-    }
-    
-    protected void onEat() {
-        logger.info("on eating !");
-    }
-        
-    protected void onFinish() {
-        logger.info("on finish !");
-    }
-
-    protected void onCancel() {
-        logger.info("on cancel !");
-    }
 }

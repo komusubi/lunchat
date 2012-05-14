@@ -37,6 +37,7 @@ import jp.dip.komusubi.lunch.wicket.page.error.ErrorPage;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
@@ -118,7 +119,7 @@ public class ProfileTest {
 		private static final long serialVersionUID = -1836746839650822372L;
 		
 		public ProfileTestPage(final String digest) {
-			add(new Profile("profile", digest));
+			add(new Profile("profile", Model.of(digest)));
 		}
 	}
 	

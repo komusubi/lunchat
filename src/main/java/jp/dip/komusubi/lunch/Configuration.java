@@ -16,12 +16,16 @@
  */
 package jp.dip.komusubi.lunch;
 
+import java.util.Date;
+
 import javax.servlet.ServletContext;
 
+import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Injector;
+import com.google.inject.TypeLiteral;
 
 public enum Configuration {
 	INSTANCE;
@@ -35,6 +39,12 @@ public enum Configuration {
 		return injector.getInstance(type);
 	}
 
+	public static <T> T getInstance(TypeLiteral<Resolver<Date>> literal, Class<T> type) {
+//	    new TypeLiteral<Resolver<String>>(){};
+//	    bind(new TypeLiteral<Resolver<String>>(){ })
+	    return null;
+	}
+	
 	public static String getParameter(String key) {
 		return getParameter(key, null);
 	}

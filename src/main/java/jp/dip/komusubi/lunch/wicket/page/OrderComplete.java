@@ -66,7 +66,7 @@ public class OrderComplete extends AuthorizedPage {
 	    return new OrderLines(id, model) {
 	        private static final long serialVersionUID = 7930054187191919478L;
 
-            @Override
+//            @Override
 	        protected void onEat() {
                 if (WicketSession.get().removeFormKey(key)) {
                     logger.info("いただきまーす");
@@ -75,7 +75,7 @@ public class OrderComplete extends AuthorizedPage {
                 }
 	        }
 
-	        @Override
+//	        @Override
 	        protected void onFinish() {
 	            if (WicketSession.get().removeFormKey(key)) {
 	                logger.info("ごちそうさま");
@@ -84,7 +84,7 @@ public class OrderComplete extends AuthorizedPage {
 	            }
 	        }
 	        
-	        @Override
+//	        @Override
 	        protected void onCancel() {
 	            if (WicketSession.get().removeFormKey(key)) {
 	                logger.info("キャンセル");

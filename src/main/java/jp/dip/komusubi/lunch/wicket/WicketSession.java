@@ -68,7 +68,7 @@ public class WicketSession extends AuthenticatedWebSession {
 		return null;
 	}
 	
-	public User getLoggedInUser() {
+	public User getSignedInUser() {
 		if (!get().isSignedIn()) {
 			if (logger.isDebugEnabled())
 				logger.debug("user didn't login yet.");

@@ -25,7 +25,6 @@ import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
-import jp.dip.komusubi.lunch.wicket.page.Member;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -64,10 +63,10 @@ public class GroupList extends Panel {
 	}
 	
 	@Override
-	public void onConfigure() {
+	protected void onConfigure() {
 		boolean visible = false;
 		if (WicketSession.get().isSignedIn()) {
-			User user = WicketSession.get().getLoggedInUser();
+			User user = WicketSession.get().getSignedInUser();
 			if (user.getGroup() == null)
 				visible = true;
 		}
@@ -111,19 +110,21 @@ public class GroupList extends Panel {
 					}
 					@Override
 					public void onClick() {
-						logger.info("onClick to {}", group);
-//						setResponsePage(page);
-						// FIXME reference to page package.
-						setResponsePage(new Member(group));
+						onSelectedGroup(group);
 					}
 					@Override
 					public boolean isEnabled() {
-						if ("dummy".equals(group.getId()))
-							return false;
+					    // FIXME disabled selectable group ?
+//						if ("dummy".equals(group.getId()))
+//							return false;
 						return true;
 					}
 				};
 			}
 		};
+	}
+	
+	protected void onSelectedGroup(Group group) {
+	    logger.info("selected group is {}", group);
 	}
 }

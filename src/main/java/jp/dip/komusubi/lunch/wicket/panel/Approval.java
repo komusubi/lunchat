@@ -52,7 +52,7 @@ public class Approval extends Panel {
     private static final long serialVersionUID = -4176824939454988839L;
     private static final Logger logger = LoggerFactory.getLogger(Approval.class);
 	private User applicant;
-	private User admitter = WicketSession.get().getLoggedInUser();;
+	private User admitter = WicketSession.get().getSignedInUser();;
 	private PageParameters params;
 	private Button approval;
 	@Inject @Named("digest") Resolver<String> digester;

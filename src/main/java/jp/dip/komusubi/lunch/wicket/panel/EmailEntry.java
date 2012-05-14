@@ -38,10 +38,7 @@ public class EmailEntry extends Panel {
 	private static final long serialVersionUID = 3071722265831129774L;
 	private static final Logger logger = LoggerFactory.getLogger(EmailEntry.class);
 	private User user = new User();
-//	@Inject
-//	private transient AccountService account;
-//	private Class<? extends WebPage> nextPage;
-	
+
 	public EmailEntry(String id, Class<? extends WebPage> nextPage) {
 		super(id);
 //		this.nextPage = nextPage;

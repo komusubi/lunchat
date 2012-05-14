@@ -23,6 +23,7 @@ import jp.dip.komusubi.lunch.wicket.panel.Header;
 import jp.dip.komusubi.lunch.wicket.panel.Profile;
 
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.Url.StringMode;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,14 +38,14 @@ public class Registry extends VariationBase {
 		this.params = params;
 		// FIXME literal string set resource file. 
 		add(new Header("header", Model.of(getDefaultHeaderBean("ユーザー登録"))));
-		add(new Profile("profile", params.get("fragment").toString()));
+		add(new Profile("profile", Model.of(params.get("fragment").toString())));
 		add(new Footer("footer"));
 	}
 
 	@Override
 	protected void onInitialize() {
 		if (params.get("fragment").isEmpty()) {
-			logger.info("malformed url {}", getRequest().getClientUrl().toAbsoluteString());
+			logger.info("malformed url {}", getRequest().getClientUrl().toString(StringMode.FULL));
 			setResponsePage(new ErrorPage("不正なURLです。"));
 		}
 		super.onInitialize();

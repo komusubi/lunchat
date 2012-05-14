@@ -18,7 +18,6 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -28,12 +27,11 @@ import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.model.Shop;
 import jp.dip.komusubi.lunch.model.User;
+import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
-import jp.dip.komusubi.lunch.wicket.component.TimeField;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -47,7 +45,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.AbstractValidator;
-import org.apache.wicket.validation.validator.DateValidator;
 import org.apache.wicket.validation.validator.PatternValidator;
 import org.apache.wicket.validation.validator.StringValidator;
 import org.komusubi.common.util.Resolver;
@@ -69,22 +66,18 @@ public abstract class GroupRegistry extends Panel {
 	
 	public GroupRegistry(String id) {
 		super(id);
-		add(getMarkupContainer("group.collapsed"));
-	}
-
-	private WebMarkupContainer getMarkupContainer(String id) {
-		WebMarkupContainer container = new WebMarkupContainer(id);
-		container.add(new AttributeModifier("data-collapsed", "false"));
+		WebMarkupContainer container = new WebMarkupContainer("group.collapsed");
 		container.add(new FeedbackPanel("feedback"));
+		container.add(new AttributeModifier("data-collapsed", "false"));
 		container.add(new GroupRegistryForm("group.form"));
-		return container;
+		add(container);
 	}
 
 	@Override
-	public void onConfigure() {
+	protected void onConfigure() {
 		boolean visible = false;
 		if (WicketSession.get().isSignedIn()) {
-			User user = WicketSession.get().getLoggedInUser();
+			User user = WicketSession.get().getSignedInUser();
 			if (user.getGroup() == null)
 				visible = true;
 		}
@@ -96,20 +89,18 @@ public abstract class GroupRegistry extends Panel {
 	 * @author jun.ozeki
 	 * @since 2011/12/26
 	 */
-	protected class GroupRegistryForm extends Form<Void> {
+	protected class GroupRegistryForm extends Form<Group> {
 
 		private static final long serialVersionUID = -7593471899292529129L;
 		private Group group = new Group();
 		private List<Shop> selection;
-		@Inject @Named("date") private transient Resolver<Date> dateResolver;
+		@Inject @Named("date") private Resolver<Date> dateResolver;
 		
 		public GroupRegistryForm(String id) {
 			super(id);
 			setDefaultModel(new CompoundPropertyModel<Group>(group));
 			add(getCodeField("code"));
 			add(getNameField("name"));
-			add(getLastOrderField("lastOrder"));
-//			add(getShopList("shop.item"));
 			add(getShopMultiChoice("choice.shop"));
 		}
 
@@ -118,7 +109,8 @@ public abstract class GroupRegistry extends Panel {
 			text.setRequired(true)
 				.add(new StringValidator.LengthBetweenValidator(2, 128))
 				.add(new PatternValidator(Pattern.compile("[a-zA-Z0-9\\.']+")))
-				.add(getSpecificWordValidator());
+				.add(specificWordValidator())
+			    .add(existsGroupValidator());
 			return text;
 		}
 		
@@ -129,7 +121,8 @@ public abstract class GroupRegistry extends Panel {
 			return text;
 		}
 
-		private AbstractValidator<String> getSpecificWordValidator() {
+		// specific word validator
+		private AbstractValidator<String> specificWordValidator() {
 			return new AbstractValidator<String>() {
 				
 				private static final long serialVersionUID = -3110131646353247925L;
@@ -146,21 +139,39 @@ public abstract class GroupRegistry extends Panel {
 			};
 		}
 		
-		private TextField<Date> getLastOrderField(String id) {
-			AbstractValidator<Date> validator;
-			String[] formats = {"H:mm"};
-			try {
-				Date minimum = DateUtils.parseDate("5:00", formats);
-				Date maximum = DateUtils.parseDate("11:00", formats);
-				validator = DateValidator.range(minimum, maximum, formats[0]);
-			} catch (ParseException e) {
-				throw new IllegalStateException(e);
-			}
-			TimeField timeField = new TimeField(id);
-			timeField.setRequired(true)
-					.add(validator);
-			return timeField;
+		private AbstractValidator<String> existsGroupValidator() {
+		    return new AbstractValidator<String>() {
+
+                private static final long serialVersionUID = 6452463346794985429L;
+
+                @Override
+                protected void onValidate(IValidatable<String> validatable) {
+                    GroupDao groupDao = Configuration.getInstance(GroupDao.class);
+                    if (groupDao.findByCode(validatable.getValue()) != null)
+                        error(validatable);
+                }
+                @Override
+                public String resourceKey() {
+                    return "exist.group.already";
+                }
+		    };
 		}
+		
+//		private TextField<Date> getLastOrderField(String id) {
+//			AbstractValidator<Date> validator;
+//			String[] formats = {"H:mm"};
+//			try {
+//				Date minimum = DateUtils.parseDate("5:00", formats);
+//				Date maximum = DateUtils.parseDate("11:00", formats);
+//				validator = DateValidator.range(minimum, maximum, formats[0]);
+//			} catch (ParseException e) {
+//				throw new IllegalStateException(e);
+//			}
+//			TimeField timeField = new TimeField(id);
+//			timeField.setRequired(true)
+//					.add(validator);
+//			return timeField;
+//		}
 		
 		private ListMultipleChoice<Shop> getShopMultiChoice(String id) {
 			ShopDao shopDao = Configuration.getInstance(ShopDao.class);
@@ -176,13 +187,35 @@ public abstract class GroupRegistry extends Panel {
 					new PropertyModel<List<Shop>>(GroupRegistryForm.this, "selection"), 
 					shops, 
 					new ChoiceRenderer<Shop>("name", "id"));
+			
+			multipleShop.add(selectLeastValidator());
 
 			return multipleShop;
 		}
 		
+		// validator select must shop 
+		private AbstractValidator<List<Shop>> selectLeastValidator() {
+		    return new AbstractValidator<List<Shop>>() {
+		        
+                private static final long serialVersionUID = 2366728187248837961L;
+
+                @Override
+                protected void onValidate(IValidatable<List<Shop>> validatable) {
+                    if (validatable.getValue() == null || validatable.getValue().size() == 0)
+                        error(validatable);
+                }
+                
+                @Override
+		        public String resourceKey() {
+                    return "must.select.shop";
+                }
+
+		    };
+		}
+		
 		@Override
 		public void onSubmit() {
-			User user = WicketSession.get().getLoggedInUser();
+			User user = WicketSession.get().getSignedInUser();
 			try {
 			    // clear ozeki
 				for (Shop shop: selection) {
@@ -196,7 +229,7 @@ public abstract class GroupRegistry extends Panel {
 				accountService.referTo(user);
 				// notice session
 				WicketSession.get().dirty();
-				onRegistered();
+				onRegister();
 			} catch (LunchException e) {
 				// group set null again.
 				user.getHealth().setGroup(null); 
@@ -208,6 +241,6 @@ public abstract class GroupRegistry extends Panel {
 		}
 	}
 
-	protected abstract void onRegistered();
+	protected abstract void onRegister();
 
 }

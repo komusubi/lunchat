@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.model.Shop;
 import jp.dip.komusubi.lunch.model.User;
@@ -56,11 +55,6 @@ public class ChoiceLunch extends Panel {
 	private static final long serialVersionUID = -4318541322169808309L;
 	private static final Logger logger = LoggerFactory.getLogger(ChoiceLunch.class);
 
-	// @Inject
-	// private transient final Shopping shopping;
-	// @Inject
-	// private final ShopDao shopDao;
-
 	public ChoiceLunch(String id, boolean forward) {
 		super(id);
 		add(new Choice("choice", forward));
@@ -71,11 +65,10 @@ public class ChoiceLunch extends Panel {
 	}
 	
 	@Override
-	public void onConfigure() {
-		// FIXME if user have a order, visible set false.
+	protected void onConfigure() {
 		boolean visible = true;
 		if (WicketSession.get().isSignedIn()) {
-			User user = WicketSession.get().getLoggedInUser();
+			User user = WicketSession.get().getSignedInUser();
 			if (user.getGroup() == null)
 				visible = false;
 			else
@@ -92,10 +85,9 @@ public class ChoiceLunch extends Panel {
 	public class Choice extends Form<Void> {
 
 		private static final long serialVersionUID = 4242361361989135612L;
-//		private transient Shopping shopping = Configuration.getInstance(Shopping.class);
-//		@Inject
-//		private transient ShopDao shopDao;
+		@Inject private Shopping shopping;
 		@Inject @Named("calendar") Resolver<Calendar> calendarResolver;
+		
 		private LoadableDetachableModel<List<Object>> ldmodel = new LoadableDetachableModel<List<Object>>() {
 			private static final long serialVersionUID = 3385439610274972123L;
 			private static final int SEEK_PERIOD = 14;
@@ -109,11 +101,10 @@ public class ChoiceLunch extends Panel {
 			
 			@Override
 			public List<Object> load() {
-				Shopping shopping = Configuration.getInstance(Shopping.class);
 				List<Shop> shops = null;
 				Calendar current = calendarResolver.resolve();
 				if (WicketSession.get().isSignedIn()) {
-					User user = WicketSession.get().getLoggedInUser();
+					User user = WicketSession.get().getSignedInUser();
 					if (user.getGroup() != null)
 						shops = user.getGroup().getContractedShops();
     			} 

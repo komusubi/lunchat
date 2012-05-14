@@ -74,7 +74,7 @@ public class OrderConfirmation extends Confirmation {
 					if (WicketSession.get().removeFormKey(key)) {
 					    // FIXME shopping with a basket !! 
 					    Shopping shopping = Configuration.getInstance(Shopping.class);
-					    Basket basket = shopping.getBasket(WicketSession.get().getLoggedInUser());
+					    Basket basket = shopping.getBasket(WicketSession.get().getSignedInUser());
 					    basket.add(model.getObject());
 					    shopping.order(basket);
 					    List<Order> orders = basket.getOrders();

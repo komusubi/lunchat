@@ -27,10 +27,8 @@ import jp.dip.komusubi.lunch.wicket.page.Home;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +86,7 @@ public class Header extends Panel {
 
 				@Override
 				public void onClick() {
-					logger.info("{} is logout", WicketSession.get().getLoggedInUser().getId());
+					logger.info("{} is logout", WicketSession.get().getSignedInUser().getId());
 					WicketSession.get().invalidate();
 				}
 				@Override

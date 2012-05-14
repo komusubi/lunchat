@@ -25,7 +25,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.TransactionException;
 import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.model.Order;
@@ -50,7 +49,7 @@ import org.komusubi.common.util.Resolver;
 public class Shopping implements Serializable {
 
 	private static final long serialVersionUID = 6554643970716125151L;
-	private Basket basket;
+	@Inject private Basket basket;
 	@Inject private ProductDao productDao;
 	@Inject private OrderDao orderDao;
 	@Inject private OrderLineDao orderLineDao;
@@ -58,17 +57,22 @@ public class Shopping implements Serializable {
 	@Inject @Named("date") private Resolver<Date> dateResolver;
 
 	public Shopping() {
-		this(new User(), Configuration.getInstance(Basket.class));
+//		this(new User(), Configuration.getInstance(Basket.class));
+//	    this(new User());
 	}
 
-	public Shopping(User user) {
-		this(user, Configuration.getInstance(Basket.class));
-	}
+//	public Shopping(User user) {
+//		this(user, Configuration.getInstance(Basket.class));
+//	}
 
-	public Shopping(User user, Basket basket) {
-		this.basket = basket;
-		basket.setUser(user);
-	}
+//	public Shopping(User user) {
+//	    basket.setUser(user);
+//	}
+	
+//	public Shopping(User user, Basket basket) {
+//		this.basket = basket;
+//		basket.setUser(user);
+//	}
 
 	// package scope for unit test
 	Shopping(User user, Basket basket, OrderDao orderDao, 

@@ -73,7 +73,7 @@ public class Attendance extends AuthorizedPage {
 	    return new Approval("approval", params) {
 
             private static final long serialVersionUID = -6648237699896515215L;
-            private transient AccountService account = Configuration.getInstance(AccountService.class);
+            private AccountService account = Configuration.getInstance(AccountService.class);
 
             /**
              * admit to become a member of group.

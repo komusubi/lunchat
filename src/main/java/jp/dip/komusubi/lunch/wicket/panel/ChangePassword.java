@@ -51,7 +51,7 @@ public class ChangePassword extends Panel {
 	private class ChangePasswordForm extends Form<Void> {
 
 		private static final long serialVersionUID = -2270743351527003637L;
-		private User user = WicketSession.get().getLoggedInUser();
+		private User user = WicketSession.get().getSignedInUser();
 		private String password;
 		private String confirm;
 		private PasswordTextField currentField;

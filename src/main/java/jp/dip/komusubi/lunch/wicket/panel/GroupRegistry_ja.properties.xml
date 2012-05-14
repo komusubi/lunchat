@@ -9,6 +9,8 @@
 <entry key="code.Required">グループIDを入力してください。</entry>
 <entry key="code.PatternValidator">グループIDは半角英数字で入力してください。</entry>
 <entry key="name.Required">グループ名を入力してください。</entry>
-<entry key="select.shop.message">お店を選択してください。</entry>
+<entry key="select.shop.message">グループで契約済みのお店を選択してください。</entry>
 <entry key="DateValidator.range">締切時刻は${minimum}から${maximum}までの時刻を設定してください。</entry>
+<entry key="must.select.shop">店舗を1件以上選択してください。</entry>
+<entry key="exist.group.already">${input}は既に利用されています。</entry>
 </properties>
