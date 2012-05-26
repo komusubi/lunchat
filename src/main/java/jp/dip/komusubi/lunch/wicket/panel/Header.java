@@ -88,6 +88,7 @@ public class Header extends Panel {
 				public void onClick() {
 					logger.info("{} is logout", WicketSession.get().getSignedInUser().getId());
 					WicketSession.get().invalidate();
+					setResponsePage(WicketApplication.get().getHomePage());
 				}
 				@Override
 				public boolean isVisible() {
