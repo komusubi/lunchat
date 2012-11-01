@@ -102,7 +102,7 @@ public class WicketSession extends AuthenticatedWebSession {
     
     public Basket getBasket() {
         if (this.basket == null)
-            this.basket = Configuration.INSTANCE.getInstance(Basket.class);
+            this.basket = Configuration.getInstance(Basket.class);
         return this.basket;
     }
 }
