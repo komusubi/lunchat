@@ -21,6 +21,7 @@ import java.util.Set;
 
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.User;
+import jp.dip.komusubi.lunch.module.Basket;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.component.SimpleBrowserInfoPage;
@@ -33,60 +34,75 @@ import org.apache.wicket.request.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * wicket session.
+ * @author jun
+ */
 public class WicketSession extends AuthenticatedWebSession {
 
-	public static final String VARIATION_JQUERY_MOBILE = "jquery";
-	private static final long serialVersionUID = 2537313227105289690L;
-	private static final Logger logger = LoggerFactory.getLogger(WicketSession.class);
-	private User loggedInUser;
-	private Set<FormKey> formKeys = new HashSet<>();
+    public static final String VARIATION_JQUERY_MOBILE = "jquery";
+    private static final long serialVersionUID = 2537313227105289690L;
+    private static final Logger logger = LoggerFactory.getLogger(WicketSession.class);
+    private User loggedInUser;
+    private Set<FormKey> formKeys = new HashSet<>();
+    private Basket basket;
 
-	public static WicketSession get() {
-		return (WicketSession) Session.get();
-	}
-	
-	public WicketSession(Request request) {
-		super(request);
-	}
+    public static WicketSession get() {
+        return (WicketSession) Session.get();
+    }
 
-	@Override
-	public boolean authenticate(final String email, final String password) {
-		AccountService accountService = Configuration.getInstance(AccountService.class);
-		if (accountService.signIn(email, password)) {
-			loggedInUser = accountService.find(email);
-			return true;
-		} else {
-			return false;
-		}
-	}
+    /**
+     * constructor.
+     * @param request wicket request object.
+     */
+    public WicketSession(Request request) {
+        super(request);
+    }
 
-	@Override
-	public Roles getRoles() {
-		if (isSignedIn()) {
-			return new Roles(Roles.ADMIN);
-		}
-		return null;
-	}
-	
-	public User getSignedInUser() {
-		if (!get().isSignedIn()) {
-			if (logger.isDebugEnabled())
-				logger.debug("user didn't login yet.");
-			loggedInUser = null;
-		}
-		return loggedInUser;
-	}
+    @Override
+    public boolean authenticate(final String email, final String password) {
+        AccountService accountService = Configuration.getInstance(AccountService.class);
+        if (accountService.signIn(email, password)) {
+            loggedInUser = accountService.find(email);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	@Override
-	public WebPage newBrowserInfoPage() {
-		return new SimpleBrowserInfoPage();
-	}
+    @Override
+    public Roles getRoles() {
+        if (isSignedIn()) {
+            return new Roles(Roles.ADMIN);
+        }
+        return null;
+    }
 
-	public void addFormKey(FormKey key) {
-		formKeys.add(key);
-	}
-	
-	public boolean removeFormKey(FormKey key) {
-		return formKeys.remove(key);
-	}
+    public User getSignedInUser() {
+        if (!get().isSignedIn()) {
+            if (logger.isDebugEnabled())
+                logger.debug("user didn't login yet.");
+            loggedInUser = null;
+        }
+        return loggedInUser;
+    }
+
+    @Override
+    public WebPage newBrowserInfoPage() {
+        return new SimpleBrowserInfoPage();
+    }
+
+    public void addFormKey(FormKey key) {
+        formKeys.add(key);
+    }
+
+    public boolean removeFormKey(FormKey key) {
+        return formKeys.remove(key);
+    }
+    
+    public Basket getBasket() {
+        if (this.basket == null)
+            this.basket = Configuration.INSTANCE.getInstance(Basket.class);
+        return this.basket;
+    }
 }
