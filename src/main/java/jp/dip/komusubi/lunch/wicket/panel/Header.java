@@ -28,16 +28,25 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * header panel.
+ * @author jun.ozeki
+ */
 public class Header extends Panel {
 
 	private static final long serialVersionUID = -467641882462547658L;
 	private static final Logger logger = LoggerFactory.getLogger(Header.class);
 	
+	/**
+	 * header bean.
+	 * @author jun.ozeki
+	 */
 	public static class HeaderBean implements Serializable {
 		private static final long serialVersionUID = -1010180169521998908L;
 		
@@ -46,7 +55,12 @@ public class Header extends Panel {
 		public Class<? extends WebPage> order;
 		public String pageTitle;
 	}
-	
+	/**
+	 * create new instance.
+	 * @param id
+	 * @param model
+	 * @param authVisible
+	 */
 	public Header(String id, Model<HeaderBean> model, boolean authVisible) {
 		super(id, model);
 		add(new Label("pageTitle", model.getObject().pageTitle));
@@ -54,7 +68,11 @@ public class Header extends Panel {
 		add(getAuthLink("auth", true));
 		add(getWebMarkupContainer("nav", model.getObject()));
 	}
-	
+	/**
+	 * create new instance.
+	 * @param id
+	 * @param model
+	 */
 	public Header(String id, Model<HeaderBean> model) {
 		this(id, model, true);
 	}
@@ -80,7 +98,7 @@ public class Header extends Panel {
 		String label;
 		
 		if (WicketSession.get().isSignedIn()) {
-			link = new Link<Void>(id) {
+			link = new StatelessLink<Void>(id) {
 
 				private static final long serialVersionUID = 1L;
 
@@ -97,7 +115,7 @@ public class Header extends Panel {
 			};
 			label = getLocalizer().getString("logout.label", Header.this);
 		} else {
-			link = new Link<Void>(id) {
+			link = new StatelessLink<Void>(id) {
 
 				private static final long serialVersionUID = 1L;
 
@@ -124,8 +142,8 @@ public class Header extends Panel {
 
 			@Override
 			public boolean isVisible() {
-//				return WicketSession.get().isSignedIn();
-			    return false;
+				return WicketSession.get().isSignedIn();
+//			    return false;
 			}
 			
 		};
@@ -140,12 +158,11 @@ public class Header extends Panel {
 		container.add(getPageLink("nav.history", bean.history == null ? Home.class : bean.history));
 		container.add(getPageLink("nav.config", bean.config == null ? Home.class : bean.config));
 
-		
 		return container;
 	}
 	
 	protected Link<String> getPageLink(String id, final Class<? extends WebPage> pageClass) {
-		return new Link<String>(id) {
+		return new StatelessLink<String>(id) {
 
 			private static final long serialVersionUID = 7343393596673757124L;
 
