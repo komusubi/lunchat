@@ -23,7 +23,7 @@ import jp.dip.komusubi.lunch.wicket.WicketSession;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.EmailTextField;
-import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
@@ -54,7 +54,7 @@ public class EmailEntry extends Panel {
 		return !WicketSession.get().isSignedIn();
 	}
 	
-	private class RegistryForm extends Form<Void> {
+	private class RegistryForm extends StatelessForm<Void> {
 		private static final long serialVersionUID = -2271065049710327798L;
 		
 		public RegistryForm(String id) {
