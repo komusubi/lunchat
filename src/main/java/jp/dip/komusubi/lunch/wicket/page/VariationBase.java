@@ -30,6 +30,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.request.Url.StringMode;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public class VariationBase extends WebPage {
 //		MDC.put("ipaddr", clientInfo.getProperties().getRemoteAddress());
 		MDC.put("ipaddr", request.getContainerRequest().getRemoteAddr());
 		MDC.put("sessionId", request.getContainerRequest().getSession().getId());
-		logger.info("[start] lunchat {}", request.getClientUrl().toAbsoluteString());
+		logger.info("[start] lunchat {}", request.getClientUrl().toString(StringMode.FULL));
 		if (logger.isDebugEnabled()) {
 			logger.debug("user agent is {} ", clientInfo.getUserAgent());
 		}
@@ -83,13 +84,16 @@ public class VariationBase extends WebPage {
 	        + "var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);"
             + "})();";
 
-			
+	private static final String disabledAjax = "$(document).bind(\"mobileinit\", function(){"
+	        + "$.mobile.ajaxEnabled = false;});";
+	
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
 		if (isJQuery()) {
 			response.renderCSSReference("/css/jquery.mobile.min.css");
 			response.renderJavaScriptReference("/js/jquery-1.6.4.min.js");
+			response.renderJavaScript(disabledAjax, null);
 			response.renderJavaScriptReference("/js/jquery.mobile.min.js");
 		}
 		if (RuntimeMode.DEPLOYMENT.equals(Configuration.mode()))
