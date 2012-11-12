@@ -91,10 +91,10 @@ public class VariationBase extends WebPage {
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
 		if (isJQuery()) {
-			response.renderCSSReference("/css/jquery.mobile.min.css");
-			response.renderJavaScriptReference("/js/jquery-1.6.4.min.js");
+			response.renderCSSReference("http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css");
+			response.renderJavaScriptReference("http://code.jquery.com/jquery-1.8.2.min.js");
 			response.renderJavaScript(disabledAjax, null);
-			response.renderJavaScriptReference("/js/jquery.mobile.min.js");
+			response.renderJavaScriptReference("http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js");
 		}
 		if (RuntimeMode.DEPLOYMENT.equals(Configuration.mode()))
 			response.renderJavaScript(analytics, null);
