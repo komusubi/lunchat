@@ -49,91 +49,101 @@ import com.google.inject.Injector;
  * @see jp.dip.komusubi.lunch.Start#main(String[])
  */
 public class WicketApplication extends AuthenticatedWebApplication {
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
-	@Override
-	public Class<Home> getHomePage() {
-		return Home.class;
-	}
 
-	/**
-	 * @see org.apache.wicket.Application#init()
-	 */
-	@Override
-	public void init() {
-		super.init();
-		// guice injector
-		getComponentInstantiationListeners().add(
-				new GuiceComponentInjector(this, (Injector) getServletContext().getAttribute(
-						Injector.class.getName())));
-		// security
-		getSecuritySettings().setEnforceMounts(true);
-		getSecuritySettings().setAuthorizationStrategy(new SimplePageAuthorizationStrategy(AuthorizedPage.class, Login.class) {
-			
-			@Override
-			protected boolean isAuthorized() {
-				return WicketSession.get().isSignedIn();
-			}
-		});
-		// markup
-		getMarkupSettings().setDefaultMarkupEncoding("utf-8");
-		getMarkupSettings().setCompressWhitespace(true);
-		getMarkupSettings().setStripComments(true);
-		// resource
-		getResourceSettings().addResourceFolder("WEB-INF");
-		// application
-		getApplicationSettings().setPageExpiredErrorPage(ExpiredError.class);
-		getApplicationSettings().setInternalErrorPage(InternalServerError.class);
-		// getApplicationSettings().setAccessDeniedPage(accessDeniedPage)
-		// request cycle
-		getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
-		getRequestCycleSettings().setResponseRequestEncoding("utf-8");
-		// logger
-		getRequestLoggerSettings().setRequestLoggerEnabled(true);
-		// mount page
-		mount();
-		// debug setting in development mode.
-		if (getConfigurationType().equals(RuntimeConfigurationType.DEVELOPMENT)) {
-			getDebugSettings().setOutputComponentPath(true);
-			getDebugSettings().setOutputMarkupContainerClassName(true);
-			getDebugSettings().setLinePreciseReportingOnAddComponentEnabled(true);
-			getDebugSettings().setLinePreciseReportingOnNewComponentEnabled(true);
-		}
-	}
+    /**
+     * 
+     * @return WicketApplication
+     */
+    public static WicketApplication get() {
+        return (WicketApplication) WebApplication.get();
+    }
+    
+    /**
+     * @see org.apache.wicket.Application#getHomePage()
+     */
+    @Override
+    public Class<Home> getHomePage() {
+        return Home.class;
+    }
 
-	private void mount() {
-		mountPage("/login", Login.class);
-		mountPage("/postback", BrowserInfoPage.class);
-		mountPage("/account/registry/${fragment}", Registry.class);
+    /**
+     * @see org.apache.wicket.Application#init()
+     */
+    @Override
+    public void init() {
+        super.init();
+        // guice injector
+        getComponentInstantiationListeners().add(
+                new GuiceComponentInjector(this, (Injector) getServletContext().getAttribute(
+                        Injector.class.getName())));
+        // security
+        getSecuritySettings().setEnforceMounts(true);
+        getSecuritySettings().setAuthorizationStrategy(
+                new SimplePageAuthorizationStrategy(AuthorizedPage.class, Login.class) {
 
-		mountPage("/account/setting", Setting.class);
-		mountPage("/reminder", Reminder.class);
-		mountPage("/receipt", Receipt.class);
-		mountPage("/order", OrderComplete.class);
-		mountPage("/group", Grouping.class);
-		mountPage("/group/attendance/${fragment}", Attendance.class);
-		mountPage("/members", Member.class);
+                    @Override
+                    protected boolean isAuthorized() {
+                        return WicketSession.get().isSignedIn();
+                    }
+                });
+        // markup
+        getMarkupSettings().setDefaultMarkupEncoding("utf-8");
+        getMarkupSettings().setCompressWhitespace(true);
+        getMarkupSettings().setStripComments(true);
+        getMarkupSettings().setStripWicketTags(true);
+        // resource
+//        getResourceSettings().addResourceFolder("WEB-INF");
+        // application
+        getApplicationSettings().setPageExpiredErrorPage(ExpiredError.class);
+        getApplicationSettings().setInternalErrorPage(InternalServerError.class);
+        // getApplicationSettings().setAccessDeniedPage(accessDeniedPage)
+        // request cycle
+        getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
+        getRequestCycleSettings().setResponseRequestEncoding("utf-8");
+        // logger
+        getRequestLoggerSettings().setRequestLoggerEnabled(true);
+        // mount page
+        mount();
+        // debug setting in development mode.
+        if (getConfigurationType().equals(RuntimeConfigurationType.DEVELOPMENT)) {
+            getDebugSettings().setOutputComponentPath(true);
+            getDebugSettings().setOutputMarkupContainerClassName(true);
+            getDebugSettings().setLinePreciseReportingOnAddComponentEnabled(true);
+            getDebugSettings().setLinePreciseReportingOnNewComponentEnabled(true);
+        }
+    }
+
+    private void mount() {
+        mountPage("/login", Login.class);
+        mountPage("/postback", BrowserInfoPage.class);
+        mountPage("/account/registry/${fragment}", Registry.class);
+
+        mountPage("/account/setting", Setting.class);
+        mountPage("/reminder", Reminder.class);
+        mountPage("/receipt", Receipt.class);
+        mountPage("/order", OrderComplete.class);
+//        mountPage("/ordering", OrderConfirmation.class);
+        mountPage("/group", Grouping.class);
+        mountPage("/group/attendance/${fragment}", Attendance.class);
+        mountPage("/members", Member.class);
+        
 //		mountPage("/account/approval/${segment}", Approval.class);
 //		mountPage("/setting", Setting.class);
 
-		// error page
-		mountPage("/error", ErrorPage.class);
-		mountPage("/error/internal", InternalServerError.class);
-		mountPage("/error/expired", ExpiredError.class);
-	}
+        // error page
+        mountPage("/error", ErrorPage.class);
+        mountPage("/error/internal", InternalServerError.class);
+        mountPage("/error/expired", ExpiredError.class);
+    }
 
-	@Override
-	protected Class<? extends AbstractAuthenticatedWebSession> getWebSessionClass() {
-		return WicketSession.class;
-	}
+    @Override
+    protected Class<? extends AbstractAuthenticatedWebSession> getWebSessionClass() {
+        return WicketSession.class;
+    }
 
-	@Override
-	public Class<? extends WebPage> getSignInPageClass() {
-		return Login.class;
-	}
+    @Override
+    public Class<? extends WebPage> getSignInPageClass() {
+        return Login.class;
+    }
 
-	public static WicketApplication get() {
-		return (WicketApplication) WebApplication.get();
-	}
 }
