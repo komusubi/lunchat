@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Parent Frame Properties</comment>
+<entry key="login.label">ログイン</entry>
+<entry key="logout.label">ログアウト</entry>
+</properties>

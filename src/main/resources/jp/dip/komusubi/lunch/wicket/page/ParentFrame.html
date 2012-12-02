@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<wicket:remove>
+  <link href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" rel="stylesheet" type="text/css" />
+  <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+</wicket:remove>
+<title wicket:id="page.title">メニュー一覧</title>
+</head>
+<body>
+  <div data-role="page" data-theme="a">
+    <div data-role="header">
+      <h1 wicket:id="panel.title">メニュー一覧</h1>
+      <a href="#" data-icon="home" data-iconpos="notext" title="Home" data-theme="f" data-ajax="false" wicket:id="link.home">home</a> 
+      <a href="#" data-ajax="false" wicket:id="signIn"><span wicket:id="signIn.title">ログイン</span></a>
+      <a href="#" data-ajax="false" wicket:id="signOut"><span wicket:id="signOut.title">ログアウト</span></a>
+      <div data-role="navbar" wicket:id="nav">
+        <ul>
+          <li><a href="#" wicket:id="nav.new" data-ajax="false">新規</a></li>
+          <li><a href="#" wicket:id="nav.history" data-ajax="false">履歴</a></li>
+          <li><a href="#" wicket:id="nav.config" data-ajax="false">設定</a></li>
+        </ul>
+      </div>
+    </div>
+    <wicket:child>
+      <div data-role="content">
+        <h2>XXさん、いらっしゃいませ。</h2>
+        <p>お店一覧</p>
+        <form method="post" data-transition="slide">
+          <ul data-role="listview">
+            <li><input type="submit" value="玉子屋"></li>
+            <li><input type="submit" value="フレッシュランチ"></li>
+          </ul>
+        </form>
+      </div>
+    </wicket:child>
+    <div data-role="footer">
+      <h1>lunchat</h1>
+    </div>
+  </div>
+</body>
+</html>
