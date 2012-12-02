@@ -4,49 +4,44 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <wicket:remove>
-  <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
-  <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
-  <script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+  <link href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" rel="stylesheet" type="text/css" />
+  <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
 </wicket:remove>
 </head>
 <body>
   <div data-role="page" data-theme="a">
-    <wicket:remove>
     <div data-role="header">
       <a href="#" data-role="button">ログアウト</a>
       <a href="#" data-role="button" data-icon="home"></a>
       <span>username</span>
       <h1>ランチ！</h1>
     </div>
-    </wicket:remove>
-    <div wicket:id="header">
-    </div>
-    <div data-role="content">
+    <wicket:extend>
+      <div data-role="content">
         <h2 wicket:id="greeting">XXさん、いらっしゃいませ。</h2>
-    <!-- 
-      <h4>
-      </h4>
-      <p>注文するお店のボタンを押して注文を決定してください。</p>
-      -->
-      <span wicket:id="select.menu"></span>
-      <span wicket:id="group.list">お店一覧</span>
-      <span wicket:id="group.registry"></span>
-      <span wicket:id="order.list"></span>
-      <wicket:remove>
-        <form method="post" data-transition="slide">
-          <ul data-role="listview">
-            <li><input type="submit" value="玉子屋"></li>
-            <li><input type="submit" value="フレッシュランチ"></li>
-          </ul>
-        </form>
-      </wicket:remove>
-    </div>
-    <span wicket:id="footer"></span>
-    <wicket:remove>
+      <!-- 
+        <h4>
+        </h4>
+        <p>注文するお店のボタンを押して注文を決定してください。</p>
+        -->
+        <span wicket:id="select.menu"></span>
+        <span wicket:id="group.list">お店一覧</span>
+        <span wicket:id="group.registry"></span>
+        <span wicket:id="order.list"></span>
+        <wicket:remove>
+          <form method="post" data-transition="slide">
+            <ul data-role="listview">
+              <li><input type="submit" value="玉子屋"></li>
+              <li><input type="submit" value="フレッシュランチ"></li>
+            </ul>
+          </form>
+        </wicket:remove>
+      </div>
+    </wicket:extend>
     <div data-role="footer">
       <h1>komusubi</h1>
     </div>
-    </wicket:remove>
   </div>
 </body>
 </html>
