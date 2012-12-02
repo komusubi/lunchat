@@ -349,18 +349,6 @@ public class ApplicationFrame extends ApplicationPage {
     }
     
     /**
-     * get mark up variation.
-     * this value append mark up file name.
-     */
-    @Override
-    public String getVariation() {
-        String variation = null;
-        if (isJquery())
-            variation = WicketSession.VARIATION_JQUERY_MOBILE;
-        return variation;
-    }
-
-    /**
      * 
      * @param pageTitle
      * @return
