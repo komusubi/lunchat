@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Dialog panel Properties</comment>
+<entry key="double.submit">既に処理は実行されています。</entry>
+<entry key="order.to">${name} を注文します。</entry>
+</properties>

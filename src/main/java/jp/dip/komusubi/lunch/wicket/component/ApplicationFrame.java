@@ -16,16 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package jp.dip.komusubi.lunch.wicket.page;
+package jp.dip.komusubi.lunch.wicket.component;
 
 import jp.dip.komusubi.lunch.wicket.WicketApplication;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
-import jp.dip.komusubi.lunch.wicket.component.ApplicationPage;
 import jp.dip.komusubi.lunch.wicket.page.account.Setting;
 import jp.dip.komusubi.lunch.wicket.panel.Header.HeaderBean;
 
 import org.apache.log4j.MDC;
-import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -42,14 +40,11 @@ import org.slf4j.LoggerFactory;
  * framework page.
  * @author jun.ozeki
  */
-public class ParentFrame extends ApplicationPage {
+public class ApplicationFrame extends ApplicationPage {
 
-    // FIXME this class move package to wicket.component
-    
     private static final long serialVersionUID = 1L;
-    private static Logger logger = LoggerFactory.getLogger(ParentFrame.class);
+    private static Logger logger = LoggerFactory.getLogger(ApplicationFrame.class);
     private WebClientInfo clientInfo = WicketSession.get().getClientInfo();
-    private ApplicationPage header;
 
     /**
      * custom link component.
@@ -83,7 +78,7 @@ public class ParentFrame extends ApplicationPage {
     /**
      * create new instance.
      */
-    public ParentFrame() {
+    public ApplicationFrame() {
         ServletWebRequest request = (ServletWebRequest) getRequestCycle().getRequest();
 //		MDC.put("ipaddr", clientInfo.getProperties().getRemoteAddress());
         MDC.put("ipaddr", request.getContainerRequest().getRemoteAddr());
@@ -100,7 +95,6 @@ public class ParentFrame extends ApplicationPage {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        this.header = new ApplicationPage();
         add(newNavigationBar("nav"));
         add(newHomeLink("link.home"));
         add(newSignInLink("signIn"));
@@ -355,40 +349,17 @@ public class ParentFrame extends ApplicationPage {
     }
     
     /**
-     * 
-     * @return
-     */
-//    protected boolean isJQuery() {
-//        if (clientInfo.getUserAgent().contains("Android")
-//                || clientInfo.getUserAgent().contains("iPhone")) {
-//            return true;
-//        }
-//		return false;
-        // MEMO this project target for mobile device, so always return "true".
-//        return true;
-//    }
-
-    /**
      * get mark up variation.
      * this value append mark up file name.
      */
     @Override
     public String getVariation() {
         String variation = null;
-        if (header.isJquery())
+        if (isJquery())
             variation = WicketSession.VARIATION_JQUERY_MOBILE;
         return variation;
     }
 
-    /**
-     * output html header.
-     */
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        super.renderHead(response);
-        header.renderHead(response);
-    }
-    
     /**
      * 
      * @param pageTitle

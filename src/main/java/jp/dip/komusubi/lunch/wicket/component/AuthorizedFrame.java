@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.wicket.page;
+package jp.dip.komusubi.lunch.wicket.component;
 
 import jp.dip.komusubi.lunch.wicket.WicketApplication;
 
@@ -26,8 +26,8 @@ import jp.dip.komusubi.lunch.wicket.WicketApplication;
  * @since 2011/11/16
  * @see WicketApplication
  */
-public class AuthorizedPage extends VariationBase {
+public class AuthorizedFrame extends ApplicationFrame {
 
-	private static final long serialVersionUID = 9194711808620319463L;
+	private static final long serialVersionUID = 1L;
 
 }
