@@ -3,26 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<wicket:remove>
+  <link href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" rel="stylesheet" type="text/css" />
+  <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+</wicket:remove>
 <title>ログイン</title>
 </head>
 <body>
   <div data-role="page" id="login" data-theme="a">
-    <span wicket:id="header"></span>
-    <wicket:remove>
     <div data-role="header">
       <h1>ログイン</h1>
     </div>
-    </wicket:remove>
+    <wicket:extend>
     <div data-role="content">
       <span wicket:id="signInPanel">sign in panel</span>
       <span wicket:id="registry">新規登録</span>
     </div>
-    <span wicket:id="footer"></span>
-    <wicket:remove>
+    </wicket:extend>
     <div data-role="footer">
       <h1>by komusubi</h1>
     </div>
-    </wicket:remove>
   </div>
 </body>
 </html>
