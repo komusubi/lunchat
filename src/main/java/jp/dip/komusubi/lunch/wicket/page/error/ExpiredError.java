@@ -18,15 +18,26 @@ package jp.dip.komusubi.lunch.wicket.page.error;
 
 import org.apache.wicket.markup.html.basic.Label;
 
-
+/**
+ * expired error page.
+ * @author jun.ozeki
+ */
 public class ExpiredError extends ErrorPage {
 
-	private static final long serialVersionUID = -723808163872827583L;
+	private static final long serialVersionUID = 1L;
 
+	/**
+	 * create new instance.
+	 */
 	public ExpiredError() {
-		super();
-		add(new Label("error.message", "このページは期限切れです。")); 
-//				new ResourceModel("expired.error.message")));
-//		add(new Label("description").setVisible(false));
+	    
+	}
+	
+	/**
+	 * initialize components.
+	 */
+	@Override
+	protected void onInitialize() {
+		add(new Label("error.message", getString("expired.errorm.message")));
 	}
 }

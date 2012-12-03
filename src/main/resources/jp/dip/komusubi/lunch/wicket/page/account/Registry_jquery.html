@@ -19,7 +19,7 @@
       <a href="#" data-role="button">ログアウト</a>
     </div>
     </wicket:remove>
-    <span wicket:id="header"></span>
+    <wicket:extend>
     <div data-role="content">
       <p>ユーザー情報を入力してください。</p>
       <span wicket:id="profile"></span>
@@ -32,7 +32,8 @@
         </form>
       </wicket:remove>
     </div>
-    <span wicket:id="footer"></span>
+    </wicket:extend>
+    <span></span>
     <wicket:remove>
     <div data-role="footer">
       <h1>footer</h1>

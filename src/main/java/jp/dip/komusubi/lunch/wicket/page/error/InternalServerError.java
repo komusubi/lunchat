@@ -20,11 +20,25 @@ package jp.dip.komusubi.lunch.wicket.page.error;
 
 import org.apache.wicket.markup.html.basic.Label;
 
+/**
+ * internal server error page.
+ * @author jun.ozeki
+ */
 public class InternalServerError extends ErrorPage {
 
-	private static final long serialVersionUID = -1489011970438287862L;
+	private static final long serialVersionUID = 1L;
 
+	/**
+	 * create new instance.
+	 */
 	public InternalServerError() {
-		add(new Label("error.message", "サーバーでエラーが発生しました。"));		
+	}
+	
+	/**
+	 * initialize components.
+	 */
+	@Override
+	protected void onInitialize() {
+		add(new Label("error.message", getString("internal.error.message")));
 	}
 }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Error Page Properties</comment>
+<entry key="page.title">エラー</entry>
+<entry key="panel.title">エラー</entry>
+<entry key="unknown.error">原因不明のエラーが発生しています。しばらくたってから再度アクセスしてください。</entry>
+<entry key="expired.error.message">有効期限が過ぎています。再度アカウント登録処理を実施てください。</entry>
+<entry key="internal.error.message">サーバー内部エラーが発生しました。しばらくたってから再度アクセスしてください。</entry>
+</properties>
