@@ -99,26 +99,6 @@ public class ApplicationFrame extends ApplicationPage {
         add(newHomeLink("link.home"));
         add(newSignInLink("signIn"));
         add(newSignOutLink("signOut"));
-        add(newPageTitle("page.title"));
-        add(newPanelTitle("panel.title"));
-    }
-    
-    /**
-     * create page title.
-     * @param id 
-     * @return
-     */
-    protected Label newPageTitle(String id) {
-        return new Label(id, getPageTitle());
-    }
-
-    /**
-     * create panel title.
-     * @param id 
-     * @return
-     */
-    protected Label newPanelTitle(String id) {
-        return new Label(id, getPanelTitle());
     }
     
     /**
@@ -158,7 +138,7 @@ public class ApplicationFrame extends ApplicationPage {
             @Override
             protected void onInitialize() {
                 super.onInitialize();
-                add(new Label("signOut.title", getString("logout.label")));
+                add(new Label("signOut.title", getString("signOut.title")));
             }
             
             /**
@@ -200,7 +180,7 @@ public class ApplicationFrame extends ApplicationPage {
             @Override
             protected void onInitialize() {
                 super.onInitialize(); 
-                add(new Label("signIn.title", getString("login.label")));
+                add(new Label("signIn.title", getString("signIn.title")));
             }
 
             /**
@@ -330,22 +310,6 @@ public class ApplicationFrame extends ApplicationPage {
      */
     protected void onConfigurationLinkClick() {
         logger.info("configuration link clicked!");
-    }
-    
-    /**
-     * get page title.
-     * override subclass.
-     */
-    protected String getPageTitle() {
-        return "no page title";
-    }
-    
-    /**
-     * get panel title.
-     * override subclas.
-     */
-    protected String getPanelTitle() {
-        return "no panel title";
     }
     
     /**

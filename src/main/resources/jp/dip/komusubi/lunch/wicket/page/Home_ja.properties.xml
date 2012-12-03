@@ -4,4 +4,5 @@
 <comment>Home Page Properties</comment>
 <entry key="greeting">${username}さん、いらっしゃいませ。</entry>
 <entry key="page.title">ホーム</entry>
+<entry key="panel.title">ホーム</entry>
 </properties>

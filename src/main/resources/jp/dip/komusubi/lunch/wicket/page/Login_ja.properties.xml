@@ -3,4 +3,5 @@
 <properties>
 <comment>Login Page Properties</comment>
 <entry key="page.title">ログイン</entry>
+<entry key="panel.title">ログイン</entry>
 </properties>

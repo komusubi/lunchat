@@ -8,15 +8,15 @@
   <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
   <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
 </wicket:remove>
-<title wicket:id="page.title">メニュー一覧</title>
+<title><wicket:message key="page.title">home</wicket:message></title>
 </head>
 <body>
   <div data-role="page" data-theme="a">
     <div data-role="header">
-      <h1 wicket:id="panel.title">メニュー一覧</h1>
+      <h1><wicket:message key="panel.title">menu list</wicket:message></h1>
       <a href="#" data-icon="home" data-iconpos="notext" title="Home" data-theme="f" data-ajax="false" wicket:id="link.home">home</a> 
-      <a href="#" data-ajax="false" wicket:id="signIn"><span wicket:id="signIn.title">ログイン</span></a>
-      <a href="#" data-ajax="false" wicket:id="signOut"><span wicket:id="signOut.title">ログアウト</span></a>
+      <a href="#" data-ajax="false" wicket:id="signIn"><span wicket:id="signIn.title">login</span></a>
+      <a href="#" data-ajax="false" wicket:id="signOut"><span wicket:id="signOut.title">logout</span></a>
       <div data-role="navbar" wicket:id="nav">
         <ul>
           <li><a href="#" wicket:id="nav.new" data-ajax="false">新規</a></li>
