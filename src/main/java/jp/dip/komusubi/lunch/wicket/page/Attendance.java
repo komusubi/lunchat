@@ -21,15 +21,14 @@ package jp.dip.komusubi.lunch.wicket.page;
 import java.util.Date;
 
 import jp.dip.komusubi.lunch.Configuration;
+import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
+import jp.dip.komusubi.lunch.wicket.component.AuthorizedFrame;
 import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.panel.Approval;
-import jp.dip.komusubi.lunch.wicket.panel.Footer;
-import jp.dip.komusubi.lunch.wicket.panel.Header;
 
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
@@ -43,7 +42,7 @@ import com.google.inject.name.Named;
  * @author jun.ozeki
  * @since 2011/11/19
  */
-public class Attendance extends AuthorizedPage {
+public class Attendance extends AuthorizedFrame {
 
 	private static final long serialVersionUID = 1242588429737776047L;
 	private static final Logger logger = LoggerFactory.getLogger(Attendance.class);
@@ -51,10 +50,11 @@ public class Attendance extends AuthorizedPage {
     private FormKey key;
 	
 	public Attendance(PageParameters params) {
-		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
+//		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
 		add(new FeedbackPanel("feedback"));
 		add(getApproval("approval", params));
-		add(new Footer("footer"));
+//		add(new Footer("footer"));
+		throw new LunchException("Header and Footer 削除対応により例外スロー");
 	}
 
 	@Override

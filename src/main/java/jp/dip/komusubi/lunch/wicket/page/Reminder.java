@@ -26,27 +26,26 @@ import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.service.NotFoundEmailException;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
+import jp.dip.komusubi.lunch.wicket.component.ApplicationFrame;
 import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.panel.EmailSender;
 import jp.dip.komusubi.lunch.wicket.panel.EmailSender.EmailSenderBean;
-import jp.dip.komusubi.lunch.wicket.panel.Footer;
-import jp.dip.komusubi.lunch.wicket.panel.Header;
 
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Reminder extends VariationBase {
+public class Reminder extends ApplicationFrame {
 
 	private static final long serialVersionUID = -6010319871215878007L;
 	private static final Logger logger = LoggerFactory.getLogger(Reminder.class);
     private FormKey key;
 	
 	public Reminder() {
-		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
+//		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
 		add(new EmailSender("email.reminder", new CompoundPropertyModel<EmailSenderBean>(getEmailSenderBean())));
-		add(new Footer("footer"));
+//		add(new Footer("footer"));
+		throw new LunchException("Header and Footer 削除対応により例外スロー");
 	}
 
 	@Override

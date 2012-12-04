@@ -18,28 +18,28 @@
  */
 package jp.dip.komusubi.lunch.wicket.page;
 
-import jp.dip.komusubi.lunch.wicket.panel.Footer;
+import jp.dip.komusubi.lunch.LunchException;
+import jp.dip.komusubi.lunch.wicket.component.AuthorizedFrame;
 import jp.dip.komusubi.lunch.wicket.panel.GroupList;
-import jp.dip.komusubi.lunch.wicket.panel.Header;
 
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.Model;
 
 /**
  * choice group. 
  * @author jun.ozeki
  * @since 2011/11/16
  */
-public class Grouping extends AuthorizedPage { 
+public class Grouping extends AuthorizedFrame { 
 
 	private static final long serialVersionUID = -8681405849328505396L;
 	
 	public Grouping() {
-		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
+//		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
 		add(new Label("page.message", "後でメッセージ設定する"));
 		add(new GroupList("group.list"));
 //		add(new GroupRegistry("group.registry"));
-		add(new Footer("footer"));
+//		add(new Footer("footer"));
+		throw new LunchException("Header and Footer 削除対応により例外スロー");
 	}
 	
 }

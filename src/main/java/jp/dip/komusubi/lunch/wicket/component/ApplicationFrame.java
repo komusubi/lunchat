@@ -21,15 +21,12 @@ package jp.dip.komusubi.lunch.wicket.component;
 import jp.dip.komusubi.lunch.wicket.WicketApplication;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.page.account.Setting;
-import jp.dip.komusubi.lunch.wicket.panel.Header.HeaderBean;
 
 import org.apache.log4j.MDC;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Url.StringMode;
@@ -313,44 +310,4 @@ public class ApplicationFrame extends ApplicationPage {
         logger.info("configuration link clicked!");
     }
     
-    /**
-     * 
-     * @param pageTitle
-     * @return
-     */
-    protected HeaderBean getDefaultHeaderBean(String pageTitle) {
-        HeaderBean bean = new HeaderBean();
-        bean.config = Setting.class;
-        bean.pageTitle = pageTitle;
-        // FIXME navigation panel link address.
-        bean.order = null;
-        bean.history = null;
-        return bean;
-    }
-
-    protected String getPageUrl(Class<? extends WebPage> clazz) {
-        // get this page's url
-        // MEMO cann't get "http://localhost:8080/" it's example for "http://localhost:8080/group/.."
-        // I don't know if bug, because it is not clear mistake.
-        String targetPath = getRequestCycle().urlFor(clazz, null).toString();
-        String ownUrl = getRequestCycle().getUrlRenderer().renderFullUrl(
-                getRequest().getClientUrl());
-        return RequestUtils.toAbsolutePath(ownUrl, targetPath);
-    }
-
-    protected String getPageUrl(WebPage page) {
-        return getPageUrl(page.getClass());
-    }
-
-//	protected String getPageAbsoluteUrl(Class<? extends WebPage> clazz) {
-//	    return getPageAbsoluteUrl(clazz, null);
-//	}
-//	
-//	protected String getPageAbsoluteUrl(Class<? extends WebPage> clazz, String relatedPath) {
-//	    String related = "";
-//	    if (relatedPath != null)
-//	        related = relatedPath;
-//	    String path = getRequestCycle().urlFor(clazz, null).toString();
-//	    return RequestUtils.toAbsolutePath(path, related);
-//	}
 }
