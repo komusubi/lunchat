@@ -18,27 +18,25 @@
  */
 package jp.dip.komusubi.lunch.wicket.page.account;
 
-import jp.dip.komusubi.lunch.wicket.page.AuthorizedPage;
+import jp.dip.komusubi.lunch.wicket.component.AuthorizedFrame;
 import jp.dip.komusubi.lunch.wicket.panel.ChangePassword;
-import jp.dip.komusubi.lunch.wicket.panel.Footer;
-import jp.dip.komusubi.lunch.wicket.panel.Header;
-import jp.dip.komusubi.lunch.wicket.panel.Header.HeaderBean;
-
-import org.apache.wicket.model.Model;
 
 /**
  * setting page. 
  * @author jun.ozeki
  * @since 2011/11/16
  */
-public class Setting extends AuthorizedPage {
+public class Setting extends AuthorizedFrame {
 
 	private static final long serialVersionUID = 3235692022909765328L;
 	
+	/**
+	 * create new instance.
+	 */
 	public Setting() {
-		HeaderBean bean = getDefaultHeaderBean(getString("page.title"));
-		add(new Header("header", Model.of(bean), true));
+//		HeaderBean bean = getDefaultHeaderBean(getString("page.title"));
+//		add(new Header("header", Model.of(bean), true));
 		add(new ChangePassword("change.password"));
-		add(new Footer("footer"));
+//		add(new Footer("footer"));
 	}
 }

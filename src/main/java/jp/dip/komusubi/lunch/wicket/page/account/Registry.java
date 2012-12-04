@@ -16,10 +16,8 @@
  */
 package jp.dip.komusubi.lunch.wicket.page.account;
 
-import jp.dip.komusubi.lunch.wicket.page.VariationBase;
+import jp.dip.komusubi.lunch.wicket.component.ApplicationFrame;
 import jp.dip.komusubi.lunch.wicket.page.error.ErrorPage;
-import jp.dip.komusubi.lunch.wicket.panel.Footer;
-import jp.dip.komusubi.lunch.wicket.panel.Header;
 import jp.dip.komusubi.lunch.wicket.panel.Profile;
 
 import org.apache.wicket.model.Model;
@@ -28,26 +26,45 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Registry extends VariationBase {
+/**
+ * user registry page.
+ * @author jun.ozeki
+ */
+public class Registry extends ApplicationFrame {
 
-	private static final long serialVersionUID = -7502193205773677682L;
-	private static final Logger logger = LoggerFactory.getLogger(Registry.class);
-	private PageParameters params;
-	
-	public Registry(PageParameters params) {
-		this.params = params;
-		// FIXME literal string set resource file. 
-		add(new Header("header", Model.of(getDefaultHeaderBean("ユーザー登録"))));
-		add(new Profile("profile", Model.of(params.get("fragment").toString())));
-		add(new Footer("footer"));
-	}
+    private static final long serialVersionUID = 1L;
+    private static final Logger logger = LoggerFactory.getLogger(Registry.class);
+    private PageParameters params;
 
-	@Override
-	protected void onInitialize() {
-		if (params.get("fragment").isEmpty()) {
-			logger.info("malformed url {}", getRequest().getClientUrl().toString(StringMode.FULL));
-			setResponsePage(new ErrorPage("不正なURLです。"));
-		}
-		super.onInitialize();
-	}
+    /**
+     * create new instance.
+     * @param params
+     */
+    public Registry(PageParameters params) {
+        this.params = params;
+    }
+
+    /**
+     * initialize components.
+     */
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        if (params.get("fragment").isEmpty()) {
+            logger.info("malformed url {}", getRequest().getClientUrl().toString(StringMode.FULL));
+            // FIXME literal word move to resource file.
+            setResponsePage(new ErrorPage(getString("illegal.access.message")));
+        }
+        add(new Profile("profile", Model.of(params.get("fragment").toString())));
+    }
+    
+    /**
+     * configure compoentns.
+     */
+    @Override
+    protected void onConfigure() {
+        super.onConfigure();
+        get("signIn").setVisible(false);
+        get("signOut").setVisible(false);
+    }
 }

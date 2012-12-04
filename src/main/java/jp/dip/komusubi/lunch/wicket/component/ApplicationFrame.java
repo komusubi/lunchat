@@ -309,6 +309,7 @@ public class ApplicationFrame extends ApplicationPage {
      * override subclass.
      */
     protected void onConfigurationLinkClick() {
+        setResponsePage(Setting.class);
         logger.info("configuration link clicked!");
     }
     

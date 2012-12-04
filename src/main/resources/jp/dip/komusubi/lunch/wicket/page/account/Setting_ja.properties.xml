@@ -3,4 +3,5 @@
 <properties>
 <comment>Setting Page Properties</comment>
 <entry key="page.title">設定</entry>
+<entry key="panel.title">設定</entry>
 </properties>

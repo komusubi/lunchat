@@ -12,7 +12,6 @@
 </head>
 <body>
   <div data-role="page" data-theme="a">
-    <span wicket:id="header"></span>
     <wicket:remove>
       <div data-role="header">
         <a href="#" data-role="button" data-icon="home"></a> <a href="#" data-role="button">ログアウト</a>
@@ -100,8 +99,9 @@
         </div>
       </wicket:remove>
     </div>
+    <wicket:extend>
     <span wicket:id="change.password"></span>
-    <span wicket:id="footer"></span>
+    </wicket:extend>
     <wicket:remove>
       <div data-role="footer">
         <h1>lunch</h1>
