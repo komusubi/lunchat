@@ -390,7 +390,7 @@
   </issueManagement>
   <ciManagement>
     <system>jenkins</system>
-    <url>http://builds.komusubi.org/job/lunch</url>
+    <url>http://builds.komusubi.org/job/lunchat</url>
   </ciManagement>
   <dependencyManagement>
     <dependencies>
