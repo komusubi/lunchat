@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+
 /**
  * choice shop panel.
  * 
@@ -196,8 +197,7 @@ public class ChoiceLunch extends Panel {
 		}
 
 		/**
-		 * リンク.
-		 * 
+		 * create link of product item. 
 		 * @param id
 		 * @param itemValue
 		 * @return

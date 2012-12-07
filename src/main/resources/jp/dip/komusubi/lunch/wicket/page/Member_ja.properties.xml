@@ -3,4 +3,6 @@
 <properties>
 <comment>Member Page Properties</comment>
 <entry key="page.title">メンバー選択</entry>
+<entry key="panel.title">メンバー選択</entry>
+<entry key="double.submit.message">既に処理が実施されています。</entry>
 </properties>

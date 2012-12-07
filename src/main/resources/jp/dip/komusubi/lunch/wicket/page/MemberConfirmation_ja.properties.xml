@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Member Confirmation Page Properties</comment>
+<entry key="page.title">承認依頼確認</entry>
+<entry key="panel.title">承認依頼確認</entry>
+<entry key="sent.confirmation.title">${name} さんに承認依頼を送信しました。</entry>
+<entry key="confirm.error.title">${name} さんへ承認依頼でエラーが発生しました。</entry>
+<entry key="dialog.message">${name}さん へグループ参加の承認依頼通知を送信します。</entry>
+<entry key="double.submit">既に承認依頼が送信されています。</entry>
+</properties>

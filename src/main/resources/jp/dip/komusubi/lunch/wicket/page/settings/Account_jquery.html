@@ -2,42 +2,38 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <wicket:remove>
   <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
   <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
   <script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
 </wicket:remove>
-<title>Confirm_jquery</title>
 </head>
 <body>
-  <div data-role="page" data-theme="a">
+  <div data-role="page">
+    <span wicket:id="header"></span>
     <wicket:remove>
-    <div data-role="header">
-      <h1>ランチ！</h1>
-      <a href="#" data-role="button" data-icon="home"></a>
-      <a href="#" data-role="button">ログアウト</a>
-    </div>
+      <div data-role="header">
+        <a href="#" data-role="button">ログアウト</a> <a href="#" data-role="button" data-icon="home"></a> <span>username</span>
+        <h1>ランチ！</h1>
+      </div>
     </wicket:remove>
-    <wicket:extend>
     <div data-role="content">
-      <p>ユーザー情報を入力してください。</p>
       <span wicket:id="profile"></span>
       <wicket:remove>
         <form method="post" data-transition="slide">
           <ul data-role="listview">
-            <li><a href="#">玉子屋"</a></li>
-            <li><a href="#">フレッシュランチ</a></li>
+            <li><input type="submit" value="玉子屋"></li>
+            <li><input type="submit" value="フレッシュランチ"></li>
           </ul>
         </form>
       </wicket:remove>
     </div>
-    </wicket:extend>
     <wicket:remove>
-    <div data-role="footer">
-      <h1>footer</h1>
-    </div>
+      <div data-role="footer">
+        <h1>lunch</h1>
+      </div>
     </wicket:remove>
+    <span wicket:id="footer"></span>
   </div>
 </body>
 </html>

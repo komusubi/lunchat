@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 
 /**
  * dialog component.
@@ -31,7 +32,7 @@ import org.apache.wicket.model.IModel;
  */
 public abstract class Dialog<T> extends Panel {
 
-    private static final long serialVersionUID = 6968078827891651580L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * create new instance.
@@ -42,7 +43,6 @@ public abstract class Dialog<T> extends Panel {
         super(id, model);
         add(getLabel("message"));
         add(new FeedbackPanel("feedback"));
-//		add(new DialogForm("confirm.form"));
         add(getAgreeLink("agree"));
         add(getCancelLink("cancel"));
     }
@@ -57,6 +57,9 @@ public abstract class Dialog<T> extends Panel {
 
             private static final long serialVersionUID = 1L;
 
+            /**
+             * event on click.
+             */
             @Override
             public void onClick() {
                 onAgree();
@@ -74,6 +77,9 @@ public abstract class Dialog<T> extends Panel {
 
             private static final long serialVersionUID = 1L;
 
+            /**
+             * event on click.
+             */
             @Override
             public void onClick() {
                 onCancel();
@@ -82,16 +88,21 @@ public abstract class Dialog<T> extends Panel {
     }
 
     /**
-     * action on event of agree.
+     * event on agree button.
      */
     protected abstract void onAgree();
 
     /**
-     * action on event of cancel.
+     * event on cancel button.
      */
     protected abstract void onCancel();
 
+    /**
+     * dialog message.
+     * @param id
+     * @return
+     */
     protected Label getLabel(String id) {
-        return new Label(id, "ラベル");
+        return new Label(id, new ResourceModel("dialog.message", "not found label."));
     }
 }

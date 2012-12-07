@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 /**
  * footer. 
  * @author jun.ozeki
+ * @deprecated not use, delete in future.
  */
 public class Footer extends Panel {
 

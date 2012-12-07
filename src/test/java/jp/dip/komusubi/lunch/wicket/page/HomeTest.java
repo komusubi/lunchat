@@ -31,6 +31,10 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+/**
+ *  
+ * @author jun
+ */
 public class HomeTest {
 
 //	@Rule

@@ -1,20 +1,20 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
+ * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * regarding copyright ownership. The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * with the License. You may obtain a copy of the License at
  * 
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
@@ -43,70 +43,128 @@ import org.slf4j.LoggerFactory;
  */
 public class MemberList extends Panel {
 
-	private static final long serialVersionUID = 695094056051480395L;
-	private static final Logger logger = LoggerFactory.getLogger(MemberList.class);
-	
-	public MemberList(String id, Group group) { // IModel<Group> model) {
-		super(id);
-		add(new FeedbackPanel("feedback"));
-		add(new Label("list.name", getString("label.title", Model.of(group))));
-		add(new GroupListView("list", getLoadableDetachableModel(group)));
-	}
+    private static final long serialVersionUID = 1L;
+    private static final Logger logger = LoggerFactory.getLogger(MemberList.class);
+    private Group group;
 
-	private LoadableDetachableModel<List<User>> getLoadableDetachableModel(final Group group) {
-		return new LoadableDetachableModel<List<User>>() {
-		
-			private static final long serialVersionUID = 342639502330434200L;
-	
-			@Override
-			public List<User> load() {
+    /**
+     * create new instance.
+     * @param id
+     * @param group
+     */
+    public MemberList(String id, Group group) { // IModel<Group> model) {
+        super(id);
+        this.group = group;
+    }
+
+    /**
+     * initialize components.
+     */
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        add(new FeedbackPanel("feedback"));
+        add(new Label("list.name", getString("label.title", Model.of(group))));
+        add(new GroupListView("list", getLoadableDetachableModel(group)));
+    }
+
+    /**
+     * 
+     * @param group
+     * @return
+     */
+    private LoadableDetachableModel<List<User>> getLoadableDetachableModel(final Group group) {
+        return new LoadableDetachableModel<List<User>>() {
+
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public List<User> load() {
 //				UserDao userDao = Configuration.getInstance(UserDao.class);
 //				return userDao.findByGroupId(groupId);
-				return group.getUsers();
-			}
-		};
-	}
-	
-	private class GroupListView extends ListView<User> {
+                return group.getUsers();
+            }
+        };
+    }
 
-		private static final long serialVersionUID = 831545974755510431L;
+    /**
+     * group list view.
+     * @author jun.ozeki
+     */
+    private class GroupListView extends ListView<User> {
 
-		public GroupListView(String id, List<? extends User> list) {
-			super(id, list);
-		}
+        private static final long serialVersionUID = 1L;
 
-		public GroupListView(String id, IModel<? extends List<? extends User>> model) {
-			super(id, model);
-		}
+        /**
+         * create new instance.
+         * @param id
+         * @param list
+         */
+        public GroupListView(String id, List<? extends User> list) {
+            super(id, list);
+        }
 
-		public GroupListView(String id) {
-			super(id);
-		}
+        /**
+         * create new instance.
+         * @param id
+         * @param model
+         */
+        public GroupListView(String id, IModel<? extends List<? extends User>> model) {
+            super(id, model);
+        }
 
-		@Override
-		protected void populateItem(ListItem<User> item) {
-			User user = item.getModelObject();
+        /**
+         * create new instance.
+         * @param id
+         */
+        public GroupListView(String id) {
+            super(id);
+        }
+
+        @Override
+        protected void populateItem(ListItem<User> item) {
+            User user = item.getModelObject();
 //			item.setDefaultModel(new CompoundPropertyModel<User>(user));
-			item.add(getLink("list.item", new CompoundPropertyModel<User>(user)));
-		}
-		
-		protected Link<User> getLink(String id, final IModel<User> model) {
-			return new Link<User>(id, model) {
-				
-				private static final long serialVersionUID = -7932363259153679644L;
-				{
-					add(new Label("nickname", model.getObject().getNickname()));
-					add(new Label("name", model.getObject().getName()));
-				}
-				@Override
-				public void onClick() {
-					onSelectedMember(model.getObject());
-				}
-			};
-		}
-	}
-	
-	protected void onSelectedMember(User user) {
-	    logger.info("submit onSelectedMember");
-	}
+            item.add(getLink("list.item", new CompoundPropertyModel<User>(user)));
+        }
+
+        /**
+         * get user link component.
+         * @param id
+         * @param model
+         * @return
+         */
+        protected Link<User> getLink(String id, final IModel<User> model) {
+            return new Link<User>(id, model) {
+
+                private static final long serialVersionUID = 1L;
+                
+                /**
+                 * initialize components.
+                 */
+                @Override
+                protected void onInitialize() {
+                    super.onInitialize();
+                    add(new Label("nickname", model.getObject().getNickname()));
+                    add(new Label("name", model.getObject().getName()));
+                }
+
+                /**
+                 * click member name.
+                 */
+                @Override
+                public void onClick() {
+                    onSelectedMember(model.getObject());
+                }
+            };
+        }
+    }
+
+    /**
+     * event of select member.
+     * @param user
+     */
+    protected void onSelectedMember(User user) {
+        logger.info("submit onSelectedMember");
+    }
 }

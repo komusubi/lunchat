@@ -49,10 +49,10 @@ public class Basket implements Iterable<Order>, Serializable {
 	private static final Logger logger = LoggerFactory.getLogger(Basket.class);
 	private User user;
 	private List<Order> orders;
-	@Inject	private OrderDao orderDao;
-	@Inject	private ProductDao productDao;
-	@Inject	private ShopDao shopDao;
-	@Inject @Named("date") private Resolver<Date> dateResolver; 
+	@Inject	private transient OrderDao orderDao;
+	@Inject	private transient ProductDao productDao;
+	@Inject	private transient ShopDao shopDao;
+	@Inject @Named("date") private transient Resolver<Date> dateResolver; 
 	
 	public Basket() {
 		this(null);

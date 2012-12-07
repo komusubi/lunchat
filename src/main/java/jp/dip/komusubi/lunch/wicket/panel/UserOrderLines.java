@@ -20,7 +20,6 @@ package jp.dip.komusubi.lunch.wicket.panel;
 
 import java.util.List;
 
-import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.Order;
 import jp.dip.komusubi.lunch.model.Receipt;
 import jp.dip.komusubi.lunch.model.User;
@@ -32,6 +31,8 @@ import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
 /**
  * @author jun.ozeki
  * @since 2012/04/22
@@ -40,7 +41,8 @@ public class UserOrderLines extends OrderLines {
 
     private static final long serialVersionUID = 1827987171914310539L;
     private static final Logger logger = LoggerFactory.getLogger(UserOrderLines.class);
-        
+    @Inject private AccountService account;
+    
     public UserOrderLines(String id, IModel<Order> model) {
         super(id, model);
         add(getEatLink("eat"));
@@ -56,7 +58,6 @@ public class UserOrderLines extends OrderLines {
           
             @Override
             public void onConfigure() {
-                AccountService account = Configuration.getInstance(AccountService.class);
                 boolean visible = true;
                 List<Order> orders = account.getOrderHistory(WicketSession.get().getSignedInUser());
                 for (Order order: orders) {
@@ -88,8 +89,6 @@ public class UserOrderLines extends OrderLines {
         };
     }
     
-//    @Inject @Named("date") private Resolver<Date> resolver = Configuration.getInstance(Resolver.class);
-    
     protected Link<Void> getCancelLink(String id) {
         return new Link<Void>(id) {
 
@@ -105,7 +104,6 @@ public class UserOrderLines extends OrderLines {
             protected void onConfigure() {
                 // TODO did not order of group and receiving not yet
                 boolean visible = false;
-                AccountService account = Configuration.getInstance(AccountService.class);
                 Order order = (Order) getDefaultModel();
                 if (order == null)
                     return;

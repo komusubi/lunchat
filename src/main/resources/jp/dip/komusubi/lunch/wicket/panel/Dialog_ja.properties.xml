@@ -4,4 +4,5 @@
 <comment>Dialog panel Properties</comment>
 <entry key="double.submit">既に処理は実行されています。</entry>
 <entry key="order.to">${name} を注文します。</entry>
+<entry key="dialog.message">ご確認ください。from dialog properties</entry>
 </properties>

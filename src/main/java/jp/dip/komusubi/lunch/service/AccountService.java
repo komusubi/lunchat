@@ -472,6 +472,11 @@ public class AccountService implements Serializable {
 	    return receipts.size() > 0 ? true : false;
 	}
 	
+	public List<Order> getUserOrderHistory(String nickname) {
+	    User user = userDao.findByNickname(nickname);
+	    return getOrderHistory(user);
+	}
+	
 	public List<Order> getOrderHistory(User user) {
 	    return getOrderHistory(user, dateResolver.resolve());
 	}
@@ -479,6 +484,19 @@ public class AccountService implements Serializable {
 	public List<Order> getOrderHistory(User user, Date date) {
 		List<Order> orders = orderDao.findByUserAndDate(user.getId(), date);
 		return orders;
+	}
+	
+	public List<Order> getGroupOrderHistory(String groupId) {
+	    Group group = groupDao.find(new Integer(groupId));
+	    return getOrderHistory(group);
+	}
+	
+	public List<Order> getOrderHistory(Group group) {
+	    return getOrderHistroy(group, dateResolver.resolve());
+	}
+	
+	public List<Order> getOrderHistroy(Group group, Date date) {
+	    return orderDao.findByGroupIdAndDate(group.getId(), date, true);
 	}
 	
 	public List<Receipt> getReceiptHistory(User user) {

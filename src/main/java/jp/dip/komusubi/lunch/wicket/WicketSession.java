@@ -64,6 +64,9 @@ public class WicketSession extends AuthenticatedWebSession {
         AccountService accountService = Configuration.getInstance(AccountService.class);
         if (accountService.signIn(email, password)) {
             loggedInUser = accountService.find(email);
+            // when user has basket already, set user to basket.
+            if (this.basket != null)
+                basket.setUser(loggedInUser);
             return true;
         } else {
             return false;
@@ -101,8 +104,9 @@ public class WicketSession extends AuthenticatedWebSession {
     }
     
     public Basket getBasket() {
-        if (this.basket == null)
+        if (this.basket == null) {
             this.basket = Configuration.getInstance(Basket.class);
+        }
         return this.basket;
     }
 }

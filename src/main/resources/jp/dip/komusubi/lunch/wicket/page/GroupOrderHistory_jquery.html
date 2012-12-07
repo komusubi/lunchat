@@ -8,21 +8,27 @@
   <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
   <script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
 </wicket:remove>
-<title><wicket:message key="page.title">メンバー選択</wicket:message></title>
 </head>
 <body>
   <div data-role="page" data-theme="a">
+    <wicket:remove>
     <div data-role="header">
-      <h1><wicket:message key="panel.title">メンバー選択</wicket:message></h1>
+      <a href="#" data-role="button">ログアウト</a>
+      <a href="#" data-role="button" data-icon="home"></a>
+      <h1>header</h1>
     </div>
-    <wicket:extend>
-    <div data-role="content">
-      <div wicket:id="member.list">member list</div>
+    </wicket:remove>
+    <div wicket:id="header">
     </div>
-    </wicket:extend>
+    <div data-role="contents">
+      <span wicket:id="group.order.history"></span>
+    </div>
+    <span wicket:id="footer"></span>
+    <wicket:remove>
     <div data-role="footer">
-      <h1>lunchat</h1> 
+      <h1>lunchat</h1>
     </div>
+    </wicket:remove>
   </div>
 </body>
 </html>

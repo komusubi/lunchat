@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<meta charset="utf-8">
+<wicket:remove>
+  <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
+  <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+</wicket:remove>
+</head>
+<body>
+  <div data-role="page" data-theme="a">
+    <div data-role="header">
+      <h1>注文を受け付けました</h1>
+    </div>
+    <div data-role="content">
+      <wicket:panel>
+        <h2>注文明細</h2>
+        <ul data-role="listview" data-inset="true">
+          <wicket:container wicket:id="order.by.shop"></wicket:container>
+          <wicket:remove>
+          <li class="line" data-role="list-divider"><span>たまご屋</span></li>
+          <li><span>商品名</span><span class="ui-li-aside">2個</span><span class="ui-li-aside">860円</span></li>
+          <li><span>合計</span><span class="ui-li-aside">個数</span><span class="ui-li-aside">金額</span></li>
+          <li><a href="#">店舗に注文する</a></li>
+          </wicket:remove>
+        </ul>
+        <a href="#" data-role="button" wicket:id="order" data-theme="b">店舗に注文</a>
+        <label wicket:id="notice">店舗に注文完了しました。</label>
+      </wicket:panel>
+    </div>
+    <div data-role="footer">
+      <h1>komusubi</h1>
+    </div>
+  </div>
+          <wicket:fragment wicket:id="orderline.fragment">
+            <li data-role="list-divider"><span wicket:id="shop.name">店舗名</span></li>
+            <li wicket:id="products"><span wicket:id="name">商品名</span>
+                <span class="ui-li-aside" wicket:id="quantity">2個</span>
+                <span class="ui-li-aside" wicket:id="amount">金額</span></li>
+            <li><span>合計</span><span class="ui-li-aside" wicket:id="total.quantity">個数</span>
+                <span class="ui-li-aside" wicket:id="total.amount">合計金額</span></li>
+            <li><a href="#" data-role="button" wicket:id="order.shop">店舗に注文します</a></li>
+          </wicket:fragment>
+</body>
+</html>

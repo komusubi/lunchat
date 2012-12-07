@@ -24,8 +24,8 @@ import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
-import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.component.ApplicationFrame;
+import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.page.account.Registry;
 import jp.dip.komusubi.lunch.wicket.panel.EmailEntry;
 import jp.dip.komusubi.lunch.wicket.panel.SignIn;
@@ -99,7 +99,7 @@ public class Login extends ApplicationFrame {
      */
     protected EmailEntry getEmailEntry(String id) {
         return new EmailEntry(id) {
-            private static final long serialVersionUID = 3560368059107652338L;
+            private static final long serialVersionUID = 1L;
 
             @Override
             protected void onRegister() {
@@ -108,7 +108,8 @@ public class Login extends ApplicationFrame {
                     String targetPath = getRequestCycle().urlFor(Registry.class, null).toString();
                     String ownUrl = getRequestCycle().getUrlRenderer().renderFullUrl(getRequest().getClientUrl());
                     String url = RequestUtils.toAbsolutePath(ownUrl, targetPath);
-
+                    logger.info("user register url: {}", url);
+                    
                     // already exist email ?
                     AccountService account = Configuration.getInstance(AccountService.class);
                     if (account.findByEmail(getUser().getEmail()) != null) {

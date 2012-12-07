@@ -184,8 +184,12 @@ public class Home extends ApplicationFrame {
      */
     protected GroupRegistry getGroupRegistry(String id) {
         return new GroupRegistry(id) {
-            private static final long serialVersionUID = -3291096546275717623L;
+            
+            private static final long serialVersionUID = 1L;
 
+            /**
+             * configure components.
+             */
             @Override
             protected void onConfigure() {
                 boolean visible = false;
@@ -195,6 +199,9 @@ public class Home extends ApplicationFrame {
                 setVisibilityAllowed(visible);
             }
 
+            /**
+             * event of group registry.
+             */
             @Override
             protected void onRegister() {
                 setResponsePage(WicketApplication.get().getHomePage());
@@ -210,8 +217,11 @@ public class Home extends ApplicationFrame {
     protected GroupList getGroupList(String id) {
         return new GroupList(id) {
 
-            private static final long serialVersionUID = 5252671274395709375L;
+            private static final long serialVersionUID = 1L;
 
+            /**
+             * configure components.
+             */
             @Override
             protected void onConfigure() {
                 boolean visible = false;
@@ -221,6 +231,9 @@ public class Home extends ApplicationFrame {
                 setVisibilityAllowed(visible);
             }
 
+            /**
+             * event of select group.
+             */
             @Override
             protected void onSelectedGroup(Group group) {
                 setResponsePage(new Member(group));

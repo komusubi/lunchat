@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 /**
  * header panel.
  * @author jun.ozeki
+ * @deprecated not use. delete in future.
  */
 public class Header extends Panel {
 

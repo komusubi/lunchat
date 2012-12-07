@@ -20,37 +20,46 @@ package jp.dip.komusubi.lunch.wicket.page;
 
 import java.util.Date;
 
-import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.Order;
-import jp.dip.komusubi.lunch.service.Shopping;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
+import jp.dip.komusubi.lunch.wicket.component.AuthorizedFrame;
 import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.panel.OrderLines;
+import jp.dip.komusubi.lunch.wicket.panel.UserOrderLines;
 
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OrderComplete extends AuthorizedPage {
+/**
+ * order complete.
+ * @author jun.ozeki
+ */
+public class OrderComplete extends AuthorizedFrame {
     private static final Logger logger = LoggerFactory.getLogger(OrderComplete.class);
 	private static final long serialVersionUID = -6096514197924442740L;
     private FormKey key;
 
-    public OrderComplete() {
-        // FIXME default constructor for direct url access.
-        logger.error("error!! direct access OrderComplete Page.");
-    }
-    
+    /**
+     * create new instance.
+     * @param model
+     */
     public OrderComplete(IModel<Order> model) {
 	    add(getOrderLines("order.lines", model));
 	}
-
+    
+    /**
+     * initialize components.
+     */
     @Override
 	protected void onInitialize() {
 	    super.onInitialize();
         this.key = new FormKey(getPageId(), getId(), new Date());
 	}
-	
+    
+	/**
+	 * configure components.
+	 */
 	@Override
 	protected void onConfigure() {
 	    super.onConfigure();
@@ -58,15 +67,17 @@ public class OrderComplete extends AuthorizedPage {
 	}
 	
 	/**
-	 * @param string
-	 * @param model
+	 * @param id  wicket id.
+	 * @param model Order. 
 	 * @return
 	 */
 	protected OrderLines getOrderLines(String id, IModel<Order> model) {
-	    return new OrderLines(id, model) {
+	    return new UserOrderLines(id, model);
+	    /*
+	    return new UserOrderLines(id, model) {
 	        private static final long serialVersionUID = 7930054187191919478L;
 
-//            @Override
+            @Override
 	        protected void onEat() {
                 if (WicketSession.get().removeFormKey(key)) {
                     logger.info("いただきまーす");
@@ -75,7 +86,7 @@ public class OrderComplete extends AuthorizedPage {
                 }
 	        }
 
-//	        @Override
+	        @Override
 	        protected void onFinish() {
 	            if (WicketSession.get().removeFormKey(key)) {
 	                logger.info("ごちそうさま");
@@ -97,6 +108,7 @@ public class OrderComplete extends AuthorizedPage {
 	            }
 	        }
 	    };
+	     */
 	}
 	
 	

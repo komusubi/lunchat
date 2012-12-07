@@ -16,8 +16,8 @@
  */
 package jp.dip.komusubi.lunch.wicket;
 
+import jp.dip.komusubi.lunch.wicket.component.AuthorizedFrame;
 import jp.dip.komusubi.lunch.wicket.page.Attendance;
-import jp.dip.komusubi.lunch.wicket.page.AuthorizedPage;
 import jp.dip.komusubi.lunch.wicket.page.Grouping;
 import jp.dip.komusubi.lunch.wicket.page.Home;
 import jp.dip.komusubi.lunch.wicket.page.Login;
@@ -79,7 +79,7 @@ public class WicketApplication extends AuthenticatedWebApplication {
         // security
         getSecuritySettings().setEnforceMounts(true);
         getSecuritySettings().setAuthorizationStrategy(
-                new SimplePageAuthorizationStrategy(AuthorizedPage.class, Login.class) {
+                new SimplePageAuthorizationStrategy(AuthorizedFrame.class, Login.class) {
 
                     @Override
                     protected boolean isAuthorized() {

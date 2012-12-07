@@ -27,8 +27,14 @@ import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.apache.wicket.validation.validator.PatternValidator;
 import org.apache.wicket.validation.validator.StringValidator;
 
+/**
+ * 
+ * @author jun.ozeki
+ */
 public class SpecificBehavior {
 
+    // FIXME move package to wicket.component
+    
 	/**
 	 * ID field behavior.
 	 * @param text

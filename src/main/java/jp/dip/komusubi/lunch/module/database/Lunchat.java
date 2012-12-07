@@ -505,6 +505,7 @@ public class Lunchat extends DBDatabase {
 
         Lunchat lunchat = new Lunchat();
         lunchat.configure(args[0], args[1], args[2]);
+        System.out.printf("finish initialize database");
     }
 
     private void configure(String database, String user, String password) {
