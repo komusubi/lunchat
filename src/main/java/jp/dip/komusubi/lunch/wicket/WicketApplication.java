@@ -16,6 +16,8 @@
  */
 package jp.dip.komusubi.lunch.wicket;
 
+import javax.servlet.http.HttpServletRequest;
+
 import jp.dip.komusubi.lunch.wicket.component.AuthorizedFrame;
 import jp.dip.komusubi.lunch.wicket.page.Attendance;
 import jp.dip.komusubi.lunch.wicket.page.Grouping;
@@ -39,6 +41,8 @@ import org.apache.wicket.guice.GuiceComponentInjector;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.servlet.XForwardedRequestWrapper;
+import org.apache.wicket.request.http.WebRequest;
 
 import com.google.inject.Injector;
 
@@ -49,6 +53,7 @@ import com.google.inject.Injector;
  * @see jp.dip.komusubi.lunch.Start#main(String[])
  */
 public class WicketApplication extends AuthenticatedWebApplication {
+
 
     /**
      * 
@@ -136,14 +141,27 @@ public class WicketApplication extends AuthenticatedWebApplication {
         mountPage("/error/expired", ExpiredError.class);
     }
 
+    /**
+     * get this wicket application session class.
+     */
     @Override
     protected Class<? extends AbstractAuthenticatedWebSession> getWebSessionClass() {
         return WicketSession.class;
     }
 
+    /**
+     * get sign in page class.
+     */
     @Override
     public Class<? extends WebPage> getSignInPageClass() {
         return Login.class;
     }
 
+//    it might use this method in behind https reverse proxy  
+//    @Override
+//    protected WebRequest newWebRequest(HttpServletRequest servletRequest, String filterPath) {
+//        XForwardedRequestWrapper xForwardedRequestWrapper = new XForwardedRequestWrapper(servletRequest);
+//        return super.newWebRequest(xForwardedRequestWrapper, filterPath);
+//    }
+    
 }
