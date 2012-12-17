@@ -22,14 +22,11 @@ import jp.dip.komusubi.lunch.wicket.WicketApplication;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.page.account.Setting;
 
-import org.apache.log4j.MDC;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.protocol.http.request.WebClientInfo;
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.request.Url.StringMode;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +38,6 @@ public class ApplicationFrame extends ApplicationPage {
 
     private static final long serialVersionUID = 1L;
     private static Logger logger = LoggerFactory.getLogger(ApplicationFrame.class);
-    private WebClientInfo clientInfo = WicketSession.get().getClientInfo();
 
     /**
      * custom link component.
@@ -76,15 +72,23 @@ public class ApplicationFrame extends ApplicationPage {
      * create new instance.
      */
     public ApplicationFrame() {
-        ServletWebRequest request = (ServletWebRequest) getRequestCycle().getRequest();
-//		MDC.put("ipaddr", clientInfo.getProperties().getRemoteAddress());
-        MDC.put("ipaddr", request.getContainerRequest().getRemoteAddr());
-        MDC.put("sessionId", request.getContainerRequest().getSession().getId());
-        logger.info("[start] lunchat {}", request.getClientUrl().toString(StringMode.FULL));
-        if (logger.isDebugEnabled()) {
-            logger.debug("user agent is {} ", clientInfo.getUserAgent());
-        }
+   }
+     
+    /**
+     * create new instance.
+     * @param model
+     */
+    public ApplicationFrame(IModel<?> model) {
+        super(model);
     }
+
+    /**
+     * create new instance.
+     * @param parameters
+     */
+    public ApplicationFrame(PageParameters parameters) {
+        super(parameters);
+    }   
     
     /**
      * initialize componeents.
@@ -97,7 +101,7 @@ public class ApplicationFrame extends ApplicationPage {
         add(newSignInLink("signIn"));
         add(newSignOutLink("signOut"));
     }
-    
+
     /**
      * create home link.
      * @param id

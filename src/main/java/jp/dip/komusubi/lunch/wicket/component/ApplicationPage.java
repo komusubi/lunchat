@@ -22,9 +22,17 @@ import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.Configuration.RuntimeMode;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 
+import org.apache.log4j.MDC;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.RequestUtils;
+import org.apache.wicket.protocol.http.request.WebClientInfo;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.request.Url.StringMode;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jun.ozeki
@@ -32,6 +40,7 @@ import org.apache.wicket.protocol.http.RequestUtils;
 public class ApplicationPage extends WebPage {
 
     private static final long serialVersionUID = 1L;
+    private static final Logger logger = LoggerFactory.getLogger(ApplicationPage.class);
     /** google analysis javascript snippet */
     private static final String analytics = "var _gaq = _gaq || [];"
             + "_gaq.push(['_setAccount', 'UA-26541332-2']);"
@@ -49,10 +58,44 @@ public class ApplicationPage extends WebPage {
      * create new instance.
      */
     public ApplicationPage() {
-
+       
     }
 
     /**
+     * create new instance
+     * @param model
+     */
+    public ApplicationPage(IModel<?> model) {
+        super(model);
+    }
+    
+    /**
+     * create new instance.
+     * @param parameters
+     */
+    public ApplicationPage(PageParameters parameters) {
+        super(parameters);
+    }
+    
+    /**
+     * initialize components.
+     * @see org.apache.wicket.Component#onInitialize()
+     */
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        WebClientInfo clientInfo = WicketSession.get().getClientInfo();
+        ServletWebRequest request = (ServletWebRequest) getRequestCycle().getRequest();
+//		MDC.put("ipaddr", clientInfo.getProperties().getRemoteAddress());
+        MDC.put("ipaddr", request.getContainerRequest().getRemoteAddr());
+        MDC.put("sessionId", request.getContainerRequest().getSession().getId());
+        logger.info("[start] lunchat {}", request.getClientUrl().toString(StringMode.FULL));
+        if (logger.isDebugEnabled()) {
+            logger.debug("user agent is {} ", clientInfo.getUserAgent());
+        }
+    }
+    
+     /**
      * 
      * @return
      */

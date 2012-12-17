@@ -18,6 +18,9 @@
  */
 package jp.dip.komusubi.lunch.wicket.component;
 
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
 import jp.dip.komusubi.lunch.wicket.WicketApplication;
 
 /**
@@ -28,6 +31,29 @@ import jp.dip.komusubi.lunch.wicket.WicketApplication;
  */
 public class AuthorizedFrame extends ApplicationFrame {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
+    /**
+     * create new instance.
+     */
+    public AuthorizedFrame() {
+        super();
+    }
+
+    /**
+     * create new instance.
+     * @param model
+     */
+    public AuthorizedFrame(IModel<?> model) {
+        super(model);
+    }
+
+    /**
+     * create new instance.
+     * @param parameters
+     */
+    public AuthorizedFrame(PageParameters parameters) {
+        super(parameters);
+    }
+    
 }
