@@ -35,7 +35,7 @@ public class DevelopmentFilter extends ReloadingWicketFilter {
 
     static {
         ReloadingClassLoader.includePattern("jp.dip.komusubi.lunch.wicket.panel.*");
-//        ReloadingClassLoader.includePattern("jp.dip.komusubi.lunch.wicket.page.*");
+        ReloadingClassLoader.includePattern("jp.dip.komusubi.lunch.wicket.page.*");
         ReloadingClassLoader.includePattern("jp.dip.komusubi.lunch.wicket.page.settings.*");
         logger.info("wicket reloading mode on ! :{}", DevelopmentFilter.class);
     }

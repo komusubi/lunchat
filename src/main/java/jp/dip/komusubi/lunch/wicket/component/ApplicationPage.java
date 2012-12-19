@@ -23,7 +23,9 @@ import jp.dip.komusubi.lunch.Configuration.RuntimeMode;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 
 import org.apache.log4j.MDC;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.RequestUtils;
@@ -123,17 +125,13 @@ public class ApplicationPage extends WebPage {
     @Override
     public void renderHead(IHeaderResponse response) {
         if (isJquery()) {
-            response.renderCSSReference("http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css");
-            response.renderJavaScriptReference("http://code.jquery.com/jquery-1.8.2.min.js");
-            response.renderJavaScript(disabledAjax, null);
-            response.renderJavaScriptReference("http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js");
-//            response.render(CssHeaderItem.forUrl("http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css"));
-//            response.render(JavaScriptHeaderItem.forUrl("http://code.jquery.com/jquery-1.8.2.min.js"));
-//            response.render(JavaScriptHeaderItem.forScript(disabledAjax, null));
-//            response.render(JavaScriptHeaderItem.forUrl("http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"));
+            response.render(CssHeaderItem.forUrl("http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css"));
+            response.render(JavaScriptHeaderItem.forUrl("http://code.jquery.com/jquery-1.8.2.min.js"));
+            response.render(JavaScriptHeaderItem.forScript(disabledAjax, null));
+            response.render(JavaScriptHeaderItem.forUrl("http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"));
         }
         if (RuntimeMode.DEPLOYMENT.equals(Configuration.mode()))
-            response.renderJavaScript(analytics, null);
+            response.render(JavaScriptHeaderItem.forScript(analytics, null));
     }
     
     /**

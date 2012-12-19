@@ -59,6 +59,10 @@ import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 
+/**
+ * ChoiceLunch class unit test.
+ * @author jun.ozeki
+ */
 public class ChoiceLunchTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ChoiceLunchTest.class);
@@ -198,7 +202,7 @@ public class ChoiceLunchTest {
 		orderCalendar.setTime(DateUtils.parseDate("2012/01/10 9:40", parseFormats));
 				
 		WicketTester tester = wicketResource.getTester(true);
-		tester.startPanel(ChoiceLunchForTest.class);
+		tester.startComponentInPage(ChoiceLunchForTest.class);
 		tester.assertComponent("choice", Choice.class);
 		ListView<Object> listView = (ListView<Object>) tester.getComponentFromLastRenderedPage("choice:shop.list");
 		
@@ -233,7 +237,7 @@ public class ChoiceLunchTest {
 		orderCalendar.setTime(DateUtils.parseDate("2012/01/10 9:30", parseFormats));
 		
 		WicketTester tester = wicketResource.getTester(true);
-		tester.startPanel(ChoiceLunchForTest.class);
+		tester.startComponentInPage(ChoiceLunchForTest.class);
 		tester.assertComponent("choice", Choice.class);
 		ListView<Object> listView = (ListView<Object>) tester.getComponentFromLastRenderedPage("choice:shop.list");
 		

@@ -46,7 +46,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.AbstractValidator;
 import org.apache.wicket.validation.validator.PatternValidator;
-import org.apache.wicket.validation.validator.StringValidator;
+import org.apache.wicket.validation.validator.RangeValidator;
 import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,10 +139,10 @@ public abstract class GroupRegistry extends Panel {
         private TextField<String> getCodeField(String id) {
             TextField<String> text = new TextField<String>(id);
             text.setRequired(true)
-                    .add(new StringValidator.LengthBetweenValidator(2, 128))
-                    .add(new PatternValidator(Pattern.compile("[a-zA-Z0-9\\.']+")))
-                    .add(specificWordValidator())
-                    .add(existsGroupValidator());
+                .add(new PatternValidator(Pattern.compile("[a-zA-Z0-9\\.']+")))
+                .add(RangeValidator.range(2, 128))
+                .add(specificWordValidator())
+                .add(existsGroupValidator());
             return text;
         }
 
@@ -154,7 +154,7 @@ public abstract class GroupRegistry extends Panel {
         private TextField<String> getNameField(String id) {
             TextField<String> text = new TextField<String>(id);
             text.setRequired(true)
-                .add(new StringValidator.LengthBetweenValidator(2, 128));
+                .add(RangeValidator.range(2, 128));
             return text;
         }
 
