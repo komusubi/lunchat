@@ -52,7 +52,7 @@ public class JdbcOrderLineDao implements OrderLineDao {
             + "( " + COLUMNS + " ) values ( ?, ?, ?, ?, ?, ?, ? )";
     private static final String SELECT_QUERY_BY_ORDERID = "select " + COLUMNS + " from orderLines where orderId = ?";
     private static final String UPDATE_QUERY_RECORD = "update " + TABLE_NAME
-            + " set quantity = ?, amount = ? datetime = ? cancel = ? " + "where orderId = ? and no = ?";
+            + " set productId = ?, quantity = ?, amount = ?, datetime = ?, cancel = ? where orderId = ? and no = ?";
     private SimpleJdbcTemplate template;
 //    private NamedParameterJdbcTemplate template;
     @Inject private ProductDao productDao;
@@ -144,13 +144,13 @@ public class JdbcOrderLineDao implements OrderLineDao {
     @Override
     public void update(OrderLine instance) {
         try {
-            template.update(UPDATE_QUERY_RECORD, instance.getPrimaryKey().getOrderId(), 
-                                                 instance.getPrimaryKey().getNo(), 
-                                                 instance.getProduct().getId(), 
+            template.update(UPDATE_QUERY_RECORD, instance.getProduct().getId(), 
                                                  instance.getQuantity(), 
                                                  instance.getAmount(), 
                                                  instance.getDatetime(), 
-                                                 instance.isCancel());
+                                                 instance.isCancel(),
+                                                 instance.getPrimaryKey().getOrderId(), 
+                                                 instance.getPrimaryKey().getNo());
         } catch (DataAccessException e) {
             throw new LunchException(e);
         }
@@ -164,8 +164,8 @@ public class JdbcOrderLineDao implements OrderLineDao {
         @Override
         public OrderLine mapRow(ResultSet rs, int rowNum) throws SQLException {
             OrderLineKey primaryKey = new OrderLineKey(
-                                            rs.getInt("no"),
-                                            rs.getInt("orderId"));
+                                            rs.getInt("orderId"),
+                                            rs.getInt("no"));
             
             OrderLine orderLine = new OrderLine(primaryKey)
                                         .setProduct(productDao.find(rs.getString("productId"))) 

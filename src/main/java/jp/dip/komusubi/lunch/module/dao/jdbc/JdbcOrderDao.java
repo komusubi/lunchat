@@ -105,9 +105,14 @@ public class JdbcOrderDao implements OrderDao {
 		throw new UnsupportedOperationException("#remove not supported");		
 	}
 
+	/**
+	 * update order.
+	 */
 	public void update(Order instance) {
 	    MapSqlParameterSource sqlParameter = buildSqlParameterSource(instance);
-	    
+	    for (OrderLine orderLine: instance) {
+    	    orderLineDao.update(orderLine);
+        }
 	    int affect = template.update(UPDATE_QUERY, sqlParameter);
 	    logger.info("JdbcOrderDao#update affect:{}", affect);
 	}
