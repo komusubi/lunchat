@@ -44,7 +44,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 public class JdbcOrderLineDao implements OrderLineDao {
 
     private static final Logger logger = LoggerFactory.getLogger(JdbcOrderLineDao.class);
-    private static final String TABLE_NAME = "orerLines";
+    private static final String TABLE_NAME = "orderLines";
     private static final String COLUMNS = "orderId, no, productId, quantity, amount, datetime, cancel";
     private static final String SELECT_QUERY_RECORD = "select " + COLUMNS
             + " from orderLines where orderId = ? and userId = ? and productId = ?";

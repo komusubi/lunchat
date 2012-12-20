@@ -173,7 +173,7 @@ public class JdbcProductDao implements ProductDao {
     public List<Product> findByShopIdAndFinishDate(String shopId, Date finishDate) {
         List<Product> list = template.query(SELECT_RECORDS_SHOPID_FINISH_DATE, productRowMapper, 
                                     shopId, JdbcDateConverter.toSqlDate(finishDate));
-        logger.info("shopId:{}, finishDay:{}, count:{}", new Object[] { shopId, finishDate, list.size() });
+        logger.info("shopId:{}, finishDay:{}, count:{}", shopId, finishDate, list.size());
         return list;
     }
 
@@ -186,7 +186,7 @@ public class JdbcProductDao implements ProductDao {
                                 productRowMapper, shopId,
                                 JdbcDateConverter.toSqlDate(finishDate), 
                                 JdbcDateConverter.toTimestamp(finishDate));
-        logger.info("shopId:{}, finishDate:{}, count:{}", new Object[] { shopId, finishDate, list.size() });
+        logger.info("shopId:{}, finishDate:{}, count:{}", shopId, finishDate, list.size());
         return list;
     }
 	
