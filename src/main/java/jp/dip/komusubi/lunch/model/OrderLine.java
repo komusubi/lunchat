@@ -132,8 +132,9 @@ public class OrderLine implements Serializable {
 		return this;
 	}
 
-	public void setOrderLineKey(OrderLineKey primaryKey) {
+	public OrderLine setOrderLineKey(OrderLineKey primaryKey) {
         this.primaryKey = primaryKey;
+        return this;
     }
 
 	public OrderLine setProduct(Product product) {
