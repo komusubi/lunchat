@@ -43,91 +43,137 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
  */
 public class JdbcOrderLineDao implements OrderLineDao {
 
-	private static final Logger logger = LoggerFactory.getLogger(JdbcOrderLineDao.class);
-	private static final String COLUMNS = "orderId, no, productId, quantity, amount, datetime, cancel";
-	private static final String SELECT_QUERY_RECORD = "select " + COLUMNS
-			+ " from orderLines where orderId = ? and userId = ? and productId = ?";
-	private static final String INSERT_QUERY_RECORD = "insert into orderLines ( " + COLUMNS + " ) values ( ?, ?, ?, ?, ?, ?, ? )";
-	private static final String SELECT_QUERY_BY_ORDERID = "select " + COLUMNS + " from orderLines where orderId = ?";
-	private SimpleJdbcTemplate template;
-	@Inject
-	private ProductDao productDao;
-	
-	@Inject
-	public JdbcOrderLineDao(DataSource dataSource) {
-		template = new SimpleJdbcTemplate(dataSource);
-	}
-	
-	@Override
-	public OrderLine find(OrderLineKey pk) {
-		OrderLine orderLine = null;
-		try {
-			orderLine = template.queryForObject(SELECT_QUERY_RECORD, orderLineRowMapper,
-									pk.getNo(),
-									pk.getOrderId());
-		} catch (EmptyResultDataAccessException e) {
-			logger.info("not found order line: {}", pk);
-		}
-		return orderLine;
-	}
+    private static final Logger logger = LoggerFactory.getLogger(JdbcOrderLineDao.class);
+    private static final String TABLE_NAME = "orerLines";
+    private static final String COLUMNS = "orderId, no, productId, quantity, amount, datetime, cancel";
+    private static final String SELECT_QUERY_RECORD = "select " + COLUMNS
+            + " from orderLines where orderId = ? and userId = ? and productId = ?";
+    private static final String INSERT_QUERY_RECORD = "insert into " + TABLE_NAME
+            + "( " + COLUMNS + " ) values ( ?, ?, ?, ?, ?, ?, ? )";
+    private static final String SELECT_QUERY_BY_ORDERID = "select " + COLUMNS + " from orderLines where orderId = ?";
+    private static final String UPDATE_QUERY_RECORD = "update " + TABLE_NAME
+            + " set quantity = ?, amount = ? datetime = ? cancel = ? " + "where orderId = ? and no = ?";
+    private SimpleJdbcTemplate template;
+//    private NamedParameterJdbcTemplate template;
+    @Inject private ProductDao productDao;
 
-	@Override
-	public List<OrderLine> findAll() {
-		throw new UnsupportedOperationException("findAll");
-	}
+    /**
+     * create new instance.
+     * @param dataSource
+     */
+    @Inject
+    public JdbcOrderLineDao(DataSource dataSource) {
+        template = new SimpleJdbcTemplate(dataSource);
+//        template = new NamedParameterJdbcTemplate(dataSource);
+    }
+    
+    /**
+     * create new instance.
+     * @param dataSource
+     * @param productDao
+     */
+    public JdbcOrderLineDao(DataSource dataSource, ProductDao productDao) {
+        this(dataSource);
+        this.productDao = productDao;
+    }
 
-	@Override
-	public List<OrderLine> findByOrderId(int orderId) {
-		List<OrderLine> orderLines = template.query(SELECT_QUERY_BY_ORDERID, orderLineRowMapper, orderId);
-		logger.info("find order line, orderId[{}]:{}", orderId, orderLines.size());
-		return orderLines;
-	}
-	
-	@Override
-	public OrderLineKey persist(OrderLine instance) {
-		try {
-			template.update(INSERT_QUERY_RECORD, instance.getPrimaryKey().getOrderId(),
-			                                        instance.getPrimaryKey().getNo(),
-													instance.getProduct().getId(),
-													instance.getQuantity(),
-													instance.getAmount(),
-													instance.getDatetime(),
-													instance.isCancel());
+    /**
+     * find by primary key.
+     */
+    @Override
+    public OrderLine find(OrderLineKey pk) {
+        OrderLine orderLine = null;
+        try {
+            orderLine = template.queryForObject(SELECT_QUERY_RECORD, orderLineRowMapper, 
+                                pk.getNo(), 
+                                pk.getOrderId());
+        } catch (EmptyResultDataAccessException e) {
+            logger.info("not found order line: {}", pk);
+        }
+        return orderLine;
+    }
 
-		} catch (DataAccessException e) {
-			throw new LunchException(e);
-		}
-		return instance.getPrimaryKey();
-	}
+    /**
+     * find all.
+     */
+    @Override
+    public List<OrderLine> findAll() {
+        throw new UnsupportedOperationException("findAll");
+    }
 
-	@Override
-	public void remove(OrderLine instance) {
-		throw new UnsupportedOperationException("remove");
-	}
+    /**
+     * find by order id.
+     */
+    @Override
+    public List<OrderLine> findByOrderId(int orderId) {
+        List<OrderLine> orderLines = template.query(SELECT_QUERY_BY_ORDERID, orderLineRowMapper, orderId);
+        logger.info("find order line, orderId[{}]:{}", orderId, orderLines.size());
+        return orderLines;
+    }
 
-	@Override
-	public void update(OrderLine instance) {
-//		throw new UnsupportedOperationException("update");
-	    
-	}
-	
-	private final RowMapper<OrderLine> orderLineRowMapper = new RowMapper<OrderLine>() {
+    /**
+     * persist a order line.
+     */
+    @Override
+    public OrderLineKey persist(OrderLine instance) {
+        try {
+            template.update(INSERT_QUERY_RECORD, instance.getPrimaryKey().getOrderId(),
+                                                 instance.getPrimaryKey().getNo(), 
+                                                 instance.getProduct().getId(), 
+                                                 instance.getQuantity(), 
+                                                 instance.getAmount(), 
+                                                 instance.getDatetime(), 
+                                                 instance.isCancel());
+        } catch (DataAccessException e) {
+            throw new LunchException(e);
+        }
+        return instance.getPrimaryKey();
+    }
 
-		@Override
-		public OrderLine mapRow(ResultSet rs, int rowNum) throws SQLException {
-			OrderLineKey primaryKey = new OrderLineKey(
-											rs.getInt("no"),
-											rs.getInt("orderId"));
-				
-			OrderLine orderLine = new OrderLine(primaryKey)
-										.setProduct(productDao.find(rs.getString("productId")))
-										.setQuantity(rs.getInt("quantity"))
-										.setDatetime(rs.getDate("datetime"))
-										.setCancel(rs.getBoolean("cancel"));
-										
-			return orderLine;
-		}
-		
-	};
+    /**
+     * remove a order line.
+     */
+    @Override
+    public void remove(OrderLine instance) {
+        throw new UnsupportedOperationException("remove");
+    }
+
+    /**
+     * update a order line.
+     */
+    @Override
+    public void update(OrderLine instance) {
+        try {
+            template.update(UPDATE_QUERY_RECORD, instance.getPrimaryKey().getOrderId(), 
+                                                 instance.getPrimaryKey().getNo(), 
+                                                 instance.getProduct().getId(), 
+                                                 instance.getQuantity(), 
+                                                 instance.getAmount(), 
+                                                 instance.getDatetime(), 
+                                                 instance.isCancel());
+        } catch (DataAccessException e) {
+            throw new LunchException(e);
+        }
+    }
+
+    /**
+     * row mapper.
+     */
+    private final RowMapper<OrderLine> orderLineRowMapper = new RowMapper<OrderLine>() {
+
+        @Override
+        public OrderLine mapRow(ResultSet rs, int rowNum) throws SQLException {
+            OrderLineKey primaryKey = new OrderLineKey(
+                                            rs.getInt("no"),
+                                            rs.getInt("orderId"));
+            
+            OrderLine orderLine = new OrderLine(primaryKey)
+                                        .setProduct(productDao.find(rs.getString("productId"))) 
+                                        .setQuantity(rs.getInt("quantity")) 
+                                        .setDatetime(rs.getDate("datetime")) 
+                                        .setCancel(rs.getBoolean("cancel"));
+            return orderLine;
+        }
+    };
 
 }
