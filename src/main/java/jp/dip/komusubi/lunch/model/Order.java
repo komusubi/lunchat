@@ -31,27 +31,40 @@ import java.util.List;
  */
 public class Order implements Serializable, Iterable<OrderLine> {
 
-	private static final long serialVersionUID = -6439746231384675399L;
-	private int id;
-	private Group group;
-	private User user;
-	private Shop shop;
-	private boolean summary;
-	private boolean cancel;
-	private int amount;
+    private static final long serialVersionUID = 1L;
+    private int id;
+    private Group group;
+    private User user;
+    private Shop shop;
+    private boolean summary;
+    private boolean cancel;
+    private int amount;
     private Date datetime;
     // private int geoId;
-	private List<OrderLine> lines;
+    private List<OrderLine> lines;
 
+    /**
+     * create new instance.
+     */
     public Order() {
-		this(0);
-	}
+        this(0);
+    }
 
+    /**
+     * craete new instance.
+     * @param id order id.
+     */
     public Order(int id) {
-		this.id = id;
-		lines = new ArrayList<OrderLine>();
-	}
+        this.id = id;
+        lines = new ArrayList<OrderLine>();
+    }
     
+    /**
+     * append a order line. 
+     * @param orderLine
+     * @param summary true:if order have same product already, to summarize quantity.
+     * @return
+     */
     public Order addLine(OrderLine orderLine, boolean summary) {
         if (!summary) {
             lines.add(orderLine);
@@ -69,170 +82,305 @@ public class Order implements Serializable, Iterable<OrderLine> {
         return this;
     }
     
-	public Order addLine(OrderLine orderLine) {
-		addLine(orderLine, false);
-		return this;
-	}
+    /**
+     * appnd a order line.
+     * @param orderLine
+     * @return
+     */
+    public Order addLine(OrderLine orderLine) {
+        addLine(orderLine, false);
+        return this;
+    }
+
+    /**
+     * append order lines.
+     * @param orderLines
+     * @param summary true:if order have same product already, to summarize quantity.
+     * @return
+     */
+    public Order addLines(Collection<OrderLine> orderLines, boolean summary) {
+        if (!summary) {
+            lines.addAll(orderLines);
+            return this;
+        }
+        for (OrderLine o: orderLines)
+            addLine(o, summary);
+        return this;
+    }
 	
-	public Order addLines(Collection<OrderLine> orderLines, boolean summary) {
-	    if (!summary) {
-	        lines.addAll(orderLines);
-	        return this;
-	    }
-	    for (OrderLine o: orderLines) 
-	        addLine(o, summary);
-	    return this;
-	}
-	
-	public Order addLines(Collection<OrderLine> orderLines) {
-	    addLines(orderLines, false);
-		return this;
-	}
+    /**
+     * append order lines.
+     * @param orderLines
+     * @return
+     */
+    public Order addLines(Collection<OrderLine> orderLines) {
+        addLines(orderLines, false);
+        return this;
+    }
 
-	public void clear() {
-		lines.clear();
-	}
+    /**
+     * clear order lines.
+     */
+    public void clear() {
+        lines.clear();
+    }
 
-	public int getAmount() {
-		// FIXME 注文確定後に商品が値段を変更した場合の対処が必要
-		int amountAll = 0;
-		for (OrderLine o: lines) {
-			amountAll += o.getAmount();
-		}
-		return amountAll;
-	}
+    /**
+     * get amount all order lines.
+     * @return
+     */
+    public int getAmount() {
+        // FIXME 注文確定後に商品が値段を変更した場合の対処が必要
+        int amountAll = 0;
+        for (OrderLine o: lines) {
+            amountAll += o.getAmount();
+        }
+        return amountAll;
+    }
 
-	public Date getDatetime() {
-		return datetime;
-	}
+    /**
+     * get order date.
+     * @return
+     */
+    public Date getDatetime() {
+        return datetime;
+    }
 
-	public Group getGroup() {
+    /**
+     * get group.
+     * @return
+     */
+    public Group getGroup() {
         return group;
     }
 
-	public int getId() {
-		return id;
-	}
-	
-	public OrderLine getOrderLine(int index) {
-		return lines.get(index);
-	}
+    /**
+     * get order id.
+     * @return
+     */
+    public int getId() {
+        return id;
+    }
 
-	public OrderLine getOrderLine(String productId) {
-		OrderLine orderLine = null;
-		if (productId == null || "".equals(productId))
-			return orderLine;
-		for (OrderLine o : lines) {
-			if (o.getProduct() != null && productId.equals(o.getProduct().getId()))
-				orderLine = o;
-		}
-		return orderLine;
-	}
+    /**
+     * get order line by index.
+     * @param index
+     * @return
+     */
+    public OrderLine getOrderLine(int index) {
+        return lines.get(index);
+    }
 
-	public List<OrderLine> getOrderLines() {
-	    return lines;
-	}
+    /**
+     * get a order line by product id
+     * @param productId
+     * @return
+     */
+    public OrderLine getOrderLine(String productId) {
+        OrderLine orderLine = null;
+        if (productId == null || "".equals(productId))
+            return orderLine;
+        for (OrderLine o: lines) {
+            if (o.getProduct() != null && productId.equals(o.getProduct().getId()))
+                orderLine = o;
+        }
+        return orderLine;
+    }
 
-	public List<OrderLine> getOrderLines(boolean canceled) {
-	    List<OrderLine> orderLines = new ArrayList<>();
-	    for (OrderLine o: lines) {
-	        if (canceled) {
-	            if (o.isCancel())
-	                orderLines.add(o);
-	        } else {
-	            if (!o.isCancel())
-	                orderLines.add(o);
-	        }
-	    }
-	    return orderLines;
-	}
-	
-	public Shop getShop() {
-		return shop;
-	}
+    /**
+     * get order lines.
+     * @return
+     */
+    public List<OrderLine> getOrderLines() {
+        return lines;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    /**
+     * get order lines.
+     * @param canceled true: only canceled order lines. false: only available order lines.
+     * @return
+     */
+    public List<OrderLine> getOrderLines(boolean canceled) {
+        List<OrderLine> orderLines = new ArrayList<>();
+        for (OrderLine o: lines) {
+            if (canceled) {
+                if (o.isCancel())
+                    orderLines.add(o);
+            } else {
+                if (!o.isCancel())
+                    orderLines.add(o);
+            }
+        }
+        return orderLines;
+    }
 
-	public boolean isCancel() {
+    /**
+     * get shop.
+     * @return
+     */
+    public Shop getShop() {
+        return shop;
+    }
+
+    /**
+     * get user.
+     * @return
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * state of order.
+     * @return
+     */
+    public boolean isCancel() {
         return cancel;
     }
 
-	public boolean isSummary() {
+    /**
+     * ... unknown ...
+     * @return
+     */
+    public boolean isSummary() {
         return summary;
     }
 
-	@Override
-	public Iterator<OrderLine> iterator() {
-		return lines.iterator();
-	}
+    /**
+     * iterator of order lines.
+     */
+    @Override
+    public Iterator<OrderLine> iterator() {
+        return lines.iterator();
+    }
 
-	public void modify(String productId, int quantity) {
-		if (quantity < 0)
-			throw new IllegalArgumentException("quantity MUST not minus: " + quantity);
-		if (productId == null || "".equals(productId))
-			throw new IllegalArgumentException("productId MUST required.");
-		OrderLine orderLine = getOrderLine(productId);
-		if (orderLine == null)
-			throw new IllegalArgumentException("not found productId: " + productId);
-		if ((orderLine.getQuantity() + quantity) < 1)
-			throw new IllegalArgumentException("quantity can't under zero. current:"
-					+ orderLine.getQuantity() + ", modify to: " + quantity);
-		orderLine.increment(quantity);
-	}
+    /**
+     * 
+     * @param productId
+     * @param quantity
+     */
+    public void modify(String productId, int quantity) {
+        if (quantity < 0)
+            throw new IllegalArgumentException("quantity MUST not minus: " + quantity);
+        if (productId == null || "".equals(productId))
+            throw new IllegalArgumentException("productId MUST required.");
+        OrderLine orderLine = getOrderLine(productId);
+        if (orderLine == null)
+            throw new IllegalArgumentException("not found productId: " + productId);
+        if ((orderLine.getQuantity() + quantity) < 1)
+            throw new IllegalArgumentException("quantity can't under zero. current:" + orderLine.getQuantity()
+                    + ", modify to: " + quantity);
+        orderLine.increment(quantity);
+    }
 
-	public void remove(Product product) {
-		remove(product.getId());
-	}
+    /**
+     * remove order line by product id 
+     * FIXME delete in near future.(when use this method with retrieve from storage, it will lose consistency.)
+     * @param product
+     * @deprecated
+     */
+    @Deprecated
+    public void remove(Product product) {
+        remove(product.getId());
+    }
 
-	public boolean remove(String productId) {
-		boolean result = false;
-		if (productId == null || "".equals(productId))
-			return result;
-		for (OrderLine o : lines) {
-			if (o.getProduct() != null && productId.equals(o.getProduct().getId())) {
-				result = lines.remove(o);
-			}
-		}
-		return result;
-	}
+    /**
+     * remove order line by product id
+     * FIXME delete in near future.(when use this method with retrieve from storage, it will lose consistency.)
+     * @param productId
+     * @return
+     * @deprecated
+     */
+    @Deprecated
+    public boolean remove(String productId) {
+        boolean result = false;
+        if (productId == null || "".equals(productId))
+            return result;
+        for (OrderLine o: lines) {
+            if (o.getProduct() != null && productId.equals(o.getProduct().getId())) {
+                result = lines.remove(o);
+            }
+        }
+        return result;
+    }
 
-	public Order setAmount(int amount) {
-		this.amount = amount;
-		return this;
-	}
+    /**
+     * set amount.
+     * @param amount
+     * @return
+     */
+    public Order setAmount(int amount) {
+        this.amount = amount;
+        return this;
+    }
 
-	public Order setCancel(boolean cancel) {
+    /**
+     * set cancel.
+     * @param cancel
+     * @return
+     */
+    public Order setCancel(boolean cancel) {
+        for (OrderLine orderLine: lines) {
+            orderLine.setCancel(true);
+        }
         this.cancel = cancel;
         return this;
     }
 
-	public Order setDatetime(Date datetime) {
-		this.datetime = datetime;
-		return this;
-	}
+    /**
+     * set date.
+     * @param datetime
+     * @return
+     */
+    public Order setDatetime(Date datetime) {
+        this.datetime = datetime;
+        return this;
+    }
 
-	public Order setGroup(Group group) {
+    /**
+     * set group.
+     * @param group
+     * @return
+     */
+    public Order setGroup(Group group) {
         this.group = group;
         return this;
     }
 
-	public Order setShop(Shop shop) {
-		this.shop = shop;
-		return this;
-	}
-
-	public Order setSummary(boolean summary) {
-        this.summary = summary;
+    /**
+     * set shop.
+     * @param shop
+     * @return
+     */
+    public Order setShop(Shop shop) {
+        this.shop = shop;
         return this;
     }
 
+    /**
+     * ... unknown ...
+     * @param summary
+     * @return
+     */
+    public Order setSummary(boolean summary) {
+        this.summary = summary;
+        return this;
+    }
+    
+    /**
+     * set user.
+     * @param user
+     * @return
+     */
     public Order setUser(User user) {
-		this.user = user;
-		return this;
-	}
+        this.user = user;
+        return this;
+    }
 
+    /**
+     * convert to receipt.
+     * @return
+     */
     public Receipt toReceipt() {
         Receipt receipt = new Receipt()
                             .setAmount(getAmount())
