@@ -39,12 +39,12 @@ import org.apache.empire.db.DBCmdType;
 import org.apache.empire.db.DBColumn;
 import org.apache.empire.db.DBCommand;
 import org.apache.empire.db.DBDatabase;
+import org.apache.empire.db.DBDatabaseDriver;
 import org.apache.empire.db.DBRecord;
 import org.apache.empire.db.DBSQLScript;
 import org.apache.empire.db.DBTable;
 import org.apache.empire.db.DBTableColumn;
 import org.apache.empire.db.exceptions.QueryFailedException;
-import org.apache.empire.db.mysql.DBDatabaseDriverMySQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -472,8 +472,14 @@ public class Lunchat extends DBDatabase {
     public final Payment PAYMENT = new Payment(this);
     public final GeoLocation GEOLOCATION = new GeoLocation(this);
     public final Notices NOTICES = new Notices(this);
-
+    private String driverClassName;
+    private DBDatabaseDriver driver;
+    
+    /**
+     * create new instance.
+     */
     public Lunchat() {
+        this("org.apache.empire.db.mysql.DBDatabaseDriverMySQL");
         // foreign key
         addRelation(HEALTH.userId.referenceOn(USERS.id));
         addRelation(HEALTH.groupId.referenceOn(GROUPS.id));
@@ -495,20 +501,48 @@ public class Lunchat extends DBDatabase {
 //        addRelation(SHIPPING_LINES.shippingId.referenceOn(SHIPPING.id));
     }
 
+    /**
+     * create new instance.
+     * @param driverClassName
+     */
+    public Lunchat(String driverClassName) {
+        this.driverClassName = driverClassName;
+    }
+    
     private static final String FRESH_LUNCH_SHIBAURA = "fresh-shibaura";
     private static final String FRESH_LUNCH_KAWASAKI = "fresh-kawasaki";
     private static final String TAMAGOYA_OOTAKU = "tamagoya";
 
+    /**
+     * main
+     * @param args
+     */
     public static void main(String[] args) {
         if (args.length != 3)
             throw new IllegalArgumentException("less argument! missing databse name and  user and passowrd");
 
         Lunchat lunchat = new Lunchat();
-        lunchat.configure(args[0], args[1], args[2]);
+        lunchat.configureMysql(args[0], args[1], args[2]);
         System.out.printf("finish initialize database");
     }
 
-    private void configure(String database, String user, String password) {
+    /**
+     * 
+     * @param databaseName
+     * @param user
+     * @param password
+     */
+    public void configureMysql(String databaseName, String user, String password) {
+        configure("jdbc:log4jdbc:mysql://localhost:3306/" + databaseName, user, password);
+    }
+    
+    /**
+     * configure database(drop and create tables). 
+     * @param url
+     * @param user
+     * @param password
+     */
+    public void configure(String url, String user, String password) {
         boolean drop = Boolean.getBoolean("DropTable");
         drop = true;
         // table list must below order because foreign key relations.
@@ -521,40 +555,35 @@ public class Lunchat extends DBDatabase {
 
         logger.info(message);
 
-        DBDatabaseDriverMySQL driver = new DBDatabaseDriverMySQL();
         DBSQLScript script = new DBSQLScript();
-        try (Connection con = DriverManager.getConnection(
-                "jdbc:log4jdbc:mysql://localhost:3306/" + database, user, password)) {
+        try (Connection con = DriverManager.getConnection(url, user, password)) {
             con.setAutoCommit(false);
 
-            open(driver, con);
+            if (!isOpen())
+                open(loadDriver(), con);
             if (drop) {
                 for (DBTable table: tableList) {
                     logger.info("table name: {}", table.getName());
                     try {
                         DBCommand command = createCommand();
                         command.select(table.count());
-                        if (querySingleInt(command.getSelect(), -1, con) != -1)
-                            driver.getDDLScript(DBCmdType.DROP, table, script);
-//						if (querySingleInt(command.getSelect(), -1, con) != -1) {
-//							driver.getDDLScript(DBCmdType.DROP, table, script);
-//							script.run(driver, con);
-//							script.clear();
-//						}
+                        if (querySingleInt(command, -1, con) != -1)
+                            loadDriver().getDDLScript(DBCmdType.DROP, table, script);
                     } catch (QueryFailedException e) {
-                        logger.error("query error: ", e);
+                        // logging in empire-db already.
+//                        logger.error("query error: {}", e.getLocalizedMessage());
                     } catch (Exception e) {
                         logger.error("exception: ", e);
                     }
                 }
                 logger.info("script is {}", script.toString());
-                script.run(driver, con);
+                script.run(loadDriver(), con);
             }
 
             // create tables
             script.clear();
-            getCreateDDLScript(driver, script);
-            script.run(driver, con);
+            getCreateDDLScript(loadDriver(), script);
+            script.run(loadDriver(), con);
 
             // init records
             initShopsRecord(getShops(), con);
@@ -566,7 +595,69 @@ public class Lunchat extends DBDatabase {
             throw new LunchException("script: " + script, e);
         }
     }
-
+    
+    
+    /**
+     * exists table
+     * @param tableName
+     * @param con
+     * @return
+     */
+    public boolean existsTable(String tableName, Connection con) {
+        if (!isOpen()) {
+            open(loadDriver(), con);
+        }
+        DBTable table = getTable(tableName);
+        if (table == null)
+            return false;
+        DBCommand command = createCommand();
+        command.select(table.count()); // select count(*) from tableName
+        try {
+            return querySingleInt(command, -1, con) >= 0;
+        } catch (QueryFailedException e) {
+            throw new LunchException(e);
+        }
+    }
+       
+    /**
+     * exists tables in the database.
+     * @param con
+     * @return
+     */
+    public boolean existsTables(Connection con) {
+        for (DBTable table: getTables()) {
+            if (!existsTable(table.getName(), con)) {
+                logger.error("table not found: {}", table.getFullName());
+                return false;
+            }
+        }
+        // exists all tables.
+        return true;
+    }
+    
+    /**
+     * load database driver for empire-db.
+     * @return
+     */
+    protected DBDatabaseDriver loadDriver() {
+        if (this.driver != null)
+            return driver;
+        try {
+            driver = (DBDatabaseDriver) Class.forName(getDriverClassName()).newInstance();
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+            throw new LunchException(e);
+        }
+        return driver;
+    }
+    
+    /**
+     * get driver class name.
+     * @return
+     */
+    private String getDriverClassName() {
+        return driverClassName;
+    }
+    
     private void initShopsRecord(List<Shop> shops, Connection con) {
         for (Shop shop: shops) {
             DBRecord record = new DBRecord();
