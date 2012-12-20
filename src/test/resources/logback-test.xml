@@ -15,7 +15,7 @@
     <!-- 
       <pattern>[%d{yyyy/MM/dd HH:mm:ss:SSS}] %X{ipaddr} %X{sessionId} &lt;%-5level&gt; - %m \(%F:%L\)%n</pattern>
     -->
-      <pattern>%-5p - %-26.26c{1} - %m%n</pattern>
+      <pattern>%-5p - %-26.26c{1} - %m \(%F:%L\)%n</pattern>
     </encoder>
   </appender>
   <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
