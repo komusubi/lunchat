@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Properties;
 
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Product;
@@ -533,7 +534,17 @@ public class Lunchat extends DBDatabase {
      * @param password
      */
     public void configureMysql(String databaseName, String user, String password) {
-        configure("jdbc:log4jdbc:mysql://localhost:3306/" + databaseName, user, password);
+        configure("jdbc:log4jdbc:mysql://localhost:3306/" + databaseName, user, password, "utf8");
+    }
+    
+    /**
+     * 
+     * @param url
+     * @param user
+     * @param password
+     */
+    public void configure(String url, String user, String password) {
+        configure(url, user, password, "utf8");
     }
     
     /**
@@ -542,7 +553,7 @@ public class Lunchat extends DBDatabase {
      * @param user
      * @param password
      */
-    public void configure(String url, String user, String password) {
+    public void configure(String url, String user, String password, String encode) {
         boolean drop = Boolean.getBoolean("DropTable");
         drop = true;
         // table list must below order because foreign key relations.
@@ -555,8 +566,13 @@ public class Lunchat extends DBDatabase {
 
         logger.info(message);
 
+        Properties prop = new Properties();
+        prop.put("user", user);
+        prop.put("password", password);
+        prop.put("characterEncoding", encode);
+        
         DBSQLScript script = new DBSQLScript();
-        try (Connection con = DriverManager.getConnection(url, user, password)) {
+        try (Connection con = DriverManager.getConnection(url, prop)) {
             con.setAutoCommit(false);
 
             if (!isOpen())
