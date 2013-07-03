@@ -1,0 +1,7 @@
+@CHARSET "UTF-8";
+table {
+  width: 100%;
+}
+.numeric {
+  text-align: right;
+}
