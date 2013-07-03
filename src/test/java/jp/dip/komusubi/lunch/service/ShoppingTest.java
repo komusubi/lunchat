@@ -131,5 +131,63 @@ public class ShoppingTest /* extends Shopping */ {
         verify(orderDao, times(1)).persist(order1);
     }
     
+    private Group getGroup() {
+        return new Group()
+                    .setCode("CDE")
+                    .setId(1)
+                    .setName("グループ名")
+                    .setPhoneNumber("03-0000-0000");
+    }
     
+    private Shop getShop() {
+        return new Shop()
+                    .setLastOrder(new Date())
+                    .setName("お弁当屋")
+                    .setPhoneNumber("03-1234-9999")
+                    .setUrl("http://localhost");
+    }
+    
+    private User getUser() {
+        return new User() 
+                    .setEmail("name@email.com")
+                    .setGroup(getGroup())
+                    .setJoined(new Date())
+                    .setName("山田 太郎")
+                    .setNickname("あだ名")
+                    .setPassword("password");
+    }
+    
+    private Product getProduct() {
+        return new Product()
+                    .setAmount(400)
+                    .setFinish(new Date())
+                    .setName("幕の内")
+                    .setRefId("")
+                    .setShop(getShop())
+                    .setStart(new Date());
+    }
+    
+    /**
+     * cancel order line.
+     * @throws Exception
+     */
+    @Test
+    public void cancelOrderLine() throws Exception {
+        Order order = new Order()
+                            .setAmount(360)
+                            .setCancel(false)
+                            .setDatetime(new Date())
+                            .setGroup(getGroup())
+                            .setShop(getShop())
+                            .setUser(getUser());
+        OrderLine orderLine = new OrderLine()
+                                    .setAmount(400)
+                                    .setCancel(false)
+                                    .setDatetime(new Date())
+                                    .setProduct(getProduct())
+                                    .setProduct(getProduct())
+                                    .setQuantity(1);
+        orderDao.persist(order);
+        target.cancel(orderLine);
+    }
 }

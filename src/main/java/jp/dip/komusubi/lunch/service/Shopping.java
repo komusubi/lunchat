@@ -29,6 +29,7 @@ import jp.dip.komusubi.lunch.TransactionException;
 import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.model.Order;
 import jp.dip.komusubi.lunch.model.OrderLine;
+import jp.dip.komusubi.lunch.model.OrderLine.OrderLineKey;
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.model.Shop;
 import jp.dip.komusubi.lunch.model.User;
@@ -226,19 +227,42 @@ public class Shopping implements Serializable {
 		return shopDao.findAll();
 	}
 
-	@Transactional
+    /**
+     * cancel order (include all order lines).
+     * @param order
+     */
+    @Transactional
     public void cancel(Order order) {
-        for (OrderLine line: order) { 
-            cancel(line);
-        }
         order.setCancel(true);
         orderDao.update(order);
     }
     
-	@Transactional
+    /**
+     * cancel a order line.
+     * @param orderLine
+     */
+    @Transactional
     public void cancel(OrderLine orderLine) {
-        orderLine.setCancel(true);
-        orderLineDao.update(orderLine);
+        OrderLineKey key = orderLine.getPrimaryKey();
+        Order order = orderDao.find(key.getOrderId());
+        
+        // check available order lines except for cancel requested.
+        boolean available = false;
+        for (OrderLine line: order.getOrderLines(false)) {
+            if (line.getPrimaryKey().getNo() != orderLine.getPrimaryKey().getNo()) {
+                available = true;
+                continue;
+            }
+        } 
+        
+        // true: cancel just a order line. 
+        // false: cancel order(all order lines)
+        if (available) {
+            order.setCancel(true);
+            orderDao.update(order);
+        } else {
+            cancel(order);
+        }
     }
 	
 }

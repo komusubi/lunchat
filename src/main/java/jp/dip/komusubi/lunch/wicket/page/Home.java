@@ -23,13 +23,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.model.Order;
+import jp.dip.komusubi.lunch.model.OrderLine;
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.Basket;
 import jp.dip.komusubi.lunch.service.AccountService;
+import jp.dip.komusubi.lunch.service.Shopping;
 import jp.dip.komusubi.lunch.wicket.WicketApplication;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.component.ApplicationFrame;
@@ -39,8 +40,9 @@ import jp.dip.komusubi.lunch.wicket.panel.ChoiceLunch;
 import jp.dip.komusubi.lunch.wicket.panel.GroupList;
 import jp.dip.komusubi.lunch.wicket.panel.GroupRegistry;
 import jp.dip.komusubi.lunch.wicket.panel.OrderLines;
-import jp.dip.komusubi.lunch.wicket.panel.UserOrderLines;
+import jp.dip.komusubi.lunch.wicket.panel.UserImpression;
 
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.komusubi.common.util.Resolver;
@@ -62,6 +64,8 @@ public class Home extends ApplicationFrame {
     private User user = WicketSession.get().getSignedInUser();
     @SuppressWarnings("unused") private String username = user == null ? "" : user.getName();
     @Inject @Named("calendar") private Resolver<Calendar> resolver;
+    @Inject private AccountService service;
+    @Inject private Shopping shopping;
     private FormKey key;
     private List<Order> orders;
 
@@ -69,6 +73,7 @@ public class Home extends ApplicationFrame {
      * create new instance.
      */
     public Home() {
+
     }
 
     /**
@@ -77,10 +82,10 @@ public class Home extends ApplicationFrame {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        add(getChoiceLunch("select.menu"));
-        add(getGroupList("group.list"));
-        add(getGroupRegistry("group.registry"));
-        add(getOrderLines("order.list"));
+        add(newChoiceLunch("select.menu"));
+        add(newGroupList("group.list"));
+        add(newGroupRegistry("group.registry"));
+        add(newOrderedComponents("ordered.components"));
         add(new AuthenticatedLabel("greeting", getLocalizer().getString("greeting", this, new Model<Home>(this))));
         // for duble submit key
         this.key = new FormKey(getPageId(), getId(), new Date());
@@ -121,8 +126,7 @@ public class Home extends ApplicationFrame {
             return orders = Collections.emptyList();
         }
         User user = WicketSession.get().getSignedInUser();
-        AccountService account = Configuration.getInstance(AccountService.class);
-        return orders = account.getOrderHistory(user, resolver.resolve().getTime());
+        return orders = service.getOrderHistory(user, resolver.resolve().getTime());
     }
 
     /**
@@ -130,7 +134,7 @@ public class Home extends ApplicationFrame {
      * @param id wicket id
      * @return ChoiceLunch panel.
      */
-    protected ChoiceLunch getChoiceLunch(String id) {
+    protected ChoiceLunch newChoiceLunch(String id) {
         return new ChoiceLunch(id) {
 
             private static final long serialVersionUID = -8829593828769576050L;
@@ -182,9 +186,9 @@ public class Home extends ApplicationFrame {
      * @param id wicket id
      * @return group registry panel.
      */
-    protected GroupRegistry getGroupRegistry(String id) {
+    protected GroupRegistry newGroupRegistry(String id) {
         return new GroupRegistry(id) {
-            
+
             private static final long serialVersionUID = 1L;
 
             /**
@@ -214,7 +218,7 @@ public class Home extends ApplicationFrame {
      * @param id wicket id
      * @return group list panel.
      */
-    protected GroupList getGroupList(String id) {
+    protected GroupList newGroupList(String id) {
         return new GroupList(id) {
 
             private static final long serialVersionUID = 1L;
@@ -242,11 +246,35 @@ public class Home extends ApplicationFrame {
     }
 
     /**
+     * user can eat lunch
+     * @return
+     */
+    protected boolean isEatable() {
+        if (!isJoinedGroup())
+            return false;
+        // does NOT have any orders.
+        List<Order> ordres = getOrdered(); 
+        if (orders.size() == 0)
+            return false;
+        
+        boolean result = false;
+        // have any available orders.
+        for (Order order: ordres) {
+            if (!order.isCancel()) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    /**
      * create order line panel.
      * @param id wicket id.
      * @return order lines panel.
      */
-    protected OrderLines getOrderLines(String id) {
+    protected OrderLines newUserOrderLines(String id) {
+        // FIXME to consider for cancel order lines.
         List<Order> orders = getOrdered();
         Order order;
         if (orders.size() > 0)
@@ -254,9 +282,9 @@ public class Home extends ApplicationFrame {
         else
             order = new Order();
 
-        return new UserOrderLines(id, Model.of(order)) {
+        return new OrderLines(id, Model.of(order)) {
 
-            private static final long serialVersionUID = -8946724145728062975L;
+            private static final long serialVersionUID = 1L;
 
             @SuppressWarnings("unchecked")
             @Override
@@ -264,24 +292,72 @@ public class Home extends ApplicationFrame {
                 IModel<Order> model = (IModel<Order>) getDefaultModel();
                 setVisibilityAllowed(model.getObject().getOrderLines().size() > 0);
             }
+        };
+    }
 
-            @Override
-            protected void onEat() {
-                if (WicketSession.get().removeFormKey(key)) {
-                    //
-                } else {
-                    logger.info("double submit on OrderLines#onEating");
-                }
-            }
+    /**
+     * create user impression panel.
+     * @param id
+     * @return
+     */
+    protected UserImpression newUserImpression(String id) {
+        return new UserImpression(id) {
 
+            private static final long serialVersionUID = 1L;
+
+            /**
+             * event of finish(ate lunch).
+             * @see jp.dip.komusubi.lunch.wicket.panel.UserImpression#onFinish()
+             */
             @Override
             protected void onFinish() {
-                if (WicketSession.get().removeFormKey(key)) {
-//                    AccountService account = Configuration.getInstance(AccountService.class);
-//                    account.
-                } else {
-                    logger.info("double submit on OrderLines#onFinished");
+                logger.info("in home event of finish.");
+            }
+
+            /**
+             * event of cancel.
+             * @see jp.dip.komusubi.lunch.wicket.panel.UserImpression#onCancel()
+             */
+            @Override
+            protected void onCancel() {
+                List<Order> orders = getOrdered();
+                for (Order order: orders) {
+                    for (OrderLine orderLine: order) {
+                        shopping.cancel(orderLine);
+                    }
                 }
+            }
+        };
+    };
+
+    /**
+     * create orderd list components.
+     * @param id
+     * @return
+     */
+    protected WebMarkupContainer newOrderedComponents(String id) {
+        return new WebMarkupContainer(id) {
+
+            private static final long serialVersionUID = 1L;
+
+            /**
+             * initialize components.
+             * @see org.apache.wicket.Component#onInitialize()
+             */
+            @Override
+            protected void onInitialize() {
+                super.onInitialize();
+                add(newUserOrderLines("order.list"));
+                add(newUserImpression("user.impressions"));
+            }
+
+            /**
+             * configure components.
+             * @see org.apache.wicket.Component#onConfigure()
+             */
+            @Override
+            protected void onConfigure() {
+                setVisibilityAllowed(isEatable());
             }
         };
     }

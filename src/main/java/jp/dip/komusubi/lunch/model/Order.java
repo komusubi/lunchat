@@ -320,9 +320,9 @@ public class Order implements Serializable, Iterable<OrderLine> {
      * @return
      */
     public Order setCancel(boolean cancel) {
-        for (OrderLine orderLine: lines) {
-            orderLine.setCancel(true);
-        }
+//        for (OrderLine orderLine: lines) {
+//            orderLine.setCancel(cancel);
+//        }
         this.cancel = cancel;
         return this;
     }

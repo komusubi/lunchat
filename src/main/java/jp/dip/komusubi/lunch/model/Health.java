@@ -47,6 +47,10 @@ public class Health implements Serializable {
 //		this(new User(userId));
 //	}
 
+	public Health() {
+	    
+	}
+	
 	public Health(User user) {
 		this.user = user;
 	}

@@ -48,22 +48,40 @@ import org.slf4j.LoggerFactory;
 public class OrderLines extends Panel {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderLines.class);
-    private static final long serialVersionUID = 2352788625691496266L;
+    private static final long serialVersionUID = 1L;
+    private IModel<Order> model;
     
     /**
+     * create new instance.
      * @param id
      * @param model
      */
     public OrderLines(String id, IModel<Order> model) {
         super(id, model);
-        add(getOrderLineViews("order.line", new PropertyModel<List<OrderLine>>(model, "orderLines")));
-        add(new Label("total.amount", new PropertyModel<String>(model, "amount")));
+        this.model = model;
     }
 
+    /**
+     * create new instance.
+     * @param id
+     */
     public OrderLines(String id) {
         this(id, Model.of(getTodayOrder()));
     }
             
+    /**
+     * initialize components.
+     * @see org.apache.wicket.Component#onInitialize()
+     */
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        add(newOrderLineViews("order.line", new PropertyModel<List<OrderLine>>(model, "orderLines")));
+    }
+    
+    /**
+     * configure components.
+     */
     @Override
     protected void onConfigure() {
         if (!WicketSession.get().isSignedIn()) {
@@ -81,14 +99,23 @@ public class OrderLines extends Panel {
         
     }
     
-    private static Order getTodayOrder() {
+    /**
+     * get order from storage.
+     * @return
+     */
+    protected static Order getTodayOrder() {
         if (!WicketSession.get().isSignedIn())
             return new Order();
         User user = WicketSession.get().getSignedInUser();
         return getTodayOrder(user);
     }
     
-    private static Order getTodayOrder(User user) {
+    /**
+     * get order from storage.
+     * @param user
+     * @return
+     */
+    protected static Order getTodayOrder(User user) {
         if (user == null)
             return new Order();
         AccountService account = Configuration.getInstance(AccountService.class);
@@ -102,20 +129,24 @@ public class OrderLines extends Panel {
         return order;
     }
     
-    protected ListView<OrderLine> getOrderLineViews(String id, PropertyModel<List<OrderLine>> model) {
+    /**
+     * create order lines view.
+     * @param id
+     * @param model
+     * @return
+     */
+    protected ListView<OrderLine> newOrderLineViews(String id, PropertyModel<List<OrderLine>> model) {
 
         ListView<OrderLine> listView = new ListView<OrderLine>(id, model) {
 
-            private static final long serialVersionUID = 8658283409782022862L;
+            private static final long serialVersionUID = 1L;
 
             @Override
             protected void populateItem(ListItem<OrderLine> item) {
                 OrderLine orderLine = item.getModelObject();
-                item.add(new Label("name", orderLine.getProduct().getName()));
-                StringBuilder builder = new StringBuilder();
-                builder.append(orderLine.getQuantity()).append("個  ")
-                        .append(orderLine.getAmount()).append("円");
-                item.add(new Label("amount", builder.toString()));
+                item.add(new Label("name", new PropertyModel<>(orderLine, "product.name")));
+                item.add(new Label("quantity", new PropertyModel<>(orderLine, "quantity")));
+                item.add(new Label("amount", new PropertyModel<>(orderLine, "amount")));
             }
         };
         return listView;

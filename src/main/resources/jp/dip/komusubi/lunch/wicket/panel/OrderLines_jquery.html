@@ -3,28 +3,37 @@
 <head>
 <meta charset="utf-8">
 <wicket:remove>
-  <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
-  <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
-  <script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+  <link href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" rel="stylesheet" type="text/css" />
+  <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
 </wicket:remove>
+<wicket:head>
+<wicket:link><link href="lunchat-panels.css" rel="stylesheet" type="text/css" /></wicket:link>
+</wicket:head>
 </head>
 <body>
   <div data-role="page" data-theme="a">
     <div data-role="header">
-      <h1>注文を受け付けました</h1>
+      <h1>注文明細</h1>
     </div>
     <div data-role="content">
       <wicket:panel>
         <h2>注文明細</h2>
+        <!--
         <ul data-role="listview" data-inset="true">
           <li wicket:id="order.line"><span wicket:id="name">3/8(木)のお弁当</span>
             <span class="ui-li-aside" wicket:id="amount">1</span></li>
           <li data-role="list-divider">合計<span class="ui-li-aside" wicket:id="total.amount">10円</span></li>
         </ul>
-        <a href="#" data-role="button" wicket:id="eat" data-theme="b">いただきます</a>
-        <a href="#" data-role="button" wicket:id="finish" data-theme="b">ごちそうさま</a>
-        <a href="#" data-role="button" wicket:id="cancel" data-theme="b">キャンセルする</a>
+        -->
+        <table border="1" wicket:id="order.line">
+          <tr><th>商品名</th><th>個数</th><th>金額</th></tr>
+          <tr><td wicket:id="name">お弁当</td><td class="numeric" wicket:id="quantity">1</td><td class="numeric" wicket:id="amount">￥430</td></tr>
+        </table>
       </wicket:panel>
+      <textarea placeholder="感想をどうぞ。"></textarea> 
+      <a href="#" data-role="button">ごちそうさま</a>
+      <a href="#" data-role="button">キャンセル</a>
     </div>
     <div data-role="footer">
       <h1>komusubi</h1>
