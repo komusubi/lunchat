@@ -36,16 +36,20 @@ public class DefaultNonce implements Nonce {
 		
 	}
 	
-	public String get(String value) {
+	public String get(String value, String salt) {
 		Validate.notNull(value, "value is MUST not null.");
 		StringBuilder builder = new StringBuilder(value);
 		if (logger.isDebugEnabled())
 			logger.debug("salt is {}", salt);
-		builder.append(salt());
+		builder.append(salt);
 
 		return DigestUtils.shaHex(builder.toString());
 	}
 	
+	public String get(String value) {
+		return get(value, salt());
+	}
+
 	public String salt() {
 		if (salt == null)
 			salt = String.valueOf(System.currentTimeMillis() + Math.random());
