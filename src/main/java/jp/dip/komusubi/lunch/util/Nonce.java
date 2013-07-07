@@ -23,5 +23,6 @@ import java.io.Serializable;
 public interface Nonce extends Serializable {
 
 	String get(String value);
+	String get(String value, String salt);
 	String salt();
 }
