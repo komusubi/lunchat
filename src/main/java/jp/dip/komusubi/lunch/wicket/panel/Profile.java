@@ -28,7 +28,6 @@ import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
-import jp.dip.komusubi.lunch.wicket.page.error.ErrorPage;
 import jp.dip.komusubi.lunch.wicket.panel.util.SpecificBehavior;
 
 import org.apache.wicket.markup.html.form.EmailTextField;
@@ -57,6 +56,7 @@ public class Profile extends Panel {
 	private static final Logger logger = LoggerFactory.getLogger(Profile.class);
 	@Inject private AccountService account;
 	@Inject @Named("date") private Resolver<Date> dateResolver;
+	@Inject private Nonce nonce;
 //	private String fragment;
 	
 	public Profile(String id) {
@@ -247,6 +247,7 @@ public class Profile extends Panel {
 				}
 
 				public void validate(Form<?> form) {
+					/*
 					Nonce nonce = (Nonce) WicketSession.get().getAttribute(Nonce.class.getName());
 					if (nonce == null) { // over session time.
 						logger.info("nonce is null session time over");
@@ -254,8 +255,11 @@ public class Profile extends Panel {
 						setResponsePage(new ErrorPage("session time over"));
 						return;
 					}
+					*/
+					// FIXME literal attribute name.
+					String salt = (String) WicketSession.get().getAttribute("salt");
 					String fragment = model.getObject();
-					if (!fragment.equals(nonce.get(emailField.getInput()))) {
+					if (!fragment.equals(nonce.get(emailField.getInput(), salt))) {
 						if (logger.isDebugEnabled())
 							logger.debug("segment is {}, nonce is {}", 
 									fragment, nonce.get(emailField.getInput()));

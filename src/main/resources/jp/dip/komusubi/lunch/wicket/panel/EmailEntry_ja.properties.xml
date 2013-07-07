@@ -3,6 +3,7 @@
 <properties>
 <comment>Temporary Properties</comment>
 <entry key="send.confirm">入力されたメールアドレスに確認メールを送信しました。メールを確認し処理を継続してください。</entry>
+<entry key="failed.confirm">メール送信処理中にエラーが発生しました。しばらくお待ちください。</entry>
 <entry key="email.Required">メールアドレスを入力してください。</entry>
 <entry key="already.exist.email">入力されたメールアドレスは既に登録されています。</entry>
 </properties>

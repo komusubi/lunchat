@@ -20,7 +20,8 @@ package jp.dip.komusubi.lunch.wicket.page;
 
 import java.util.Date;
 
-import jp.dip.komusubi.lunch.Configuration;
+import javax.inject.Inject;
+
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
@@ -46,7 +47,9 @@ public class Login extends ApplicationFrame {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = LoggerFactory.getLogger(Login.class);
     private FormKey key;
-
+    @Inject private Nonce nonce;
+    @Inject private AccountService account;
+    
     /**
      * create new instance. 
      */
@@ -105,20 +108,25 @@ public class Login extends ApplicationFrame {
             protected void onRegister() {
                 if (WicketSession.get().removeFormKey(key)) {
                     // confirm page の absolute URLを取得
-                    String targetPath = getRequestCycle().urlFor(Registry.class, null).toString();
+                	String salt = nonce.salt();
+                	PageParameters parameters = new PageParameters().add("fragment", nonce.get(getUser().getEmail(), salt));
+                    String targetPath = getRequestCycle().urlFor(Registry.class, parameters).toString();
                     String ownUrl = getRequestCycle().getUrlRenderer().renderFullUrl(getRequest().getClientUrl());
                     String url = RequestUtils.toAbsolutePath(ownUrl, targetPath);
                     logger.info("user register url: {}", url);
-                    
+
                     // already exist email ?
-                    AccountService account = Configuration.getInstance(AccountService.class);
                     if (account.findByEmail(getUser().getEmail()) != null) {
                         error(getLocalizer().getString("already.exist.email", this, "email address already exist."));
                     } else {
-                        Nonce nonce = account.apply(getUser(), url);
-                        // session に Nonceを保持
-                        WicketSession.get().setAttribute(Nonce.class.getName(), nonce);
-                        info(getLocalizer().getString("send.confirm", this, "send confirm email."));
+                        if (account.apply(getUser(), url)) {
+	                        // session に Nonceを保持
+                        	// FIXME literal attribute name.
+	                        WicketSession.get().setAttribute("salt", salt);
+	                        info(getLocalizer().getString("send.confirm", this, "send confirm email."));
+                        } else {
+                        	error(getLocalizer().getString("failed.confirm", this, "failed confirm email."));
+                        }
                     }
                 } else {
                     logger.info("double click on EmailEntry#onRegister");

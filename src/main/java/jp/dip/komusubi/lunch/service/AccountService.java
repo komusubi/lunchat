@@ -220,27 +220,23 @@ public class AccountService implements Serializable {
 	 * @param url temporary url for authentication.
 	 * @return
 	 */
-	public Nonce apply(User user, String url) {
-		Nonce nonce = Configuration.getInstance(Nonce.class);
-		StringBuilder builder = new StringBuilder(url);
-		if (!url.endsWith("/"))
-			builder.append("/");
-		builder.append(nonce.get(user.getEmail()));
+	public boolean apply(User user, String url) {
 		try {
 			MailContent content = new MailContent();
 //			admin.setName(getString("confirm.mail.from.name")) //$NON-NLS-1$
 //				.setEmail(getString("confirm.mail.from.address")); //$NON-NLS-1$
 			content.setSubject(getString("confirm.mail.title")); //$NON-NLS-1$
-			content.setBody(format("confirm.mail.body", builder.toString())); //$NON-NLS-1$
+			content.setBody(format("confirm.mail.body", url)); //$NON-NLS-1$
 			MailMessage mail = new MailMessage();
 			mail.setContent(content);
 			mail.setFrom(getAdminUser());
 			mail.addToRecipient(user);
 			smtp.send(mail);
 			logger.info("send to {}, subject is {},", user.getEmail(), getString("confirm.mail.title"));
-			return nonce;
+			return true;
 		} catch (Exception e) {
-			throw new IllegalStateException(e);
+			logger.error("exception {}", e);
+			return false;
 		}
 	}
 
