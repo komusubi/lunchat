@@ -18,7 +18,6 @@
  */
 package jp.dip.komusubi.lunch.wicket.page.error;
 
-import org.apache.wicket.markup.html.basic.Label;
 
 /**
  * internal server error page.
@@ -39,6 +38,7 @@ public class InternalServerError extends ErrorPage {
 	 */
 	@Override
 	protected void onInitialize() {
-		add(new Label("error.message", getString("internal.error.message")));
+		super.onInitialize();
+//		add(new Label("error.message", getString("internal.error.message")));
 	}
 }
