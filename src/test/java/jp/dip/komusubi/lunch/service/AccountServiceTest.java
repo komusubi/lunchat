@@ -113,7 +113,7 @@ public class AccountServiceTest {
 						.setName("こむすび")
 						.setEmail("komusubi@email.com");
 		
-		Nonce nonce = target.apply(user, "http://www.domain.com/base");
+		target.apply(user, "http://www.domain.com/base");
 
 		MockSmtpServer server = (MockSmtpServer) PrivateAccessor.getField(target, "smtp");
 		MailMessage message = server.getMailMessage();
