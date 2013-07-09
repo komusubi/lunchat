@@ -18,11 +18,11 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.model.Shop;
@@ -44,9 +44,10 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.validation.IValidatable;
-import org.apache.wicket.validation.validator.AbstractValidator;
+import org.apache.wicket.validation.IValidator;
+import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.PatternValidator;
-import org.apache.wicket.validation.validator.RangeValidator;
+import org.apache.wicket.validation.validator.StringValidator;
 import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,6 +111,9 @@ public abstract class GroupRegistry extends Panel {
         private Group group = new Group();
         private List<Shop> selection;
         @Inject @Named("date") private Resolver<Date> dateResolver;
+        @Inject private GroupDao groupDao;
+        @Inject private ShopDao shopDao;
+        @Inject private AccountService accountService;
 
         /**
          * create new instance.
@@ -140,7 +144,7 @@ public abstract class GroupRegistry extends Panel {
             TextField<String> text = new TextField<String>(id);
             text.setRequired(true)
                 .add(new PatternValidator(Pattern.compile("[a-zA-Z0-9\\.']+")))
-                .add(RangeValidator.range(2, 128))
+                .add(new StringValidator(2, 64))
                 .add(specificWordValidator())
                 .add(existsGroupValidator());
             return text;
@@ -154,46 +158,33 @@ public abstract class GroupRegistry extends Panel {
         private TextField<String> getNameField(String id) {
             TextField<String> text = new TextField<String>(id);
             text.setRequired(true)
-                .add(RangeValidator.range(2, 128));
+                .add(new StringValidator(2, 128));
             return text;
         }
 
         // specific word validator
-        private AbstractValidator<String> specificWordValidator() {
-            return new AbstractValidator<String>() {
+        private IValidator<String> specificWordValidator() {
+        	return new IValidator<String>() {
+				private static final long serialVersionUID = 1L;
 
-                private static final long serialVersionUID = -3110131646353247925L;
-
-                @Override
-                protected void onValidate(IValidatable<String> validatable) {
-                    if ("default".equals(validatable.getValue()))
-                        error(validatable);
-                }
-
-                @Override
-                public String resourceKey() {
-                    return "wrong.value";
-                }
-            };
+				@Override
+				public void validate(IValidatable<String> validatable) {
+					if ("default".equals(validatable.getValue()))
+						validatable.error(new ValidationError().addKey("wrong.value"));
+				}
+        	};
         }
 
-        private AbstractValidator<String> existsGroupValidator() {
-            return new AbstractValidator<String>() {
+        private IValidator<String> existsGroupValidator() {
+        	return new IValidator<String>() {
+				private static final long serialVersionUID = 1L;
 
-                private static final long serialVersionUID = 6452463346794985429L;
-
-                @Override
-                protected void onValidate(IValidatable<String> validatable) {
-                    GroupDao groupDao = Configuration.getInstance(GroupDao.class);
-                    if (groupDao.findByCode(validatable.getValue()) != null)
-                        error(validatable);
-                }
-
-                @Override
-                public String resourceKey() {
-                    return "exist.group.already";
-                }
-            };
+				@Override
+				public void validate(IValidatable<String> validatable) {
+					if (groupDao.findByCode(validatable.getValue()) != null)
+						validatable.error(new ValidationError().addKey("exist.group.already"));
+				}
+        	};
         }
 
 //		private TextField<Date> getLastOrderField(String id) {
@@ -213,7 +204,6 @@ public abstract class GroupRegistry extends Panel {
 //		}
 
         private ListMultipleChoice<Shop> getShopMultiChoice(String id) {
-            ShopDao shopDao = Configuration.getInstance(ShopDao.class);
             List<Shop> shops;
 //			if (group.getContracts().size() == 0)
             shops = shopDao.findAll();
@@ -232,36 +222,27 @@ public abstract class GroupRegistry extends Panel {
         }
 
         // validator select must shop
-        private AbstractValidator<List<Shop>> selectLeastValidator() {
-            return new AbstractValidator<List<Shop>>() {
+        private IValidator<Collection<Shop>> selectLeastValidator() {
+        	return new IValidator<Collection<Shop>>() {
+				private static final long serialVersionUID = 1L;
 
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                protected void onValidate(IValidatable<List<Shop>> validatable) {
+				@Override
+				public void validate(IValidatable<Collection<Shop>> validatable) {
                     if (validatable.getValue() == null || validatable.getValue().size() == 0)
-                        error(validatable);
-                }
-
-                @Override
-                public String resourceKey() {
-                    return "must.select.shop";
-                }
-
-            };
+                    	validatable.error(new ValidationError().addKey("must.select.shop"));
+				}
+        	};
         }
 
         @Override
         public void onSubmit() {
             User user = WicketSession.get().getSignedInUser();
             try {
-                // clear ozeki
                 for (Shop shop: selection) {
                     if (logger.isDebugEnabled())
                         logger.debug("selection shop:{}", shop);
                     group.addContract(shop);
                 }
-                AccountService accountService = Configuration.getInstance(AccountService.class);
                 user.getHealth().setGroup(group);
                 user.getHealth().setGroupJoined(dateResolver.resolve());
                 accountService.referTo(user);
