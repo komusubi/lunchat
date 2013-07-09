@@ -18,6 +18,7 @@
  */
 package jp.dip.komusubi.lunch.service;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -187,7 +188,13 @@ public class ShoppingTest /* extends Shopping */ {
                                     .setProduct(getProduct())
                                     .setProduct(getProduct())
                                     .setQuantity(1);
-        orderDao.persist(order);
+
+        when(orderDao.find(orderLine.getPrimaryKey().getOrderId())).thenReturn(order);
+        order.setCancel(true);
+        doNothing().when(orderDao).update(order);
+        scenario();
         target.cancel(orderLine);
+        verify(orderDao, times(1)).find(orderLine.getPrimaryKey().getOrderId());
+        verify(orderDao, times(1)).update(order);
     }
 }
