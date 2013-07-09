@@ -384,22 +384,23 @@
     </developer>
   </developers>
   <distributionManagement>
+    <downloadUrl>http://repos.komusubi.org/release</downloadUrl>
     <site>
-      <id>komusubi-repo</id>
+      <id>komusubi-site</id>
       <name>komusubi vps</name>
-      <url>scp://komusubi.org/home/jun/public/m2/sites/lunchat</url>
+      <url>scp://komusubi.org/var/www/html/sites/lunchat</url>
     </site>
     <repository>
       <uniqueVersion>false</uniqueVersion>
-      <id>komusubi-repo</id>
+      <id>komusubi-release</id>
       <name>komusubi vps</name>
-      <url>scp://komusubi.org/home/jun/public/m2/repo</url>
+      <url>scp://komusubi.org/var/www/html/sites/lunchat</url>
       <layout>default</layout>
     </repository>
     <snapshotRepository>
       <id>komusubi-snapshot</id>
       <name>komusubi snapshot</name>
-      <url>scp://komusubi.org/home/jun/public/m2/snapshot</url>
+      <url>scp://komusubi.org/var/www/html/sites/lunchat</url>
     </snapshotRepository>
   </distributionManagement>
   <inceptionYear>2011</inceptionYear>
