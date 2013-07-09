@@ -23,6 +23,7 @@ public class Product implements Serializable {
 
 	private static final long serialVersionUID = -2538213207179936427L;
 	public static final String DEFAULT_ID = "dummy";
+	public static final String NOT_FOUND_ITEM = "not.found.item";
 	private String id;
 	private String refId;
 	private String name;

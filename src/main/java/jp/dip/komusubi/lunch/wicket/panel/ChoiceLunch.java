@@ -53,7 +53,7 @@ import com.google.inject.name.Named;
  */
 public class ChoiceLunch extends Panel {
 
-	private static final long serialVersionUID = -4318541322169808309L;
+	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(ChoiceLunch.class);
 
 	public ChoiceLunch(String id, boolean forward) {
@@ -150,7 +150,7 @@ public class ChoiceLunch extends Panel {
 						if (!found) { 
 							String msgPattern = getLocalizer().getString("not.found.product.in.period", ChoiceLunch.this);
 							String message = MessageFormat.format(msgPattern, shop.getName());
-							itemValues.add(new Product()
+							itemValues.add(new Product(Product.NOT_FOUND_ITEM)
 											.setName(message)
 											.setAmount(0)
 											.setShop(shop));
@@ -178,7 +178,7 @@ public class ChoiceLunch extends Panel {
 
 			return new ListView<Object>(id, ldmodel) {
 
-				private static final long serialVersionUID = -502489393499906175L;
+				private static final long serialVersionUID = 1L;
 
 				@Override
 				protected void populateItem(ListItem<Object> item) {
@@ -239,6 +239,9 @@ public class ChoiceLunch extends Panel {
     				// view dialog style confirm
     				link.add(AttributeModifier.append("data-rel", "dialog"));
 				}
+				// link disabled when not found product or over the last order time.
+				if (Product.DEFAULT_ID.equals(product.getId()) || Product.NOT_FOUND_ITEM.equals(product.getId()))
+					link.setEnabled(false);
 			} else {
 				throw new IllegalStateException("itemValue dosen't object Shop or Product");
 			}
