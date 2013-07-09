@@ -142,7 +142,6 @@ public class Group implements Serializable {
 			// FIXME refer to module package. should fix proxy pattern.
 			ContractDao contractDao = Configuration.getInstance(ContractDao.class);
 			contracts = contractDao.findByGroupId(getId());
-			contracts.addAll(contractDao.findByGroupId(getId()));
 		}
 		return contracts;
 	}
