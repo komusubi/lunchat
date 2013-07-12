@@ -394,13 +394,13 @@
       <uniqueVersion>false</uniqueVersion>
       <id>komusubi-release</id>
       <name>komusubi vps</name>
-      <url>scp://komusubi.org/var/www/html/sites/lunchat</url>
+      <url>scp://komusubi.org/var/www/html/m2repo/release</url>
       <layout>default</layout>
     </repository>
     <snapshotRepository>
       <id>komusubi-snapshot</id>
       <name>komusubi snapshot</name>
-      <url>scp://komusubi.org/var/www/html/sites/lunchat</url>
+      <url>scp://komusubi.org/var/www/html/m2repo/snapshot</url>
     </snapshotRepository>
   </distributionManagement>
   <inceptionYear>2011</inceptionYear>
