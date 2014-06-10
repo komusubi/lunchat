@@ -16,25 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.module;
+package jp.lunchat.storage;
 
-import jp.lunchat.core.model.Payment;
+import javax.inject.Inject;
 
-public class CreditPayment implements Payment {
+import jp.lunchat.core.model.Authentication;
+import jp.lunchat.core.model.User;
+import jp.lunchat.storage.dao.UserDao;
 
-	public boolean pay(Basket basket) {
-		// TODO Auto-generated method stub
-		return false;
+public class DefaultAuthentication implements Authentication {
+	private UserDao userDao;
+
+	@Inject
+	public DefaultAuthentication(UserDao userDao) {
+		this.userDao = userDao;
 	}
 
-	public boolean isPayable(int amountAll) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean evaluate(User user) {
+		User u = userDao.find(user.getId());
+		if (u == null)
+			return false;
+		return u.getPassword().equals(user.getPassword());
 	}
 
-	public boolean isPayable(Basket basket) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	
 }

@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 import jp.lunchat.core.model.Product;
 import jp.lunchat.core.model.Shop;
 import jp.lunchat.core.model.User;
+import jp.lunchat.storage.Basket;
 import jp.lunchat.storage.dao.OrderDao;
 import jp.lunchat.storage.dao.ProductDao;
 import jp.lunchat.storage.dao.ShopDao;

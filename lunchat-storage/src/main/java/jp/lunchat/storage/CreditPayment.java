@@ -16,43 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.module;
+package jp.lunchat.storage;
 
-import jp.lunchat.core.model.Action;
 import jp.lunchat.core.model.Payment;
-import jp.lunchat.core.model.Role;
-import jp.lunchat.core.model.User;
 
-public class CashPayment implements Payment, Action {
+public class CreditPayment implements Payment {
 
-	
-	private User user;
-
-	public CashPayment(User user) {
-		this.user = user;
-	}
-	
 	public boolean pay(Basket basket) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean isPayable(int amountAll) {
-
-		return false;
-	}
-
-	public Role getRole() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public boolean available(User user) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean isPayable(Basket basket) {
-//		return isPayable(basket.amountAll());
+		// TODO Auto-generated method stub
 		return false;
 	}
 

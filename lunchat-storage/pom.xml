@@ -26,5 +26,9 @@
       <groupId>jp.lunchat</groupId>
       <artifactId>lunchat-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+    </dependency>
   </dependencies>
 </project>

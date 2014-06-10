@@ -20,11 +20,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import jp.dip.komusubi.lunch.Configuration;
-import jp.dip.komusubi.lunch.module.Basket;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.component.SimpleBrowserInfoPage;
 import jp.lunchat.core.model.User;
+import jp.lunchat.storage.Basket;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;

@@ -16,20 +16,44 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.module;
+package jp.lunchat.storage;
 
-import jp.lunchat.core.model.Authentication;
-import jp.lunchat.core.model.User;
+import java.util.Date;
 
-public class GoogleAuthentication implements Authentication {
+import javax.inject.Inject;
 
-	public GoogleAuthentication() {
-		
+import jp.lunchat.core.model.Payment;
+import jp.lunchat.storage.dao.BasketDao;
+import jp.lunchat.storage.dao.OrderDao;
+
+import org.komusubi.common.util.Resolver;
+
+
+public class PurchaseOrder {
+
+	private Payment payment;
+
+	@Inject
+	public PurchaseOrder(Payment payment) {
+		this.payment = payment;
+	}
+
+//	public int purchase(Basket basket) {
+//		if (payment.isPayable(basket.amountAll()))
+//			return 0;
+//		payment.pay(basket);
+//		return basket.amountAll(); 
+//	}
+	
+	private OrderDao orderDao;
+	private Resolver<Date> resolver;
+	private BasketDao basketDao ;
+	
+	public void order(Basket basket) {
+		basketDao.persist(basket);
 	}
 	
-	public boolean evaluate(User user) {
-		return false;
+	public Basket retrieve() {
+		return basketDao.find(0L);
 	}
-
-//	public boolean is
 }

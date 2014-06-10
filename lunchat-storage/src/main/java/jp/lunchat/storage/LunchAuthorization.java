@@ -16,44 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.module;
+package jp.lunchat.storage;
 
-import java.util.Date;
+import jp.lunchat.core.model.Action;
+import jp.lunchat.core.model.Authorization;
+import jp.lunchat.core.model.User;
 
-import javax.inject.Inject;
+public class LunchAuthorization implements Authorization {
 
-import jp.lunchat.core.model.Payment;
-import jp.lunchat.storage.dao.BasketDao;
-import jp.lunchat.storage.dao.OrderDao;
+	private Action action;
 
-import org.komusubi.common.util.Resolver;
-
-
-public class PurchaseOrder {
-
-	private Payment payment;
-
-	@Inject
-	public PurchaseOrder(Payment payment) {
-		this.payment = payment;
+	public LunchAuthorization(Action action) {
+		this.action = action;
 	}
 
-//	public int purchase(Basket basket) {
-//		if (payment.isPayable(basket.amountAll()))
-//			return 0;
-//		payment.pay(basket);
-//		return basket.amountAll(); 
-//	}
-	
-	private OrderDao orderDao;
-	private Resolver<Date> resolver;
-	private BasketDao basketDao ;
-	
-	public void order(Basket basket) {
-		basketDao.persist(basket);
-	}
-	
-	public Basket retrieve() {
-		return basketDao.find(0L);
+	public boolean available(User user) {
+		return user.hasRole(action.getRole());
 	}
 }

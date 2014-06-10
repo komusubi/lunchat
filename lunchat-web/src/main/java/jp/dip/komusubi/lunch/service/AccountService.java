@@ -27,7 +27,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import jp.dip.komusubi.lunch.Configuration;
-import jp.dip.komusubi.lunch.module.Transactional;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.lunchat.LunchatException;
 import jp.lunchat.core.model.Contract;
@@ -37,6 +36,7 @@ import jp.lunchat.core.model.OrderLine;
 import jp.lunchat.core.model.Receipt;
 import jp.lunchat.core.model.ReceiptLine;
 import jp.lunchat.core.model.User;
+import jp.lunchat.storage.Transactional;
 import jp.lunchat.storage.dao.ContractDao;
 import jp.lunchat.storage.dao.GroupDao;
 import jp.lunchat.storage.dao.OrderDao;

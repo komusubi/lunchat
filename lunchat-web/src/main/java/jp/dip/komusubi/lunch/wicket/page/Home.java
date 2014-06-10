@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import jp.dip.komusubi.lunch.module.Basket;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.service.Shopping;
 import jp.dip.komusubi.lunch.wicket.WicketApplication;
@@ -41,6 +40,7 @@ import jp.lunchat.core.model.Order;
 import jp.lunchat.core.model.OrderLine;
 import jp.lunchat.core.model.Product;
 import jp.lunchat.core.model.User;
+import jp.lunchat.storage.Basket;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;

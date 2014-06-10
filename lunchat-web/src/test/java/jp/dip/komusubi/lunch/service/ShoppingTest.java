@@ -27,13 +27,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import jp.dip.komusubi.lunch.module.Basket;
 import jp.lunchat.core.model.Group;
 import jp.lunchat.core.model.Order;
 import jp.lunchat.core.model.OrderLine;
 import jp.lunchat.core.model.Product;
 import jp.lunchat.core.model.Shop;
 import jp.lunchat.core.model.User;
+import jp.lunchat.storage.Basket;
 import jp.lunchat.storage.dao.OrderDao;
 import jp.lunchat.storage.dao.OrderLineDao;
 import jp.lunchat.storage.dao.ProductDao;

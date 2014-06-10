@@ -16,28 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.module;
-
-import javax.inject.Inject;
+package jp.lunchat.storage;
 
 import jp.lunchat.core.model.Authentication;
 import jp.lunchat.core.model.User;
-import jp.lunchat.storage.dao.UserDao;
 
-public class DefaultAuthentication implements Authentication {
-	private UserDao userDao;
+public class GoogleAuthentication implements Authentication {
 
-	@Inject
-	public DefaultAuthentication(UserDao userDao) {
-		this.userDao = userDao;
+	public GoogleAuthentication() {
+		
 	}
-
-	public boolean evaluate(User user) {
-		User u = userDao.find(user.getId());
-		if (u == null)
-			return false;
-		return u.getPassword().equals(user.getPassword());
-	}
-
 	
+	public boolean evaluate(User user) {
+		return false;
+	}
+
+//	public boolean is
 }
