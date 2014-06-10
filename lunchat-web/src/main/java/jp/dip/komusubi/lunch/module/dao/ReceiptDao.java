@@ -21,7 +21,7 @@ package jp.dip.komusubi.lunch.module.dao;
 import java.util.Date;
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Receipt;
+import jp.lunchat.core.model.Receipt;
 
 import org.komusubi.common.persistence.GenericDao;
 

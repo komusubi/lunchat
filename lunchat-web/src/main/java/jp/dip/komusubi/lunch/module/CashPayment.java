@@ -18,10 +18,10 @@
  */
 package jp.dip.komusubi.lunch.module;
 
-import jp.dip.komusubi.lunch.model.Action;
-import jp.dip.komusubi.lunch.model.Payment;
-import jp.dip.komusubi.lunch.model.Role;
-import jp.dip.komusubi.lunch.model.User;
+import jp.lunchat.core.model.Action;
+import jp.lunchat.core.model.Payment;
+import jp.lunchat.core.model.Role;
+import jp.lunchat.core.model.User;
 
 public class CashPayment implements Payment, Action {
 

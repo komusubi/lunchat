@@ -20,7 +20,7 @@ package jp.dip.komusubi.lunch.module.dao;
 
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Group;
+import jp.lunchat.core.model.Group;
 
 public class MockGroupDao implements GroupDao {
 

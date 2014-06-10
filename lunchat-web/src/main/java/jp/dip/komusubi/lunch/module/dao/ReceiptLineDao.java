@@ -18,8 +18,8 @@
  */
 package jp.dip.komusubi.lunch.module.dao;
 
-import jp.dip.komusubi.lunch.model.ReceiptLine;
-import jp.dip.komusubi.lunch.model.ReceiptLine.ReceiptLineKey;
+import jp.lunchat.core.model.ReceiptLine;
+import jp.lunchat.core.model.ReceiptLine.ReceiptLineKey;
 
 import org.komusubi.common.persistence.GenericDao;
 

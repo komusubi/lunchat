@@ -18,7 +18,7 @@
  */
 package jp.dip.komusubi.lunch.module.dao;
 
-import jp.dip.komusubi.lunch.model.Group;
+import jp.lunchat.core.model.Group;
 
 import org.komusubi.common.persistence.GenericDao;
 

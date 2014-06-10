@@ -16,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.model;
+package jp.lunchat.core.model;
 
-public interface Authorization {
+public interface Authentication {
 
-	boolean available(User user);
+	boolean evaluate(User user);
 }

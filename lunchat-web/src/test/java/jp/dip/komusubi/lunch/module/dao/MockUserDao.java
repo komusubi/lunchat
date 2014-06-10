@@ -20,8 +20,8 @@ package jp.dip.komusubi.lunch.module.dao;
 
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Health;
-import jp.dip.komusubi.lunch.model.User;
+import jp.lunchat.core.model.Health;
+import jp.lunchat.core.model.User;
 
 public class MockUserDao implements UserDao {
 

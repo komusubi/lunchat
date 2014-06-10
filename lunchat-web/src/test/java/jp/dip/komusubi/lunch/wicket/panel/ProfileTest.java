@@ -21,7 +21,6 @@ package jp.dip.komusubi.lunch.wicket.panel;
 import java.text.ParseException;
 import java.util.Date;
 
-import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.DefaultNonce;
 import jp.dip.komusubi.lunch.module.dao.ContractDao;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
@@ -34,6 +33,7 @@ import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketTesterResource;
 import jp.dip.komusubi.lunch.wicket.page.error.ErrorPage;
+import jp.lunchat.core.model.User;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.markup.html.WebPage;

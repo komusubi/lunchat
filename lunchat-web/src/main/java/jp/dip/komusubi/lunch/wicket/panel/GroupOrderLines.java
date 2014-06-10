@@ -20,9 +20,9 @@ package jp.dip.komusubi.lunch.wicket.panel;
 
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Order;
-import jp.dip.komusubi.lunch.model.OrderLine;
 import jp.dip.komusubi.lunch.service.AccountService;
+import jp.lunchat.core.model.Order;
+import jp.lunchat.core.model.OrderLine;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;

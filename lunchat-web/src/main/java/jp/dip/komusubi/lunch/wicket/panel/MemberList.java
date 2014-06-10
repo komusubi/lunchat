@@ -20,8 +20,8 @@ package jp.dip.komusubi.lunch.wicket.panel;
 
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Group;
-import jp.dip.komusubi.lunch.model.User;
+import jp.lunchat.core.model.Group;
+import jp.lunchat.core.model.User;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;

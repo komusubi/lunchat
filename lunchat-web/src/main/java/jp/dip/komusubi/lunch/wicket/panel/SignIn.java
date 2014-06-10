@@ -21,12 +21,12 @@ package jp.dip.komusubi.lunch.wicket.panel;
 import java.text.MessageFormat;
 
 import jp.dip.komusubi.lunch.Configuration;
-import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.page.Reminder;
 import jp.dip.komusubi.lunch.wicket.panel.util.SpecificBehavior;
+import jp.lunchat.core.model.User;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.wicket.authroles.authentication.panel.SignInPanel;

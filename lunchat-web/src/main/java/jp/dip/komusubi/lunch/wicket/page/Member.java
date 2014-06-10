@@ -20,12 +20,12 @@ package jp.dip.komusubi.lunch.wicket.page;
 
 import java.util.Date;
 
-import jp.dip.komusubi.lunch.model.Group;
-import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.component.AuthorizedFrame;
 import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.panel.MemberList;
+import jp.lunchat.core.model.Group;
+import jp.lunchat.core.model.User;
 
 import org.apache.wicket.model.Model;
 import org.slf4j.Logger;

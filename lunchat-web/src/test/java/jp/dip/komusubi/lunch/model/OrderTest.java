@@ -22,7 +22,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Date;
 
-import jp.dip.komusubi.lunch.model.OrderLine.OrderLineKey;
+import jp.lunchat.core.model.Order;
+import jp.lunchat.core.model.OrderLine;
+import jp.lunchat.core.model.Product;
+import jp.lunchat.core.model.Shop;
+import jp.lunchat.core.model.OrderLine.OrderLineKey;
 
 import org.junit.Ignore;
 import org.junit.Test;

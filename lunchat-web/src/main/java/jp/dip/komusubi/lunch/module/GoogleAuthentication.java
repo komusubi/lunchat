@@ -18,8 +18,8 @@
  */
 package jp.dip.komusubi.lunch.module;
 
-import jp.dip.komusubi.lunch.model.Authentication;
-import jp.dip.komusubi.lunch.model.User;
+import jp.lunchat.core.model.Authentication;
+import jp.lunchat.core.model.User;
 
 public class GoogleAuthentication implements Authentication {
 

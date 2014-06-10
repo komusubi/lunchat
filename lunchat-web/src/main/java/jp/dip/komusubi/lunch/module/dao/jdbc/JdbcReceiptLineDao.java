@@ -26,10 +26,10 @@ import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import jp.dip.komusubi.lunch.TransactionException;
-import jp.dip.komusubi.lunch.model.ReceiptLine;
-import jp.dip.komusubi.lunch.model.ReceiptLine.ReceiptLineKey;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
 import jp.dip.komusubi.lunch.module.dao.ReceiptLineDao;
+import jp.lunchat.core.model.ReceiptLine;
+import jp.lunchat.core.model.ReceiptLine.ReceiptLineKey;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

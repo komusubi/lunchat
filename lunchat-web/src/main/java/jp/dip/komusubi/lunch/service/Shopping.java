@@ -26,19 +26,19 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import jp.dip.komusubi.lunch.TransactionException;
-import jp.dip.komusubi.lunch.model.Group;
-import jp.dip.komusubi.lunch.model.Order;
-import jp.dip.komusubi.lunch.model.OrderLine;
-import jp.dip.komusubi.lunch.model.OrderLine.OrderLineKey;
-import jp.dip.komusubi.lunch.model.Product;
-import jp.dip.komusubi.lunch.model.Shop;
-import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.Basket;
 import jp.dip.komusubi.lunch.module.Transactional;
 import jp.dip.komusubi.lunch.module.dao.OrderDao;
 import jp.dip.komusubi.lunch.module.dao.OrderLineDao;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
+import jp.lunchat.core.model.Group;
+import jp.lunchat.core.model.Order;
+import jp.lunchat.core.model.OrderLine;
+import jp.lunchat.core.model.Product;
+import jp.lunchat.core.model.Shop;
+import jp.lunchat.core.model.User;
+import jp.lunchat.core.model.OrderLine.OrderLineKey;
 
 import org.komusubi.common.util.Resolver;
 

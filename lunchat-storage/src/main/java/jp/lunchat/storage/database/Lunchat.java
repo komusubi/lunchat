@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Properties;
 
 import jp.lunchat.LunchatException;
+import jp.lunchat.core.model.Product;
+import jp.lunchat.core.model.Shop;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;

@@ -27,13 +27,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import jp.dip.komusubi.lunch.Configuration;
-import jp.dip.komusubi.lunch.model.Contract;
-import jp.dip.komusubi.lunch.model.Group;
-import jp.dip.komusubi.lunch.model.Order;
-import jp.dip.komusubi.lunch.model.OrderLine;
-import jp.dip.komusubi.lunch.model.Receipt;
-import jp.dip.komusubi.lunch.model.ReceiptLine;
-import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.Transactional;
 import jp.dip.komusubi.lunch.module.dao.ContractDao;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
@@ -42,6 +35,13 @@ import jp.dip.komusubi.lunch.module.dao.ReceiptDao;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.lunchat.LunchatException;
+import jp.lunchat.core.model.Contract;
+import jp.lunchat.core.model.Group;
+import jp.lunchat.core.model.Order;
+import jp.lunchat.core.model.OrderLine;
+import jp.lunchat.core.model.Receipt;
+import jp.lunchat.core.model.ReceiptLine;
+import jp.lunchat.core.model.User;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.komusubi.common.protocol.smtp.MailContent;

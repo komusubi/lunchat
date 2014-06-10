@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Product;
+import jp.lunchat.core.model.Product;
 
 import org.apache.commons.lang3.time.DateUtils;
 

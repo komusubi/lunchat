@@ -25,10 +25,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import jp.dip.komusubi.lunch.model.Product;
-import jp.dip.komusubi.lunch.model.Shop;
 import jp.dip.komusubi.lunch.module.dao.ContractDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
+import jp.lunchat.core.model.Product;
+import jp.lunchat.core.model.Shop;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

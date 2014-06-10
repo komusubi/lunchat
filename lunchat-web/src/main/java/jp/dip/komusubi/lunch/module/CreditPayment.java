@@ -18,7 +18,7 @@
  */
 package jp.dip.komusubi.lunch.module;
 
-import jp.dip.komusubi.lunch.model.Payment;
+import jp.lunchat.core.model.Payment;
 
 public class CreditPayment implements Payment {
 

@@ -20,8 +20,8 @@ package jp.dip.komusubi.lunch.module.dao;
 
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.OrderLine;
-import jp.dip.komusubi.lunch.model.OrderLine.OrderLineKey;
+import jp.lunchat.core.model.OrderLine;
+import jp.lunchat.core.model.OrderLine.OrderLineKey;
 
 import org.komusubi.common.persistence.GenericDao;
 

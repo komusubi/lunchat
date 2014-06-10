@@ -26,11 +26,11 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import jp.dip.komusubi.lunch.model.Contract;
 import jp.dip.komusubi.lunch.module.dao.ContractDao;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
 import jp.lunchat.LunchatException;
+import jp.lunchat.core.model.Contract;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

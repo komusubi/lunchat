@@ -21,11 +21,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Product;
-import jp.dip.komusubi.lunch.model.Shop;
-import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.service.Shopping;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
+import jp.lunchat.core.model.Product;
+import jp.lunchat.core.model.Shop;
+import jp.lunchat.core.model.User;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.wicket.AttributeModifier;

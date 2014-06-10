@@ -23,11 +23,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Group;
-import jp.dip.komusubi.lunch.model.Order;
-import jp.dip.komusubi.lunch.model.OrderLine;
-import jp.dip.komusubi.lunch.model.Product;
-import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.Basket;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.service.Shopping;
@@ -41,6 +36,11 @@ import jp.dip.komusubi.lunch.wicket.panel.GroupList;
 import jp.dip.komusubi.lunch.wicket.panel.GroupRegistry;
 import jp.dip.komusubi.lunch.wicket.panel.OrderLines;
 import jp.dip.komusubi.lunch.wicket.panel.UserImpression;
+import jp.lunchat.core.model.Group;
+import jp.lunchat.core.model.Order;
+import jp.lunchat.core.model.OrderLine;
+import jp.lunchat.core.model.Product;
+import jp.lunchat.core.model.User;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;

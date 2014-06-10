@@ -16,15 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.model;
+package jp.lunchat.core.model;
 
-import jp.dip.komusubi.lunch.module.Basket;
-
-public interface Payment {
-
-	boolean pay(Basket basket);
-
-	boolean isPayable(int amountAll);
-	boolean isPayable(Basket basket);
-	
+public enum Role {
+	USER, ADMIN;
 }

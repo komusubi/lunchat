@@ -20,8 +20,8 @@ package jp.dip.komusubi.lunch.wicket.page;
 
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Order;
 import jp.dip.komusubi.lunch.service.Shopping;
+import jp.lunchat.core.model.Order;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;

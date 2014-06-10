@@ -21,8 +21,8 @@ package jp.dip.komusubi.lunch.service;
 import java.util.Collections;
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Order;
 import jp.lunchat.LunchatException;
+import jp.lunchat.core.model.Order;
 
 public class DuplicatedOrderException extends LunchatException {
 

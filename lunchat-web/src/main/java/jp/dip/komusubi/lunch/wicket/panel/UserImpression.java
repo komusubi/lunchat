@@ -18,7 +18,7 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
-import jp.dip.komusubi.lunch.model.Order;
+import jp.lunchat.core.model.Order;
 
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;

@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Shop;
+import jp.lunchat.core.model.Shop;
 
 import org.junit.Before;
 import org.junit.ClassRule;

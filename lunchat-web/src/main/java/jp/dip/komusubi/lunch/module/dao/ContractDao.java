@@ -20,7 +20,7 @@ package jp.dip.komusubi.lunch.module.dao;
 
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Contract;
+import jp.lunchat.core.model.Contract;
 
 import org.komusubi.common.persistence.GenericDao;
 

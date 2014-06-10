@@ -22,8 +22,6 @@ import java.util.Date;
 import java.util.List;
 
 import jp.dip.komusubi.lunch.Configuration;
-import jp.dip.komusubi.lunch.model.Order;
-import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.module.Basket;
 import jp.dip.komusubi.lunch.service.Shopping;
 import jp.dip.komusubi.lunch.wicket.WicketApplication;
@@ -31,6 +29,8 @@ import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.component.AuthorizedPage;
 import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.panel.Dialog;
+import jp.lunchat.core.model.Order;
+import jp.lunchat.core.model.Product;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;

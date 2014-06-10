@@ -20,11 +20,11 @@ package jp.dip.komusubi.lunch.wicket.page;
 
 import java.util.Date;
 
-import jp.dip.komusubi.lunch.model.Order;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.component.AuthorizedFrame;
 import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.panel.OrderLines;
+import jp.lunchat.core.model.Order;
 
 import org.apache.wicket.model.IModel;
 

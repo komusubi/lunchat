@@ -21,8 +21,8 @@ package jp.dip.komusubi.lunch.module.dao.html;
 import java.util.Date;
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
+import jp.lunchat.core.model.Product;
 
 public class HtmlProductDao implements ProductDao {
 

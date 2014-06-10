@@ -23,11 +23,11 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import jp.dip.komusubi.lunch.model.OrderLine;
-import jp.dip.komusubi.lunch.model.OrderLine.OrderLineKey;
 import jp.dip.komusubi.lunch.module.dao.OrderLineDao;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
 import jp.lunchat.LunchatException;
+import jp.lunchat.core.model.OrderLine;
+import jp.lunchat.core.model.OrderLine.OrderLineKey;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

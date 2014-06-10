@@ -32,7 +32,6 @@ import javax.servlet.ServletContextEvent;
 import javax.sql.DataSource;
 
 import jp.dip.komusubi.lunch.Configuration.RuntimeMode;
-import jp.dip.komusubi.lunch.model.Authentication;
 import jp.dip.komusubi.lunch.module.Basket;
 import jp.dip.komusubi.lunch.module.DefaultAuthentication;
 import jp.dip.komusubi.lunch.module.DefaultNonce;
@@ -67,6 +66,7 @@ import jp.dip.komusubi.lunch.service.ShoppingResource;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.DevelopmentFilter;
 import jp.dip.komusubi.lunch.wicket.WicketApplication;
+import jp.lunchat.core.model.Authentication;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;

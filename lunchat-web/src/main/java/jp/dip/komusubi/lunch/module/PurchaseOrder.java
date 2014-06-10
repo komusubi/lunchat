@@ -22,9 +22,9 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import jp.dip.komusubi.lunch.model.Payment;
 import jp.dip.komusubi.lunch.module.dao.BasketDao;
 import jp.dip.komusubi.lunch.module.dao.OrderDao;
+import jp.lunchat.core.model.Payment;
 
 import org.komusubi.common.util.Resolver;
 

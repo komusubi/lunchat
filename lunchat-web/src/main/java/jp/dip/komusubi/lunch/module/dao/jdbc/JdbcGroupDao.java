@@ -26,9 +26,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.lunchat.LunchatException;
+import jp.lunchat.core.model.Group;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

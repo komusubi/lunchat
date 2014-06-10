@@ -21,7 +21,7 @@ package jp.dip.komusubi.lunch.module.dao;
 import java.util.Date;
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Order;
+import jp.lunchat.core.model.Order;
 
 public class MockOrderDao implements OrderDao {
 

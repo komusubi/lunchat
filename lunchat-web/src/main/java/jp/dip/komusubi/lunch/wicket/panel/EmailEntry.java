@@ -18,8 +18,8 @@
  */
 package jp.dip.komusubi.lunch.wicket.panel;
 
-import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
+import jp.lunchat.core.model.User;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.EmailTextField;

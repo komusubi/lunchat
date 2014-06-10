@@ -21,11 +21,11 @@ package jp.dip.komusubi.lunch.wicket.panel;
 import java.util.List;
 
 import jp.dip.komusubi.lunch.Configuration;
-import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.page.error.ErrorPage;
+import jp.lunchat.core.model.User;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;

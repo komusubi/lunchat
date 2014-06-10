@@ -16,10 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.model;
+package jp.lunchat.core.model;
 
-public interface Action {
+import jp.dip.komusubi.lunch.module.Basket;
 
-	Role getRole();
-	boolean available(User user);
+public interface Payment {
+
+	boolean pay(Basket basket);
+
+	boolean isPayable(int amountAll);
+	boolean isPayable(Basket basket);
+	
 }

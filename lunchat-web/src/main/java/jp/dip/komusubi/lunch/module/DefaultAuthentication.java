@@ -20,9 +20,9 @@ package jp.dip.komusubi.lunch.module;
 
 import javax.inject.Inject;
 
-import jp.dip.komusubi.lunch.model.Authentication;
-import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
+import jp.lunchat.core.model.Authentication;
+import jp.lunchat.core.model.User;
 
 public class DefaultAuthentication implements Authentication {
 	private UserDao userDao;

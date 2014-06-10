@@ -22,12 +22,12 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import jp.dip.komusubi.lunch.model.Product;
-import jp.dip.komusubi.lunch.model.Shop;
-import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.dao.OrderDao;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
+import jp.lunchat.core.model.Product;
+import jp.lunchat.core.model.Shop;
+import jp.lunchat.core.model.User;
 
 import org.junit.Test;
 

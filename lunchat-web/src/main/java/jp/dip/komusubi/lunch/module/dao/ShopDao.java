@@ -21,8 +21,8 @@ package jp.dip.komusubi.lunch.module.dao;
 import java.util.Date;
 import java.util.List;
 
-import jp.dip.komusubi.lunch.model.Product;
-import jp.dip.komusubi.lunch.model.Shop;
+import jp.lunchat.core.model.Product;
+import jp.lunchat.core.model.Shop;
 
 import org.komusubi.common.persistence.GenericDao;
 

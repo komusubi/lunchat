@@ -16,27 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.model;
+package jp.lunchat.core.model;
 
 import java.io.Serializable;
 
-public class Attribute implements Serializable {
-	private static final long serialVersionUID = -4332493409035603622L;
-	private String key;
-	private String value;
-	
-	public String getKey() {
-		return key;
-	}
-	public Attribute setKey(String key) {
-		this.key = key;
-		return this;
-	}
-	public String getValue() {
-		return value;
-	}
-	public Attribute setValue(String value) {
-		this.value = value;
-		return this;
-	}
+public class Notice implements Serializable {
+
+	private static final long serialVersionUID = -5991320864091779504L;
+
 }
