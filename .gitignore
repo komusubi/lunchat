@@ -1,7 +1,7 @@
 /target
-/.classpath
-/.externalToolBuilders
-/.project
-/.settings
+.classpath
+.externalToolBuilders
+.project
+.settings
 
 /lunch.log
