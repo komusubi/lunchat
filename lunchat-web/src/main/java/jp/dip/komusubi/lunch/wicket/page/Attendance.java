@@ -21,12 +21,12 @@ package jp.dip.komusubi.lunch.wicket.page;
 import java.util.Date;
 
 import jp.dip.komusubi.lunch.Configuration;
-import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.component.AuthorizedFrame;
 import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.panel.Approval;
+import jp.lunchat.LunchException;
 
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;

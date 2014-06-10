@@ -18,7 +18,7 @@
  */
 package jp.dip.komusubi.lunch.service;
 
-import jp.dip.komusubi.lunch.LunchException;
+import jp.lunchat.LunchException;
 
 public class NotFoundElementException extends LunchException {
 

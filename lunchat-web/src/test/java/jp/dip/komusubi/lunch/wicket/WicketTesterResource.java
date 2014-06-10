@@ -22,8 +22,8 @@ import java.io.File;
 
 import javax.servlet.ServletContextEvent;
 
-import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.MockBootstrap;
+import jp.lunchat.LunchException;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockServletContext;

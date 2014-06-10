@@ -18,9 +18,9 @@
  */
 package jp.dip.komusubi.lunch.wicket.page;
 
-import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.wicket.component.AuthorizedFrame;
 import jp.dip.komusubi.lunch.wicket.panel.GroupList;
+import jp.lunchat.LunchException;
 
 import org.apache.wicket.markup.html.basic.Label;
 

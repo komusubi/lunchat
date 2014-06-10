@@ -21,7 +21,6 @@ package jp.dip.komusubi.lunch.wicket.panel;
 import java.util.Date;
 
 import jp.dip.komusubi.lunch.Configuration;
-import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
@@ -29,6 +28,7 @@ import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.panel.util.SpecificBehavior;
+import jp.lunchat.LunchException;
 
 import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.Form;

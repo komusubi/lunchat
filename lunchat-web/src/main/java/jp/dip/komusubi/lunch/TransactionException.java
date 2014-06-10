@@ -18,6 +18,8 @@
  */
 package jp.dip.komusubi.lunch;
 
+import jp.lunchat.LunchException;
+
 /**
  * @author jun.ozeki
  * @since 2012/04/08

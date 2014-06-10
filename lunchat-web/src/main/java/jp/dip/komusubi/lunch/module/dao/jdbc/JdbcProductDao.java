@@ -28,10 +28,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import jp.dip.komusubi.lunch.LunchException;
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
+import jp.lunchat.LunchException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

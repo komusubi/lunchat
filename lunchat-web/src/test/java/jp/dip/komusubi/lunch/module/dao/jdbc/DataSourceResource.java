@@ -23,7 +23,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import jp.dip.komusubi.lunch.LunchException;
+import jp.lunchat.LunchException;
 import jp.lunchat.storage.database.Lunchat;
 
 import org.apache.commons.dbcp.BasicDataSource;

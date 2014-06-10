@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch;
+package jp.lunchat;
 
 public class LunchException extends RuntimeException {
 	private static final long serialVersionUID = -7608485425479792036L;
