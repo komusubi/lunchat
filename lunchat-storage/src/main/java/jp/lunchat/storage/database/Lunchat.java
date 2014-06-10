@@ -28,9 +28,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 
-import jp.dip.komusubi.lunch.LunchException;
-import jp.dip.komusubi.lunch.model.Product;
-import jp.dip.komusubi.lunch.model.Shop;
+import jp.lunchat.LunchatException;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -608,7 +606,7 @@ public class Lunchat extends DBDatabase {
             // commit
             commit(con);
         } catch (SQLException e) {
-            throw new LunchException("script: " + script, e);
+            throw new LunchatException("script: " + script, e);
         }
     }
     
@@ -631,7 +629,7 @@ public class Lunchat extends DBDatabase {
         try {
             return querySingleInt(command, -1, con) >= 0;
         } catch (QueryFailedException e) {
-            throw new LunchException(e);
+            throw new LunchatException(e);
         }
     }
        
@@ -661,7 +659,7 @@ public class Lunchat extends DBDatabase {
         try {
             driver = (DBDatabaseDriver) Class.forName(getDriverClassName()).newInstance();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            throw new LunchException(e);
+            throw new LunchatException(e);
         }
         return driver;
     }
@@ -718,7 +716,7 @@ public class Lunchat extends DBDatabase {
                     .setPhoneNumber("044-281-2011").setUrl("http://www.fl39.com/month_menu")
                     .setLastOrder(DateUtils.parseDate(lastOrderFresh, format)));
         } catch (ParseException e) {
-            throw new LunchException(e);
+            throw new LunchatException(e);
         }
         return shops;
     }

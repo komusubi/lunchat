@@ -18,13 +18,13 @@
  */
 package jp.dip.komusubi.lunch;
 
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
 /**
  * @author jun.ozeki
  * @since 2012/04/08
  */
-public class TransactionException extends LunchException {
+public class TransactionException extends LunchatException {
 
     private static final long serialVersionUID = 6032268142337060263L;
 

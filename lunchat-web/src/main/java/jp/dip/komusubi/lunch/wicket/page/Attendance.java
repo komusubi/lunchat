@@ -26,7 +26,7 @@ import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.component.AuthorizedFrame;
 import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.panel.Approval;
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -54,7 +54,7 @@ public class Attendance extends AuthorizedFrame {
 		add(new FeedbackPanel("feedback"));
 		add(getApproval("approval", params));
 //		add(new Footer("footer"));
-		throw new LunchException("Header and Footer 削除対応により例外スロー");
+		throw new LunchatException("Header and Footer 削除対応により例外スロー");
 	}
 
 	@Override

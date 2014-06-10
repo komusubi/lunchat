@@ -23,7 +23,7 @@ import java.io.File;
 import javax.servlet.ServletContextEvent;
 
 import jp.dip.komusubi.lunch.MockBootstrap;
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
@@ -89,7 +89,7 @@ public class WicketTesterResource extends ExternalResource {
 			
 		File webXmlTemplate = new File(servletContext.getRealPath("/WEB-INF/web.xml.template"));
 		if (!webXmlTemplate.exists() || !webXmlTemplate.isFile()) {
-			throw new LunchException("not found resouce for unit test. : " + webXmlTemplate.getAbsolutePath());
+			throw new LunchatException("not found resouce for unit test. : " + webXmlTemplate.getAbsolutePath());
 		}
 		webXmlTemplate.renameTo(webXml);
 	}

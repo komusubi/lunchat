@@ -29,7 +29,7 @@ import jp.dip.komusubi.lunch.model.Health;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.module.dao.HealthDao;
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -59,7 +59,7 @@ public class JdbcHealthDao implements HealthDao {
 		try {
 			health = template.queryForObject(SELECT_QUERY_PK, healthRowMapper, pk);
 		} catch (DataAccessException e) {
-			throw new LunchException(e);
+			throw new LunchatException(e);
 		}
 		return health;
 	}
@@ -82,7 +82,7 @@ public class JdbcHealthDao implements HealthDao {
 											instance.getGroup() != null ? instance.getGroup().getCode() : null,
 											JdbcDateConverter.toTimestamp(instance.getGroupJoined()));
 		} catch (DataAccessException e) {
-			throw new LunchException(e);
+			throw new LunchatException(e);
 		}
 		return instance.getUser().getId();									
 	}
@@ -105,7 +105,7 @@ public class JdbcHealthDao implements HealthDao {
 											JdbcDateConverter.toTimestamp(instance.getGroupJoined()),
 											instance.getUser().getId());
 		} catch (DataAccessException e) {
-			throw new LunchException(e);
+			throw new LunchatException(e);
 		}
 	}
 

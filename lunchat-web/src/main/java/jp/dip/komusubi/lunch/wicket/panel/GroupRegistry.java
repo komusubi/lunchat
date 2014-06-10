@@ -30,7 +30,7 @@ import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -249,7 +249,7 @@ public abstract class GroupRegistry extends Panel {
                 // notice session
                 WicketSession.get().dirty();
                 onRegister();
-            } catch (LunchException e) {
+            } catch (LunchatException e) {
                 // group set null again.
                 user.getHealth().setGroup(null);
                 user.getHealth().setGroupJoined(null);

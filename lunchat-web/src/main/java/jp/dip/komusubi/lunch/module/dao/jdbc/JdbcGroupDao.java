@@ -28,7 +28,7 @@ import javax.sql.DataSource;
 
 import jp.dip.komusubi.lunch.model.Group;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,7 +99,7 @@ public class JdbcGroupDao implements GroupDao {
 			// find group because id is auto increment. 
 			group = findByCode(instance.getCode());
 		} catch (DataAccessException e) {
-			throw new LunchException(e);
+			throw new LunchatException(e);
 		}
 		if (group == null)
 		    throw new IllegalStateException("fail persistence, could NOT find Group: " + instance);

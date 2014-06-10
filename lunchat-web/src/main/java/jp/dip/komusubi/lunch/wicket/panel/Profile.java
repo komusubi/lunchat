@@ -28,7 +28,7 @@ import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.panel.util.SpecificBehavior;
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
 import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.Form;
@@ -281,7 +281,7 @@ public class Profile extends Panel {
 			user.setJoined(dateResolver.resolve());
 			try {
 				getAccountService().create(user);
-			} catch (LunchException e) {
+			} catch (LunchatException e) {
 				error(getString("registry.failed"));
 				return;
 			}

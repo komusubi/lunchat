@@ -18,9 +18,9 @@
  */
 package jp.dip.komusubi.lunch.module;
 
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
-public class NotFoundProductException extends LunchException {
+public class NotFoundProductException extends LunchatException {
 	private static final long serialVersionUID = -3506186160722226597L;
 
 	public NotFoundProductException() {

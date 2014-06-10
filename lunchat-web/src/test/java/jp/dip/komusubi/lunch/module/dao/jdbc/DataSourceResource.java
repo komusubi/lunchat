@@ -23,7 +23,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 import jp.lunchat.storage.database.Lunchat;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -82,18 +82,18 @@ public class DataSourceResource extends ExternalResource {
         try (Connection con = getDataSource().getConnection()) {
             if (lunchat.existsTables(con))
                 return;
-        } catch (LunchException e) {
+        } catch (LunchatException e) {
             lunchat.configure(JDBC_URL, JDBC_USER, JDBC_USER_PASSWORD);
         }
     }
     
     @Override
-    protected void after() throws LunchException {
+    protected void after() throws LunchatException {
         if (dataSource != null)
             try {
                 dataSource.close();
             } catch (SQLException e) {
-                throw new LunchException(e);
+                throw new LunchatException(e);
             }
     }
 

@@ -41,7 +41,7 @@ import jp.dip.komusubi.lunch.module.dao.OrderDao;
 import jp.dip.komusubi.lunch.module.dao.ReceiptDao;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.util.Nonce;
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.komusubi.common.protocol.smtp.MailContent;
@@ -398,7 +398,7 @@ public class AccountService implements Serializable {
 			logger.info("send to {}, subject is {}", to.getEmail(), getString("remind.mail.title"));
 			return nonce;
 		} catch (Exception e) {
-			throw new LunchException(e);
+			throw new LunchatException(e);
 		}
 	}
 	

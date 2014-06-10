@@ -18,22 +18,22 @@
  */
 package jp.lunchat;
 
-public class LunchException extends RuntimeException {
+public class LunchatException extends RuntimeException {
 	private static final long serialVersionUID = -7608485425479792036L;
 
-	public LunchException() {
+	public LunchatException() {
 		super();
 	}
 
-	public LunchException(String arg0, Throwable arg1) {
+	public LunchatException(String arg0, Throwable arg1) {
 		super(arg0, arg1);
 	}
 
-	public LunchException(String arg0) {
+	public LunchatException(String arg0) {
 		super(arg0);
 	}
 
-	public LunchException(Throwable arg0) {
+	public LunchatException(Throwable arg0) {
 		super(arg0);
 	}
 

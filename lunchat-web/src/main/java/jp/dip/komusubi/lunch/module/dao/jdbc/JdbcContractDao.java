@@ -30,7 +30,7 @@ import jp.dip.komusubi.lunch.model.Contract;
 import jp.dip.komusubi.lunch.module.dao.ContractDao;
 import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,7 +139,7 @@ public class JdbcContractDao implements ContractDao {
 			
 			contract = findByGroupCodeAndShopId(instance.getGroup().getCode(), instance.getShop().getId());
 		} catch (DataAccessException e) {
-			throw new LunchException(e);
+			throw new LunchatException(e);
 		}
 	    if (contract == null)
 	        throw new IllegalStateException("file presistence, could NOT find Contract: " + instance);
@@ -152,7 +152,7 @@ public class JdbcContractDao implements ContractDao {
 		try {
 			template.update(DELETE_RECORD_QUERY, instance.getId());
 		} catch (DataAccessException e) {
-			throw new LunchException(e);
+			throw new LunchatException(e);
 		}
 	}
 
@@ -165,7 +165,7 @@ public class JdbcContractDao implements ContractDao {
 										instance.getContracted(),
 										instance.getId());
 		} catch (DataAccessException e) {
-			throw new LunchException(e);
+			throw new LunchatException(e);
 		}
 	}
 

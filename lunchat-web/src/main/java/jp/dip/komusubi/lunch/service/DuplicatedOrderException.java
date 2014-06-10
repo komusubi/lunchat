@@ -22,9 +22,9 @@ import java.util.Collections;
 import java.util.List;
 
 import jp.dip.komusubi.lunch.model.Order;
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
-public class DuplicatedOrderException extends LunchException {
+public class DuplicatedOrderException extends LunchatException {
 
 	private static final long serialVersionUID = -572106620056732612L;
 	private List<Order> orders;

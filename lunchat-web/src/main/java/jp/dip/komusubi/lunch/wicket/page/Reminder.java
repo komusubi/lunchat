@@ -29,7 +29,7 @@ import jp.dip.komusubi.lunch.wicket.component.ApplicationFrame;
 import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.panel.EmailSender;
 import jp.dip.komusubi.lunch.wicket.panel.EmailSender.EmailSenderBean;
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.slf4j.Logger;
@@ -45,7 +45,7 @@ public class Reminder extends ApplicationFrame {
 //		add(new Header("header", Model.of(getDefaultHeaderBean(getString("page.title")))));
 		add(new EmailSender("email.reminder", new CompoundPropertyModel<EmailSenderBean>(getEmailSenderBean())));
 //		add(new Footer("footer"));
-		throw new LunchException("Header and Footer 削除対応により例外スロー");
+		throw new LunchatException("Header and Footer 削除対応により例外スロー");
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class Reminder extends ApplicationFrame {
 				} catch (NotFoundEmailException e) {
 					// sniffing mail address ? or just wrong ?
 					logger.info("user might be suspect? wrong input email address: {}", email);
-				} catch (LunchException e) {
+				} catch (LunchatException e) {
 					error(getLocalizer().getString("send.mail.error", Reminder.this));
 					return;
 				}

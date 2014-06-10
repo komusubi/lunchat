@@ -34,7 +34,7 @@ import jp.dip.komusubi.lunch.module.dao.OrderDao;
 import jp.dip.komusubi.lunch.module.dao.OrderLineDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +95,7 @@ public class JdbcOrderDao implements OrderDao {
 			}
 			logger.info("persisted: {}", instance);
 		} catch (DataAccessException e) {
-			throw new LunchException(e);
+			throw new LunchatException(e);
 		}
 		// return to auto boxing 
 		return holder.getKey().intValue();

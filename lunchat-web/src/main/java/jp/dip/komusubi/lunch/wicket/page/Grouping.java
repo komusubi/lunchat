@@ -20,7 +20,7 @@ package jp.dip.komusubi.lunch.wicket.page;
 
 import jp.dip.komusubi.lunch.wicket.component.AuthorizedFrame;
 import jp.dip.komusubi.lunch.wicket.panel.GroupList;
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
 import org.apache.wicket.markup.html.basic.Label;
 
@@ -39,7 +39,7 @@ public class Grouping extends AuthorizedFrame {
 		add(new GroupList("group.list"));
 //		add(new GroupRegistry("group.registry"));
 //		add(new Footer("footer"));
-		throw new LunchException("Header and Footer 削除対応により例外スロー");
+		throw new LunchatException("Header and Footer 削除対応により例外スロー");
 	}
 	
 }

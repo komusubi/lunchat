@@ -27,7 +27,7 @@ import jp.dip.komusubi.lunch.model.OrderLine;
 import jp.dip.komusubi.lunch.model.OrderLine.OrderLineKey;
 import jp.dip.komusubi.lunch.module.dao.OrderLineDao;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,7 +125,7 @@ public class JdbcOrderLineDao implements OrderLineDao {
                                                  instance.getDatetime(), 
                                                  instance.isCancel());
         } catch (DataAccessException e) {
-            throw new LunchException(e);
+            throw new LunchatException(e);
         }
         return instance.getPrimaryKey();
     }
@@ -152,7 +152,7 @@ public class JdbcOrderLineDao implements OrderLineDao {
                                                  instance.getPrimaryKey().getOrderId(), 
                                                  instance.getPrimaryKey().getNo());
         } catch (DataAccessException e) {
-            throw new LunchException(e);
+            throw new LunchatException(e);
         }
     }
 

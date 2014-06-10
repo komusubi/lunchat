@@ -27,7 +27,7 @@ import jp.dip.komusubi.lunch.model.Health;
 import jp.dip.komusubi.lunch.model.User;
 import jp.dip.komusubi.lunch.module.dao.HealthDao;
 import jp.dip.komusubi.lunch.module.dao.UserDao;
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,7 +132,7 @@ public class JdbcUserDao implements UserDao {
 			healthDao.persist(instance.getHealth());
 			logger.info("persisted: {}", instance);
 		} catch (DataAccessException e) {
-			throw new LunchException(e);
+			throw new LunchatException(e);
 		}
 		// return to auto boxing
 		return holder.getKey().intValue();

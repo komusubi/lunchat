@@ -31,7 +31,7 @@ import javax.sql.DataSource;
 import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
-import jp.lunchat.LunchException;
+import jp.lunchat.LunchatException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,7 +116,7 @@ public class JdbcProductDao implements ProductDao {
                                           instance.getStart(), 
                                           instance.getFinish());
         } catch (DataAccessException e) {
-            throw new LunchException(e);
+            throw new LunchatException(e);
         }
         return instance.getId();
     }
