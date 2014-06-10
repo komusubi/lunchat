@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.module.dao.jdo;
+package jp.lunchat.storage.dao.jdo;
 
 import java.util.List;
 
