@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import java.util.List;
 
 import jp.lunchat.core.model.Shop;
+import jp.lunchat.storage.dao.jdbc.JdbcShopDao;
 
 import org.junit.Before;
 import org.junit.ClassRule;

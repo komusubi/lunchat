@@ -22,5 +22,9 @@
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-persist</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.dropwizard</groupId>
+      <artifactId>dropwizard-jetty</artifactId>
+    </dependency>
   </dependencies>
 </project>

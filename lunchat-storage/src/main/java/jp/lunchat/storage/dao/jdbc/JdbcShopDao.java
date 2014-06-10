@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package jp.dip.komusubi.lunch.module.dao.jdbc;
+package jp.lunchat.storage.dao.jdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
