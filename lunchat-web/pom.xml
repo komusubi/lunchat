@@ -9,4 +9,18 @@
   <artifactId>lunchat-web</artifactId>
   <packaging>war</packaging>
   <name>lunchat web module</name>
+  <dependencies>
+    <dependency>
+      <groupId>jp.lunchat</groupId>
+      <artifactId>lunchat-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-servlet</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-persist</artifactId>
+    </dependency>
+  </dependencies>
 </project>
