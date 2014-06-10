@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package jp.dip.komusubi.lunch;
+package jp.lunchat.web;
 
 import static com.google.inject.matcher.Matchers.annotatedWith;
 import static com.google.inject.matcher.Matchers.any;
@@ -31,7 +31,6 @@ import java.util.Map;
 import javax.servlet.ServletContextEvent;
 import javax.sql.DataSource;
 
-import jp.dip.komusubi.lunch.Configuration.RuntimeMode;
 import jp.dip.komusubi.lunch.module.resolver.DateResolver;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
 import jp.dip.komusubi.lunch.module.resolver.Resolvers;
@@ -63,6 +62,7 @@ import jp.lunchat.storage.dao.jdbc.JdbcReceiptDao;
 import jp.lunchat.storage.dao.jdbc.JdbcReceiptLineDao;
 import jp.lunchat.storage.dao.jdbc.JdbcShopDao;
 import jp.lunchat.storage.dao.jdbc.JdbcUserDao;
+import jp.lunchat.web.Configuration.RuntimeMode;
 import jp.lunchat.web.service.AccountService;
 import jp.lunchat.web.service.BackOffice;
 import jp.lunchat.web.service.Shopping;

@@ -21,6 +21,8 @@ package jp.dip.komusubi.lunch;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
+import jp.lunchat.web.Configuration;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;

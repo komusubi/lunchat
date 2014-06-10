@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch;
+package jp.lunchat.web;
 
 import jp.lunchat.LunchatException;
 

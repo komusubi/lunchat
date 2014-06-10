@@ -25,7 +25,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import jp.dip.komusubi.lunch.TransactionException;
 import jp.lunchat.core.model.Group;
 import jp.lunchat.core.model.Order;
 import jp.lunchat.core.model.OrderLine;
@@ -39,6 +38,7 @@ import jp.lunchat.storage.dao.OrderDao;
 import jp.lunchat.storage.dao.OrderLineDao;
 import jp.lunchat.storage.dao.ProductDao;
 import jp.lunchat.storage.dao.ShopDao;
+import jp.lunchat.web.TransactionException;
 
 import org.komusubi.common.util.Resolver;
 
