@@ -20,10 +20,10 @@ package jp.dip.komusubi.lunch.wicket.panel;
 
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
-import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.panel.util.SpecificBehavior;
 import jp.lunchat.core.model.User;
+import jp.lunchat.web.service.AccountService;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;

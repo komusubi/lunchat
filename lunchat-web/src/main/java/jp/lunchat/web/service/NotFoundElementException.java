@@ -16,41 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.service;
+package jp.lunchat.web.service;
 
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import jp.lunchat.LunchatException;
 
+public class NotFoundElementException extends LunchatException {
 
-@Path("/v1")
-public class ShoppingResource {
+	private static final long serialVersionUID = 8605476525707263983L;
 
-	private Authenticator auth;
-
-	@Inject
-	public ShoppingResource(Authenticator auth) {
-		this.auth = auth;
+	public NotFoundElementException() {
+		super();
 	}
-	// resource url
-	// http://domain.com/basket
 
-	@POST
-	@Path("/cart")
-	public Response createBasket() {
-		return null;
+	public NotFoundElementException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
 	}
-	
-	@PUT
-	public void updateBasket() {
-		
+
+	public NotFoundElementException(String arg0) {
+		super(arg0);
 	}
-	
-	@GET
-	public String readBasket() {
-		return null;
+
+	public NotFoundElementException(Throwable arg0) {
+		super(arg0);
 	}
+
 }

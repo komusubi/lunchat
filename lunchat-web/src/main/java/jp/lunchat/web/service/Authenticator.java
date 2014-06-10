@@ -16,10 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.service;
+package jp.lunchat.web.service;
 
+import javax.inject.Inject;
 
-public class Cart {
+import jp.lunchat.core.model.Authentication;
+import jp.lunchat.core.model.User;
 
+public class Authenticator {
+	private Authentication auth;
 	
+	@Inject
+	public Authenticator(Authentication auth) {
+		this.auth = auth;
+	}
+	
+	public boolean login(User user) {
+		return auth.evaluate(user);
+	}
 }

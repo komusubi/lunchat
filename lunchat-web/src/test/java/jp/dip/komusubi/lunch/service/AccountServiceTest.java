@@ -35,6 +35,7 @@ import jp.dip.komusubi.lunch.util.Nonce;
 import jp.lunchat.core.model.User;
 import jp.lunchat.storage.DefaultNonce;
 import jp.lunchat.storage.dao.UserDao;
+import jp.lunchat.web.service.AccountService;
 import junitx.util.PrivateAccessor;
 
 import org.apache.wicket.protocol.http.mock.MockServletContext;

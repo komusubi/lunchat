@@ -16,9 +16,41 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.service;
+package jp.lunchat.web.service;
 
-public class BackOfficeResource {
+import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
 
+
+@Path("/v1")
+public class ShoppingResource {
+
+	private Authenticator auth;
+
+	@Inject
+	public ShoppingResource(Authenticator auth) {
+		this.auth = auth;
+	}
+	// resource url
+	// http://domain.com/basket
+
+	@POST
+	@Path("/cart")
+	public Response createBasket() {
+		return null;
+	}
 	
+	@PUT
+	public void updateBasket() {
+		
+	}
+	
+	@GET
+	public String readBasket() {
+		return null;
+	}
 }

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.service;
+package jp.lunchat.web.service;
 
 import java.util.Date;
 import java.util.List;

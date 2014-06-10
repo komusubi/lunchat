@@ -22,12 +22,12 @@ import java.util.Date;
 import java.util.List;
 
 import jp.dip.komusubi.lunch.Configuration;
-import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.wicket.WicketApplication;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.lunchat.core.model.Order;
 import jp.lunchat.core.model.OrderLine;
 import jp.lunchat.core.model.User;
+import jp.lunchat.web.service.AccountService;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;

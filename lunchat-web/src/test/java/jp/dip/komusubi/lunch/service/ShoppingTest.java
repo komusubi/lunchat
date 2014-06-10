@@ -38,6 +38,7 @@ import jp.lunchat.storage.dao.OrderDao;
 import jp.lunchat.storage.dao.OrderLineDao;
 import jp.lunchat.storage.dao.ProductDao;
 import jp.lunchat.storage.dao.ShopDao;
+import jp.lunchat.web.service.Shopping;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Before;

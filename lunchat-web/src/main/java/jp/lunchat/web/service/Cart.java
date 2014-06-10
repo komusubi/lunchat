@@ -16,28 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.service;
+package jp.lunchat.web.service;
 
-import jp.lunchat.LunchatException;
 
-public class NotFoundElementException extends LunchatException {
+public class Cart {
 
-	private static final long serialVersionUID = 8605476525707263983L;
-
-	public NotFoundElementException() {
-		super();
-	}
-
-	public NotFoundElementException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
-	}
-
-	public NotFoundElementException(String arg0) {
-		super(arg0);
-	}
-
-	public NotFoundElementException(Throwable arg0) {
-		super(arg0);
-	}
-
+	
 }

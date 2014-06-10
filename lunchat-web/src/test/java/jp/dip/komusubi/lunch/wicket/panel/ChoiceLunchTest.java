@@ -32,7 +32,6 @@ import jp.dip.komusubi.lunch.module.dao.MockOrderDao;
 import jp.dip.komusubi.lunch.module.dao.MockProductDao;
 import jp.dip.komusubi.lunch.module.dao.MockShopDao;
 import jp.dip.komusubi.lunch.module.resolver.DateResolver;
-import jp.dip.komusubi.lunch.service.Shopping;
 import jp.dip.komusubi.lunch.wicket.WicketTesterResource;
 import jp.dip.komusubi.lunch.wicket.panel.ChoiceLunch.Choice;
 import jp.lunchat.core.model.Product;
@@ -40,6 +39,7 @@ import jp.lunchat.core.model.Shop;
 import jp.lunchat.storage.dao.OrderDao;
 import jp.lunchat.storage.dao.ProductDao;
 import jp.lunchat.storage.dao.ShopDao;
+import jp.lunchat.web.service.Shopping;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.markup.html.list.ListView;

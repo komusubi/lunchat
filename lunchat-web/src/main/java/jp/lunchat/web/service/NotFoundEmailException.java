@@ -16,22 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.service;
+package jp.lunchat.web.service;
 
-import javax.inject.Inject;
+public class NotFoundEmailException extends NotFoundElementException {
 
-import jp.lunchat.core.model.Authentication;
-import jp.lunchat.core.model.User;
+	private static final long serialVersionUID = -7497185036104349594L;
 
-public class Authenticator {
-	private Authentication auth;
-	
-	@Inject
-	public Authenticator(Authentication auth) {
-		this.auth = auth;
+	public NotFoundEmailException() {
+		super();
 	}
-	
-	public boolean login(User user) {
-		return auth.evaluate(user);
+
+	public NotFoundEmailException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
 	}
+
+	public NotFoundEmailException(String arg0) {
+		super(arg0);
+	}
+
+	public NotFoundEmailException(Throwable arg0) {
+		super(arg0);
+	}
+
 }
