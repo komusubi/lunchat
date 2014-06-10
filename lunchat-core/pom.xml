@@ -6,7 +6,7 @@
     <artifactId>lunchat</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>lunchat-core</lunchat-core>
+  <artifactId>lunchat-core</artifactId>
   <packaging>jar</packaging>
   <name>lunchat core module</name>
   <properties>
