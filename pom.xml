@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>jp.lunchat</groupId>
   <artifactId>lunchat</artifactId>
-  <packaging>war</packaging>
+  <packaging>pom</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <name>lunch order management</name>
   <description>2011</description>
