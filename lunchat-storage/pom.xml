@@ -22,5 +22,9 @@
       <artifactId>log4jdbc4</artifactId>
       <classifier>mod</classifier>
     </dependency>
+    <dependency>
+      <groupId>jp.lunchat</groupId>
+      <artifactId>lunchat-core</artifactId>
+    </dependency>
   </dependencies>
 </project>

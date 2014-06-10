@@ -24,7 +24,7 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import jp.dip.komusubi.lunch.LunchException;
-import jp.dip.komusubi.lunch.module.database.Lunchat;
+import jp.lunchat.storage.database.Lunchat;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.lang3.SystemUtils;

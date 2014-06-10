@@ -28,7 +28,7 @@ import jp.dip.komusubi.lunch.model.Product;
 import jp.dip.komusubi.lunch.model.Shop;
 import jp.dip.komusubi.lunch.module.dao.ProductDao;
 import jp.dip.komusubi.lunch.module.dao.ShopDao;
-import jp.dip.komusubi.lunch.module.database.Lunchat;
+import jp.lunchat.storage.database.Lunchat;
 
 import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
