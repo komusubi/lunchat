@@ -21,10 +21,10 @@ package jp.dip.komusubi.lunch.wicket.panel;
 import java.util.List;
 
 import jp.dip.komusubi.lunch.Configuration;
-import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.lunchat.core.model.Group;
 import jp.lunchat.core.model.User;
+import jp.lunchat.storage.dao.GroupDao;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;

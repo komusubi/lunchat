@@ -16,13 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.module.dao;
+package jp.lunchat.storage.dao;
 
-import jp.lunchat.core.model.Group;
+import jp.lunchat.core.model.ReceiptLine;
+import jp.lunchat.core.model.ReceiptLine.ReceiptLineKey;
 
 import org.komusubi.common.persistence.GenericDao;
 
-public interface GroupDao extends GenericDao<Integer, Group>{
 
-    Group findByCode(String code);
+/**
+ * @author jun.ozeki
+ * @since 2012/04/09
+ */
+public interface ReceiptLineDao extends GenericDao<ReceiptLineKey, ReceiptLine> {
+
 }

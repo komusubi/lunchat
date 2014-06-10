@@ -16,21 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.module.dao;
+package jp.lunchat.storage.dao;
 
-import java.util.List;
-
-import jp.lunchat.core.model.Health;
-import jp.lunchat.core.model.User;
+import jp.dip.komusubi.lunch.module.Basket;
 
 import org.komusubi.common.persistence.GenericDao;
 
-public interface UserDao extends GenericDao<Integer, User> {
+public interface BasketDao extends GenericDao<Long, Basket> {
 
-	User findByEmail(String email);
-	User findByNickname(String nickname);
-	List<User> findByGroupId(Integer groupId);
-	List<User> findByAdmitter(String name);
-	void update(Health instance);
-	
 }

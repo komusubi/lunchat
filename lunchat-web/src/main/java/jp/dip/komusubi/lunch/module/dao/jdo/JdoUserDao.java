@@ -20,9 +20,9 @@ package jp.dip.komusubi.lunch.module.dao.jdo;
 
 import java.util.List;
 
-import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.lunchat.core.model.Health;
 import jp.lunchat.core.model.User;
+import jp.lunchat.storage.dao.UserDao;
 
 public class JdoUserDao implements UserDao {
 

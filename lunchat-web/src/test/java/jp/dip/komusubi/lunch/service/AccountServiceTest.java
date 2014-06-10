@@ -30,11 +30,11 @@ import javax.servlet.ServletContextEvent;
 
 import jp.dip.komusubi.lunch.MockBootstrap;
 import jp.dip.komusubi.lunch.module.DefaultNonce;
-import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.module.resolver.DateResolver;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.lunchat.core.model.User;
+import jp.lunchat.storage.dao.UserDao;
 import junitx.util.PrivateAccessor;
 
 import org.apache.wicket.protocol.http.mock.MockServletContext;

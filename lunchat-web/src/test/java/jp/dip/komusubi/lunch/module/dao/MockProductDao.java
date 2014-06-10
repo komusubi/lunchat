@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 import jp.lunchat.core.model.Product;
+import jp.lunchat.storage.dao.ProductDao;
 
 import org.apache.commons.lang3.time.DateUtils;
 

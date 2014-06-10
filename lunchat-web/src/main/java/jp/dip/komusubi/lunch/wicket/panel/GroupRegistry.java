@@ -23,14 +23,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import jp.dip.komusubi.lunch.module.dao.GroupDao;
-import jp.dip.komusubi.lunch.module.dao.ShopDao;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.lunchat.LunchatException;
 import jp.lunchat.core.model.Group;
 import jp.lunchat.core.model.Shop;
 import jp.lunchat.core.model.User;
+import jp.lunchat.storage.dao.GroupDao;
+import jp.lunchat.storage.dao.ShopDao;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;

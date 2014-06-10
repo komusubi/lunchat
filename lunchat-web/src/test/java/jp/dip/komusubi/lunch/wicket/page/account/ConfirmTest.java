@@ -19,13 +19,13 @@
 package jp.dip.komusubi.lunch.wicket.page.account;
 
 import jp.dip.komusubi.lunch.module.DefaultNonce;
-import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.service.MockSmtpServer;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketTesterResource;
 import jp.dip.komusubi.lunch.wicket.panel.Profile;
+import jp.lunchat.storage.dao.UserDao;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;

@@ -16,17 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.module.dao;
+package jp.lunchat.storage.dao;
 
 import java.util.List;
 
-import jp.lunchat.core.model.OrderLine;
-import jp.lunchat.core.model.OrderLine.OrderLineKey;
+import jp.lunchat.core.model.Contract;
 
 import org.komusubi.common.persistence.GenericDao;
 
-public interface OrderLineDao extends GenericDao<OrderLineKey, OrderLine> {
+public interface ContractDao extends GenericDao<Integer, Contract> {
 
-	List<OrderLine> findByOrderId(int orderId);
-
+	List<Contract> findByGroupId(Integer groupId);
+	List<Contract> findByShopId(String shopId);
+	Contract findByGroupIdAndShopId(Integer groupId, String shopId);
+	Contract findByGroupCodeAndShopId(String groupCode, String shopId);
 }

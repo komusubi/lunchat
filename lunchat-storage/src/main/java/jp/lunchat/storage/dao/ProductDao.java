@@ -16,12 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.module.dao;
+package jp.lunchat.storage.dao;
 
-import jp.dip.komusubi.lunch.module.Basket;
+import java.util.Date;
+import java.util.List;
+
+import jp.lunchat.core.model.Product;
 
 import org.komusubi.common.persistence.GenericDao;
 
-public interface BasketDao extends GenericDao<Long, Basket> {
+public interface ProductDao extends GenericDao<String, Product> {
 
+	List<Product> findByShopId(String shopId);
+	List<Product> findByShopIdAndFinishDate(String shopId, Date finishDate);
+	List<Product> findByShopIdAndFinishDatetime(String shopId, Date finishDate);
+	List<Product> findBySalable(String shopId, Date date);
 }

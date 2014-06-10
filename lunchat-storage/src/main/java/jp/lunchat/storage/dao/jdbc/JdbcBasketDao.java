@@ -20,8 +20,7 @@ package jp.lunchat.storage.dao.jdbc;
 
 import java.util.List;
 
-import jp.dip.komusubi.lunch.module.Basket;
-import jp.dip.komusubi.lunch.module.dao.BasketDao;
+import jp.lunchat.storage.dao.BasketDao;
 
 public class JdbcBasketDao implements BasketDao {
 

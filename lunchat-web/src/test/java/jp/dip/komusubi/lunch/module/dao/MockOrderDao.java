@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 import jp.lunchat.core.model.Order;
+import jp.lunchat.storage.dao.OrderDao;
 
 public class MockOrderDao implements OrderDao {
 

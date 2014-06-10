@@ -22,18 +22,18 @@ import java.text.ParseException;
 import java.util.Date;
 
 import jp.dip.komusubi.lunch.module.DefaultNonce;
-import jp.dip.komusubi.lunch.module.dao.ContractDao;
-import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.dip.komusubi.lunch.module.dao.MockContractDao;
 import jp.dip.komusubi.lunch.module.dao.MockGroupDao;
 import jp.dip.komusubi.lunch.module.dao.MockUserDao;
-import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
 import jp.dip.komusubi.lunch.service.AccountService;
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketTesterResource;
 import jp.dip.komusubi.lunch.wicket.page.error.ErrorPage;
 import jp.lunchat.core.model.User;
+import jp.lunchat.storage.dao.ContractDao;
+import jp.lunchat.storage.dao.GroupDao;
+import jp.lunchat.storage.dao.UserDao;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.markup.html.WebPage;

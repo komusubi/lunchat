@@ -16,27 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.module.dao;
+package jp.lunchat.storage.dao;
 
-import java.util.Date;
 import java.util.List;
 
-import jp.lunchat.core.model.Order;
+import jp.lunchat.core.model.Health;
+import jp.lunchat.core.model.User;
 
 import org.komusubi.common.persistence.GenericDao;
 
-/**
- * order dao.
- * @author jun.ozeki
- * @since 2011/11/26
- */
-public interface OrderDao extends GenericDao<Integer, Order> {
+public interface UserDao extends GenericDao<Integer, User> {
 
-	List<Order> findByUserAndDate(Integer userId, Date date);
-	List<Order> findByUser(Integer userId);
-	List<Order> findByProduct(String productId);
-	List<Order> findByUserAndProductAndDate(Integer userId, String productId, Date date);
-	List<Order> findByGroupId(String groupId);
-	List<Order> findByGroupIdAndDate(Integer groupId, Date date, boolean summary);
-
+	User findByEmail(String email);
+	User findByNickname(String nickname);
+	List<User> findByGroupId(Integer groupId);
+	List<User> findByAdmitter(String name);
+	void update(Health instance);
+	
 }

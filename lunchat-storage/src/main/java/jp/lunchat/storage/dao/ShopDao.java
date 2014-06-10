@@ -16,18 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.module.dao;
+package jp.lunchat.storage.dao;
 
-import jp.lunchat.core.model.ReceiptLine;
-import jp.lunchat.core.model.ReceiptLine.ReceiptLineKey;
+import java.util.Date;
+import java.util.List;
+
+import jp.lunchat.core.model.Product;
+import jp.lunchat.core.model.Shop;
 
 import org.komusubi.common.persistence.GenericDao;
 
+public interface ShopDao extends GenericDao<String, Shop> {
 
-/**
- * @author jun.ozeki
- * @since 2012/04/09
- */
-public interface ReceiptLineDao extends GenericDao<ReceiptLineKey, ReceiptLine> {
-
+	List<Product> findBySalable(String ShopId, Date date);
 }

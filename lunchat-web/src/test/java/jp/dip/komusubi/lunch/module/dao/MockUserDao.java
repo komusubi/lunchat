@@ -22,6 +22,7 @@ import java.util.List;
 
 import jp.lunchat.core.model.Health;
 import jp.lunchat.core.model.User;
+import jp.lunchat.storage.dao.UserDao;
 
 public class MockUserDao implements UserDao {
 

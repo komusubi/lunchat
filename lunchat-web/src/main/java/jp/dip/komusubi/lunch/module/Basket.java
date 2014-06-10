@@ -25,14 +25,14 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import jp.dip.komusubi.lunch.module.dao.OrderDao;
-import jp.dip.komusubi.lunch.module.dao.ProductDao;
-import jp.dip.komusubi.lunch.module.dao.ShopDao;
 import jp.lunchat.core.model.Order;
 import jp.lunchat.core.model.OrderLine;
 import jp.lunchat.core.model.Product;
 import jp.lunchat.core.model.Shop;
 import jp.lunchat.core.model.User;
+import jp.lunchat.storage.dao.OrderDao;
+import jp.lunchat.storage.dao.ProductDao;
+import jp.lunchat.storage.dao.ShopDao;
 
 import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;

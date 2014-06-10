@@ -16,12 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.module.dao;
+package jp.lunchat.storage.dao;
 
-import jp.lunchat.core.model.Health;
+import java.util.List;
+
+import jp.lunchat.core.model.OrderLine;
+import jp.lunchat.core.model.OrderLine.OrderLineKey;
 
 import org.komusubi.common.persistence.GenericDao;
 
-public interface HealthDao extends GenericDao<Integer, Health> {
+public interface OrderLineDao extends GenericDao<OrderLineKey, OrderLine> {
+
+	List<OrderLine> findByOrderId(int orderId);
 
 }

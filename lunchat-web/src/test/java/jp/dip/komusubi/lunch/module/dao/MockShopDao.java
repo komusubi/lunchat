@@ -24,6 +24,7 @@ import java.util.List;
 
 import jp.lunchat.core.model.Product;
 import jp.lunchat.core.model.Shop;
+import jp.lunchat.storage.dao.ShopDao;
 
 public class MockShopDao implements ShopDao {
 

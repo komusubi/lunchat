@@ -16,18 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.module.dao;
+package jp.lunchat.storage.dao;
 
+import java.util.Date;
 import java.util.List;
 
-import jp.lunchat.core.model.Contract;
+import jp.lunchat.core.model.Order;
 
 import org.komusubi.common.persistence.GenericDao;
 
-public interface ContractDao extends GenericDao<Integer, Contract> {
+/**
+ * order dao.
+ * @author jun.ozeki
+ * @since 2011/11/26
+ */
+public interface OrderDao extends GenericDao<Integer, Order> {
 
-	List<Contract> findByGroupId(Integer groupId);
-	List<Contract> findByShopId(String shopId);
-	Contract findByGroupIdAndShopId(Integer groupId, String shopId);
-	Contract findByGroupCodeAndShopId(String groupCode, String shopId);
+	List<Order> findByUserAndDate(Integer userId, Date date);
+	List<Order> findByUser(Integer userId);
+	List<Order> findByProduct(String productId);
+	List<Order> findByUserAndProductAndDate(Integer userId, String productId, Date date);
+	List<Order> findByGroupId(String groupId);
+	List<Order> findByGroupIdAndDate(Integer groupId, Date date, boolean summary);
+
 }

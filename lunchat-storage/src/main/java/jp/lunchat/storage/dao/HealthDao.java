@@ -16,17 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.dip.komusubi.lunch.module.dao;
+package jp.lunchat.storage.dao;
 
-import java.util.Date;
-import java.util.List;
-
-import jp.lunchat.core.model.Product;
-import jp.lunchat.core.model.Shop;
+import jp.lunchat.core.model.Health;
 
 import org.komusubi.common.persistence.GenericDao;
 
-public interface ShopDao extends GenericDao<String, Shop> {
+public interface HealthDao extends GenericDao<Integer, Health> {
 
-	List<Product> findBySalable(String ShopId, Date date);
 }

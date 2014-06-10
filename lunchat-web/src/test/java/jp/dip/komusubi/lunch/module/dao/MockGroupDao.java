@@ -21,6 +21,7 @@ package jp.dip.komusubi.lunch.module.dao;
 import java.util.List;
 
 import jp.lunchat.core.model.Group;
+import jp.lunchat.storage.dao.GroupDao;
 
 public class MockGroupDao implements GroupDao {
 

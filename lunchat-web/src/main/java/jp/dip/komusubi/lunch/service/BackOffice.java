@@ -24,10 +24,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import jp.dip.komusubi.lunch.module.dao.ProductDao;
-import jp.dip.komusubi.lunch.module.dao.ShopDao;
 import jp.lunchat.core.model.Product;
 import jp.lunchat.core.model.Shop;
+import jp.lunchat.storage.dao.ProductDao;
+import jp.lunchat.storage.dao.ShopDao;
 import jp.lunchat.storage.database.Lunchat;
 
 import org.komusubi.common.util.Resolver;

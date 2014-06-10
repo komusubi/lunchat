@@ -21,6 +21,7 @@ package jp.dip.komusubi.lunch.module.dao;
 import java.util.List;
 
 import jp.lunchat.core.model.Contract;
+import jp.lunchat.storage.dao.ContractDao;
 
 public class MockContractDao implements ContractDao {
 
