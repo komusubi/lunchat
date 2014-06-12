@@ -18,6 +18,8 @@
  */
 package jp.lunchat.storage;
 
+import jp.lunchat.util.Nonce;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -41,7 +43,7 @@ public class DefaultNonce implements Nonce {
 			logger.debug("salt is {}", salt);
 		builder.append(salt);
 
-		return DigestUtils.shaHex(builder.toString());
+		return DigestUtils.sha1Hex(builder.toString());
 	}
 	
 	public String get(String value) {
