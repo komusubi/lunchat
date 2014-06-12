@@ -32,7 +32,7 @@ public class DigestResolver implements Resolver<String>, Serializable {
 	}
 
 	public String resolve(String value) {
-		return DigestUtils.shaHex(value);
+		return DigestUtils.sha1Hex(value);
 	}
 
 }
