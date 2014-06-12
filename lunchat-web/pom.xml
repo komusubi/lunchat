@@ -26,5 +26,13 @@
       <groupId>io.dropwizard</groupId>
       <artifactId>dropwizard-jetty</artifactId>
     </dependency>
+    <dependency>
+      <groupId>jp.lunchat</groupId>
+      <artifactId>lunchat-storage</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.dropwizard</groupId>
+      <artifactId>dropwizard-jersey</artifactId>
+    </dependency>
   </dependencies>
 </project>

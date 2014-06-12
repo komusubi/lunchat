@@ -18,8 +18,6 @@
  */
 package jp.lunchat.storage;
 
-import jp.dip.komusubi.lunch.util.Nonce;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;

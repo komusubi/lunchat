@@ -34,7 +34,6 @@ import javax.sql.DataSource;
 import jp.dip.komusubi.lunch.module.resolver.DateResolver;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
 import jp.dip.komusubi.lunch.module.resolver.Resolvers;
-import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.DevelopmentFilter;
 import jp.dip.komusubi.lunch.wicket.WicketApplication;
 import jp.lunchat.core.Configuration;
@@ -43,7 +42,6 @@ import jp.lunchat.core.model.Authentication;
 import jp.lunchat.storage.Basket;
 import jp.lunchat.storage.DefaultAuthentication;
 import jp.lunchat.storage.DefaultNonce;
-import jp.lunchat.storage.Transactional;
 import jp.lunchat.storage.dao.ContractDao;
 import jp.lunchat.storage.dao.GroupDao;
 import jp.lunchat.storage.dao.HealthDao;
@@ -64,6 +62,7 @@ import jp.lunchat.storage.dao.jdbc.JdbcReceiptDao;
 import jp.lunchat.storage.dao.jdbc.JdbcReceiptLineDao;
 import jp.lunchat.storage.dao.jdbc.JdbcShopDao;
 import jp.lunchat.storage.dao.jdbc.JdbcUserDao;
+import jp.lunchat.util.Nonce;
 import jp.lunchat.web.service.AccountService;
 import jp.lunchat.web.service.BackOffice;
 import jp.lunchat.web.service.Shopping;
@@ -71,8 +70,6 @@ import jp.lunchat.web.service.ShoppingResource;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.wicket.protocol.http.WicketFilter;
 import org.komusubi.common.protocol.smtp.SmtpServer;
 import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
@@ -87,9 +84,9 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
+import com.google.inject.persist.Transactional;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
-import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 /**
  * bootstrap module configuration.

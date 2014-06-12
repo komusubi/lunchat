@@ -22,13 +22,13 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.component.ApplicationFrame;
 import jp.dip.komusubi.lunch.wicket.component.FormKey;
 import jp.dip.komusubi.lunch.wicket.page.account.Registry;
 import jp.dip.komusubi.lunch.wicket.panel.EmailEntry;
 import jp.dip.komusubi.lunch.wicket.panel.SignIn;
+import jp.lunchat.util.Nonce;
 import jp.lunchat.web.service.AccountService;
 
 import org.apache.wicket.protocol.http.RequestUtils;

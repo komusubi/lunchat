@@ -20,11 +20,11 @@ package jp.dip.komusubi.lunch.wicket.page.account;
 
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
 import jp.dip.komusubi.lunch.service.MockSmtpServer;
-import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketTesterResource;
 import jp.dip.komusubi.lunch.wicket.panel.Profile;
 import jp.lunchat.storage.DefaultNonce;
 import jp.lunchat.storage.dao.UserDao;
+import jp.lunchat.util.Nonce;
 import jp.lunchat.web.service.AccountService;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;

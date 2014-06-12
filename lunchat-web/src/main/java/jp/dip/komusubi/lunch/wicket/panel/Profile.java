@@ -22,12 +22,12 @@ import java.util.Date;
 
 import jp.dip.komusubi.lunch.Configuration;
 import jp.dip.komusubi.lunch.module.resolver.DigestResolver;
-import jp.dip.komusubi.lunch.util.Nonce;
 import jp.dip.komusubi.lunch.wicket.WicketSession;
 import jp.dip.komusubi.lunch.wicket.panel.util.SpecificBehavior;
 import jp.lunchat.LunchatException;
 import jp.lunchat.core.model.User;
 import jp.lunchat.storage.dao.UserDao;
+import jp.lunchat.util.Nonce;
 import jp.lunchat.web.service.AccountService;
 
 import org.apache.wicket.markup.html.form.EmailTextField;
