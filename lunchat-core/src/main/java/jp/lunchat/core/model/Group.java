@@ -24,9 +24,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import jp.dip.komusubi.lunch.Configuration;
-import jp.dip.komusubi.lunch.module.dao.ContractDao;
-import jp.dip.komusubi.lunch.module.dao.UserDao;
+import jp.lunchat.core.Configuration;
 
 /**
  * group.

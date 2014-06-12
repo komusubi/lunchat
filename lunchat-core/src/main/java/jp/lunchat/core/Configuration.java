@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package jp.lunchat.web;
+package jp.lunchat.core;
 
 import java.util.Date;
 

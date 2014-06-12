@@ -28,6 +28,7 @@ import javax.inject.Named;
 
 import jp.dip.komusubi.lunch.util.Nonce;
 import jp.lunchat.LunchatException;
+import jp.lunchat.core.Configuration;
 import jp.lunchat.core.model.Contract;
 import jp.lunchat.core.model.Group;
 import jp.lunchat.core.model.Order;
@@ -41,7 +42,6 @@ import jp.lunchat.storage.dao.GroupDao;
 import jp.lunchat.storage.dao.OrderDao;
 import jp.lunchat.storage.dao.ReceiptDao;
 import jp.lunchat.storage.dao.UserDao;
-import jp.lunchat.web.Configuration;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.komusubi.common.protocol.smtp.MailContent;
