@@ -18,7 +18,8 @@
  */
 package jp.lunchat.storage.dao;
 
-import jp.dip.komusubi.lunch.module.Basket;
+
+import jp.lunchat.storage.Basket;
 
 import org.komusubi.common.persistence.GenericDao;
 
