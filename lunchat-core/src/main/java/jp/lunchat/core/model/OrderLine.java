@@ -19,8 +19,6 @@ package jp.lunchat.core.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.komusubi.common.util.Resolver;
-
 /**
  * order line.
  * @author jun.ozeki

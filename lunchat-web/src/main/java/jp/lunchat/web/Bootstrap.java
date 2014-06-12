@@ -31,8 +31,6 @@ import java.util.Map;
 import javax.servlet.ServletContextEvent;
 import javax.sql.DataSource;
 
-import jp.dip.komusubi.lunch.wicket.DevelopmentFilter;
-import jp.dip.komusubi.lunch.wicket.WicketApplication;
 import jp.lunchat.core.Configuration;
 import jp.lunchat.core.Configuration.RuntimeMode;
 import jp.lunchat.core.model.Authentication;
@@ -70,6 +68,7 @@ import jp.lunchat.web.service.ShoppingResource;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.commons.dbcp.BasicDataSource;
 import org.komusubi.common.protocol.smtp.SmtpServer;
 import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
@@ -81,7 +80,6 @@ import org.springframework.transaction.TransactionStatus;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.google.inject.persist.Transactional;
@@ -107,7 +105,7 @@ public class Bootstrap extends GuiceServletContextListener {
      */
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        Configuration.setServletContext(servletContextEvent.getServletContext());
+        Context.setServletContext(servletContextEvent.getServletContext());
         super.contextInitialized(servletContextEvent);
     }
 
@@ -133,17 +131,17 @@ public class Bootstrap extends GuiceServletContextListener {
             bind(ShoppingResource.class);
 
             Map<String, String> param = new HashMap<String, String>(2);
-            param.put(WicketFilter.FILTER_MAPPING_PARAM, "/*");
-            param.put("applicationClassName", WicketApplication.class.getName());
+//            param.put(WicketFilter.FILTER_MAPPING_PARAM, "/*");
+//            param.put("applicationClassName", WicketApplication.class.getName());
             param.put("wicket.configuration", Configuration.mode().name());
             if (RuntimeMode.DEPLOYMENT.equals(Configuration.mode())) {
-                bind(WicketFilter.class).in(Singleton.class);
-                filter("/*").through(WicketFilter.class, param);
+//                bind(WicketFilter.class).in(Singleton.class);
+//                filter("/*").through(WicketFilter.class, param);
             } else {
-                bind(DevelopmentFilter.class).in(Singleton.class);
-                filter("/*").through(DevelopmentFilter.class, param);
+//                bind(DevelopmentFilter.class).in(Singleton.class);
+//                filter("/*").through(DevelopmentFilter.class, param);
             }
-            serve("/v1", "/v2").with(GuiceContainer.class);
+//            serve("/v1", "/v2").with(GuiceContainer.class);
         }
     }
 

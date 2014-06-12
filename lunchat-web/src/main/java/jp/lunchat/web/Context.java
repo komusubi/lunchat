@@ -16,14 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.lunchat.core.model;
+package jp.lunchat.web;
 
+import javax.servlet.ServletContext;
 
-public interface Payment {
+import com.google.inject.Injector;
 
-	boolean pay(Basket basket);
+/**
+ * @author jun.ozeki
+ */
+public enum Context {
+    INSTANCE;
+    private static ServletContext servletContext;
+	private static Injector injector;
 
-	boolean isPayable(int amountAll);
-	boolean isPayable(Basket basket);
-	
+    public static <T> T getInstance(Class<T> type) {
+		if (injector == null)
+			injector = (Injector) servletContext.getAttribute(Injector.class.getName());
+		return injector.getInstance(type);
+    }
+
+	/* package */ static final void setServletContext(ServletContext servletContext) {
+		Context.servletContext = servletContext;
+	}
 }

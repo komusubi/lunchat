@@ -18,8 +18,6 @@ package jp.lunchat.core;
 
 import java.util.Date;
 
-import javax.servlet.ServletContext;
-
 import org.komusubi.common.util.Resolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +29,11 @@ public enum Configuration {
 	INSTANCE;
 	private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 	private static Injector injector;
-	private static ServletContext servletContext;
+//	private static ServletContext servletContext;
 
 	public static <T> T getInstance(Class<T> type) {
-		if (injector == null)
-			injector = (Injector) servletContext.getAttribute(Injector.class.getName());
+//		if (injector == null)
+//			injector = (Injector) servletContext.getAttribute(Injector.class.getName());
 		return injector.getInstance(type);
 	}
 
@@ -50,11 +48,12 @@ public enum Configuration {
 	}
 
 	public static String getParameter(String key, String def) {
-		String value = servletContext.getInitParameter(key);
-		if (value == null) {
-			logger.error("\"{}\" value is null", key);
-		}
-		return value == null ? def : value;
+//		String value = servletContext.getInitParameter(key);
+//		if (value == null) {
+//			logger.error("\"{}\" value is null", key);
+//		}
+//		return value == null ? def : value;
+	    throw new UnsupportedOperationException("Not Implemented");
 	}
 
 	public static RuntimeMode mode() {
@@ -64,9 +63,9 @@ public enum Configuration {
 	        return RuntimeMode.DEVELOPMENT;
 	}
 
-	static final void setServletContext(ServletContext servletContext) {
-		Configuration.servletContext = servletContext;
-	}
+//	static final void setServletContext(ServletContext servletContext) {
+//		Configuration.servletContext = servletContext;
+//	}
 
 	public static enum RuntimeMode {
 		DEVELOPMENT, DEPLOYMENT;

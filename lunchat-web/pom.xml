@@ -34,5 +34,9 @@
       <groupId>io.dropwizard</groupId>
       <artifactId>dropwizard-jersey</artifactId>
     </dependency>
+    <dependency>
+      <groupId>commons-dbcp</groupId>
+      <artifactId>commons-dbcp</artifactId>
+    </dependency>
   </dependencies>
 </project>
