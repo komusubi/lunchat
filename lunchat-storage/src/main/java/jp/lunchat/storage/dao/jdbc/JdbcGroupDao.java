@@ -26,9 +26,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import jp.dip.komusubi.lunch.module.dao.GroupDao;
 import jp.lunchat.LunchatException;
 import jp.lunchat.core.model.Group;
+import jp.lunchat.storage.dao.GroupDao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,22 +38,22 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 public class JdbcGroupDao implements GroupDao {
-	
-	private static final Logger logger = LoggerFactory.getLogger(JdbcGroupDao.class);
-	private static final String COLUMNS = "id, code, name, place, phoneNumber";
-	private static final String SELECT_RECORD_QUERY = "select " + COLUMNS + " from groups where id = ?";
-	private static final String SELECT_RECORD_ALL = "select " + COLUMNS + " from groups";
-	private static final String SELECT_RECORD_BY_CODE = "select " + COLUMNS + " from groups where code = ?";
-	private static final String INSERT_RECORD = "insert into groups (" + COLUMNS + ") values (?, ?, ?, ?, ?)";
+
+    private static final Logger logger = LoggerFactory.getLogger(JdbcGroupDao.class);
+    private static final String COLUMNS = "id, code, name, place, phoneNumber";
+    private static final String SELECT_RECORD_QUERY = "select " + COLUMNS + " from groups where id = ?";
+    private static final String SELECT_RECORD_ALL = "select " + COLUMNS + " from groups";
+    private static final String SELECT_RECORD_BY_CODE = "select " + COLUMNS + " from groups where code = ?";
+    private static final String INSERT_RECORD = "insert into groups (" + COLUMNS + ") values (?, ?, ?, ?, ?)";
 //	private static final String SELECT_QUERY_CONTRACTS = "select id, shopId from"
 //	@Inject private ContractDao contractDao;
-	private SimpleJdbcTemplate template;
+    private SimpleJdbcTemplate template;
 
-	@Inject
-	public JdbcGroupDao(DataSource dataSource) {
-		this.template = new SimpleJdbcTemplate(dataSource);
-	}
-	
+    @Inject
+    public JdbcGroupDao(DataSource dataSource) {
+        this.template = new SimpleJdbcTemplate(dataSource);
+    }
+
     @Override
     public Group find(Integer pk) {
         Group group = null;
@@ -72,63 +72,63 @@ public class JdbcGroupDao implements GroupDao {
             group = template.queryForObject(SELECT_RECORD_BY_CODE, groupRowMapper, code);
         } catch (EmptyResultDataAccessException e) {
             logger.info("not found group, code is {}", code);
-        } 
+        }
         return group;
     }
-	
-	@Override
-	public List<Group> findAll() {
-		List<Group> list = template.query(SELECT_RECORD_ALL, groupRowMapper);
-		if (list == null) {
-			logger.info("findAll not find record !");
-			list = Collections.emptyList();
-		}
-		return list;
-	}
 
-	@Override
-	public Integer persist(Group instance) {
-	    Group group = null;
-		try {
-			template.update(INSERT_RECORD, instance.getId(),
-			                                instance.getCode(),
-			                                instance.getName(),
-			                                null,
-			                                instance.getPhoneNumber());
-			// FIXME LUNCHAT-18 change sql parameter source query and get auto incremented id.  
-			// find group because id is auto increment. 
-			group = findByCode(instance.getCode());
-		} catch (DataAccessException e) {
-			throw new LunchatException(e);
-		}
-		if (group == null)
-		    throw new IllegalStateException("fail persistence, could NOT find Group: " + instance);
-		// FIXME ? group's ID is immutable?
-		instance.setId(group.getId());
-		return group.getId();
-	}
+    @Override
+    public List<Group> findAll() {
+        List<Group> list = template.query(SELECT_RECORD_ALL, groupRowMapper);
+        if (list == null) {
+            logger.info("findAll not find record !");
+            list = Collections.emptyList();
+        }
+        return list;
+    }
 
-	@Override
-	public void remove(Group instance) {
-		throw new UnsupportedOperationException("groupDao#remove");
-	}
+    @Override
+    public Integer persist(Group instance) {
+        Group group = null;
+        try {
+            template.update(INSERT_RECORD, instance.getId(),
+                            instance.getCode(),
+                            instance.getName(),
+                            null,
+                            instance.getPhoneNumber());
+            // FIXME LUNCHAT-18 change sql parameter source query and get auto incremented id.
+            // find group because id is auto increment.
+            group = findByCode(instance.getCode());
+        } catch (DataAccessException e) {
+            throw new LunchatException(e);
+        }
+        if (group == null)
+            throw new IllegalStateException("fail persistence, could NOT find Group: " + instance);
+        // FIXME ? group's ID is immutable?
+        instance.setId(group.getId());
+        return group.getId();
+    }
 
-	@Override
-	public void update(Group instance) {
-		throw new UnsupportedOperationException("groupDao#update");
-	}
-	
-	private final RowMapper<Group> groupRowMapper = new RowMapper<Group>() {
-		
-		@Override
-		public Group mapRow(ResultSet rs, int rowNum) throws SQLException {
-			
-			Group group = new Group(rs.getInt("id"))
-			                    .setCode(rs.getString("code"))
-			                    .setName(rs.getString("name"))
-			                    .setPhoneNumber(rs.getString("phoneNumber"));
-			return group;
-		}
-		
-	};
+    @Override
+    public void remove(Group instance) {
+        throw new UnsupportedOperationException("groupDao#remove");
+    }
+
+    @Override
+    public void update(Group instance) {
+        throw new UnsupportedOperationException("groupDao#update");
+    }
+
+    private final RowMapper<Group> groupRowMapper = new RowMapper<Group>() {
+
+        @Override
+        public Group mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+            Group group = new Group(rs.getInt("id"))
+                            .setCode(rs.getString("code"))
+                            .setName(rs.getString("name"))
+                            .setPhoneNumber(rs.getString("phoneNumber"));
+            return group;
+        }
+
+    };
 }

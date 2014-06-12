@@ -25,11 +25,11 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import jp.dip.komusubi.lunch.TransactionException;
-import jp.dip.komusubi.lunch.module.dao.ProductDao;
-import jp.dip.komusubi.lunch.module.dao.ReceiptLineDao;
 import jp.lunchat.core.model.ReceiptLine;
 import jp.lunchat.core.model.ReceiptLine.ReceiptLineKey;
+import jp.lunchat.storage.dao.ProductDao;
+import jp.lunchat.storage.dao.ReceiptLineDao;
+import jp.lunchat.storage.dao.TransactionException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

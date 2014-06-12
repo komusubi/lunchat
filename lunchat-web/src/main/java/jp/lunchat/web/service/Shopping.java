@@ -38,7 +38,7 @@ import jp.lunchat.storage.dao.OrderDao;
 import jp.lunchat.storage.dao.OrderLineDao;
 import jp.lunchat.storage.dao.ProductDao;
 import jp.lunchat.storage.dao.ShopDao;
-import jp.lunchat.web.TransactionException;
+import jp.lunchat.storage.dao.TransactionException;
 
 import org.komusubi.common.util.Resolver;
 

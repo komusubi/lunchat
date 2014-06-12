@@ -23,11 +23,11 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import jp.dip.komusubi.lunch.module.dao.OrderLineDao;
-import jp.dip.komusubi.lunch.module.dao.ProductDao;
 import jp.lunchat.LunchatException;
 import jp.lunchat.core.model.OrderLine;
 import jp.lunchat.core.model.OrderLine.OrderLineKey;
+import jp.lunchat.storage.dao.OrderLineDao;
+import jp.lunchat.storage.dao.ProductDao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,12 +47,13 @@ public class JdbcOrderLineDao implements OrderLineDao {
     private static final String TABLE_NAME = "orderLines";
     private static final String COLUMNS = "orderId, no, productId, quantity, amount, datetime, cancel";
     private static final String SELECT_QUERY_RECORD = "select " + COLUMNS
-            + " from orderLines where orderId = ? and userId = ? and productId = ?";
+                    + " from orderLines where orderId = ? and userId = ? and productId = ?";
     private static final String INSERT_QUERY_RECORD = "insert into " + TABLE_NAME
-            + "( " + COLUMNS + " ) values ( ?, ?, ?, ?, ?, ?, ? )";
+                    + "( " + COLUMNS + " ) values ( ?, ?, ?, ?, ?, ?, ? )";
     private static final String SELECT_QUERY_BY_ORDERID = "select " + COLUMNS + " from orderLines where orderId = ?";
-    private static final String UPDATE_QUERY_RECORD = "update " + TABLE_NAME
-            + " set productId = ?, quantity = ?, amount = ?, datetime = ?, cancel = ? where orderId = ? and no = ?";
+    private static final String UPDATE_QUERY_RECORD = "update "
+                    + TABLE_NAME
+                    + " set productId = ?, quantity = ?, amount = ?, datetime = ?, cancel = ? where orderId = ? and no = ?";
     private SimpleJdbcTemplate template;
 //    private NamedParameterJdbcTemplate template;
     @Inject private ProductDao productDao;
@@ -66,7 +67,7 @@ public class JdbcOrderLineDao implements OrderLineDao {
         template = new SimpleJdbcTemplate(dataSource);
 //        template = new NamedParameterJdbcTemplate(dataSource);
     }
-    
+
     /**
      * create new instance.
      * @param dataSource
@@ -84,9 +85,9 @@ public class JdbcOrderLineDao implements OrderLineDao {
     public OrderLine find(OrderLineKey pk) {
         OrderLine orderLine = null;
         try {
-            orderLine = template.queryForObject(SELECT_QUERY_RECORD, orderLineRowMapper, 
-                                pk.getNo(), 
-                                pk.getOrderId());
+            orderLine = template.queryForObject(SELECT_QUERY_RECORD, orderLineRowMapper,
+                            pk.getNo(),
+                            pk.getOrderId());
         } catch (EmptyResultDataAccessException e) {
             logger.info("not found order line: {}", pk);
         }
@@ -118,12 +119,12 @@ public class JdbcOrderLineDao implements OrderLineDao {
     public OrderLineKey persist(OrderLine instance) {
         try {
             template.update(INSERT_QUERY_RECORD, instance.getPrimaryKey().getOrderId(),
-                                                 instance.getPrimaryKey().getNo(), 
-                                                 instance.getProduct().getId(), 
-                                                 instance.getQuantity(), 
-                                                 instance.getAmount(), 
-                                                 instance.getDatetime(), 
-                                                 instance.isCancel());
+                            instance.getPrimaryKey().getNo(),
+                            instance.getProduct().getId(),
+                            instance.getQuantity(),
+                            instance.getAmount(),
+                            instance.getDatetime(),
+                            instance.isCancel());
         } catch (DataAccessException e) {
             throw new LunchatException(e);
         }
@@ -144,13 +145,13 @@ public class JdbcOrderLineDao implements OrderLineDao {
     @Override
     public void update(OrderLine instance) {
         try {
-            template.update(UPDATE_QUERY_RECORD, instance.getProduct().getId(), 
-                                                 instance.getQuantity(), 
-                                                 instance.getAmount(), 
-                                                 instance.getDatetime(), 
-                                                 instance.isCancel(),
-                                                 instance.getPrimaryKey().getOrderId(), 
-                                                 instance.getPrimaryKey().getNo());
+            template.update(UPDATE_QUERY_RECORD, instance.getProduct().getId(),
+                            instance.getQuantity(),
+                            instance.getAmount(),
+                            instance.getDatetime(),
+                            instance.isCancel(),
+                            instance.getPrimaryKey().getOrderId(),
+                            instance.getPrimaryKey().getNo());
         } catch (DataAccessException e) {
             throw new LunchatException(e);
         }
@@ -164,14 +165,14 @@ public class JdbcOrderLineDao implements OrderLineDao {
         @Override
         public OrderLine mapRow(ResultSet rs, int rowNum) throws SQLException {
             OrderLineKey primaryKey = new OrderLineKey(
-                                            rs.getInt("orderId"),
-                                            rs.getInt("no"));
-            
+                            rs.getInt("orderId"),
+                            rs.getInt("no"));
+
             OrderLine orderLine = new OrderLine(primaryKey)
-                                        .setProduct(productDao.find(rs.getString("productId"))) 
-                                        .setQuantity(rs.getInt("quantity")) 
-                                        .setDatetime(rs.getDate("datetime")) 
-                                        .setCancel(rs.getBoolean("cancel"));
+                            .setProduct(productDao.find(rs.getString("productId")))
+                            .setQuantity(rs.getInt("quantity"))
+                            .setDatetime(rs.getDate("datetime"))
+                            .setCancel(rs.getBoolean("cancel"));
             return orderLine;
         }
     };

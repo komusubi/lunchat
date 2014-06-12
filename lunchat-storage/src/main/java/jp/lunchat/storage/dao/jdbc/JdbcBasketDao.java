@@ -20,6 +20,7 @@ package jp.lunchat.storage.dao.jdbc;
 
 import java.util.List;
 
+import jp.lunchat.storage.Basket;
 import jp.lunchat.storage.dao.BasketDao;
 
 public class JdbcBasketDao implements BasketDao {

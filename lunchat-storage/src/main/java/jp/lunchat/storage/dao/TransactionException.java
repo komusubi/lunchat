@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package jp.lunchat.web;
+package jp.lunchat.storage.dao;
 
 import jp.lunchat.LunchatException;
 

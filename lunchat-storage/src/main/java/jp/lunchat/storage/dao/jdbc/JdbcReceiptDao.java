@@ -27,15 +27,15 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import jp.dip.komusubi.lunch.TransactionException;
-import jp.dip.komusubi.lunch.module.dao.GroupDao;
-import jp.dip.komusubi.lunch.module.dao.ReceiptDao;
-import jp.dip.komusubi.lunch.module.dao.ReceiptLineDao;
-import jp.dip.komusubi.lunch.module.dao.ShopDao;
-import jp.dip.komusubi.lunch.module.dao.UserDao;
 import jp.lunchat.core.model.Receipt;
 import jp.lunchat.core.model.ReceiptLine;
 import jp.lunchat.core.model.ReceiptLine.ReceiptLineKey;
+import jp.lunchat.storage.dao.GroupDao;
+import jp.lunchat.storage.dao.ReceiptDao;
+import jp.lunchat.storage.dao.ReceiptLineDao;
+import jp.lunchat.storage.dao.ShopDao;
+import jp.lunchat.storage.dao.TransactionException;
+import jp.lunchat.storage.dao.UserDao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

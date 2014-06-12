@@ -25,113 +25,115 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import jp.dip.komusubi.lunch.module.dao.GroupDao;
-import jp.dip.komusubi.lunch.module.dao.HealthDao;
 import jp.lunchat.LunchatException;
 import jp.lunchat.core.model.Health;
 import jp.lunchat.core.model.User;
+import jp.lunchat.storage.dao.GroupDao;
+import jp.lunchat.storage.dao.HealthDao;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 public class JdbcHealthDao implements HealthDao {
-	
+
 //	private static final Logger logger = LoggerFactory.getLogger(JdbcHealthDao.class);
-	private static final String COLUMNS = "userId, login, lastLogin, loginFail, admitted, active, groupId, groupJoined"; 
-	private static final String SELECT_QUERY_PK = "select " + COLUMNS + " from health where userId = ?";
-	private static final String UPDATE_QUERY = "update health set login = ?, lastLogin = ?, loginFail = ?,"
-			+ " admitted = ?, active = ?, groupId = (select id from groups where code = ?), groupJoined = ? where userId = ?";
-	private static final String INSERT_QUERY = "insert into health (" + COLUMNS + ") values ("
-			+ "(select id from users where email = ?), ?, ?, ?, ?, ?, (select id from groups where code = ?),  ?)";
-	private SimpleJdbcTemplate template;
-	private GroupDao groupDao;
+    private static final String COLUMNS = "userId, login, lastLogin, loginFail, admitted, active, groupId, groupJoined";
+    private static final String SELECT_QUERY_PK = "select " + COLUMNS + " from health where userId = ?";
+    private static final String UPDATE_QUERY = "update health set login = ?, lastLogin = ?, loginFail = ?,"
+                    + " admitted = ?, active = ?, groupId = (select id from groups where code = ?), groupJoined = ? where userId = ?";
+    private static final String INSERT_QUERY = "insert into health ("
+                    + COLUMNS
+                    + ") values ("
+                    + "(select id from users where email = ?), ?, ?, ?, ?, ?, (select id from groups where code = ?),  ?)";
+    private SimpleJdbcTemplate template;
+    private GroupDao groupDao;
 
-	@Inject
-	public JdbcHealthDao(DataSource dataSource, GroupDao groupDao) {
-		template = new SimpleJdbcTemplate(dataSource);
-		this.groupDao = groupDao;
-	}
-	
-	@Override
-	public Health find(Integer pk) {
-		Health health = null;
-		try {
-			health = template.queryForObject(SELECT_QUERY_PK, healthRowMapper, pk);
-		} catch (DataAccessException e) {
-			throw new LunchatException(e);
-		}
-		return health;
-	}
+    @Inject
+    public JdbcHealthDao(DataSource dataSource, GroupDao groupDao) {
+        template = new SimpleJdbcTemplate(dataSource);
+        this.groupDao = groupDao;
+    }
 
-	@Override
-	public List<Health> findAll() {
-		throw new UnsupportedOperationException("findAll not supported.");
-	}
+    @Override
+    public Health find(Integer pk) {
+        Health health = null;
+        try {
+            health = template.queryForObject(SELECT_QUERY_PK, healthRowMapper, pk);
+        } catch (DataAccessException e) {
+            throw new LunchatException(e);
+        }
+        return health;
+    }
 
-	@Override
-	public Integer persist(Health instance) {
-		validate(instance);
-		try {
-			template.update(INSERT_QUERY, instance.getUser().getEmail(),
-											instance.getLogin(),
-											instance.getLastLogin(),
-											instance.getLoginFail(),
-											instance.getAdmitter(),
-											instance.isActive(),
-											instance.getGroup() != null ? instance.getGroup().getCode() : null,
-											JdbcDateConverter.toTimestamp(instance.getGroupJoined()));
-		} catch (DataAccessException e) {
-			throw new LunchatException(e);
-		}
-		return instance.getUser().getId();									
-	}
+    @Override
+    public List<Health> findAll() {
+        throw new UnsupportedOperationException("findAll not supported.");
+    }
 
-	@Override
-	public void remove(Health instance) {
-		throw new UnsupportedOperationException("remove not supported.");
-	}
+    @Override
+    public Integer persist(Health instance) {
+        validate(instance);
+        try {
+            template.update(INSERT_QUERY, instance.getUser().getEmail(),
+                            instance.getLogin(),
+                            instance.getLastLogin(),
+                            instance.getLoginFail(),
+                            instance.getAdmitter(),
+                            instance.isActive(),
+                            instance.getGroup() != null ? instance.getGroup().getCode() : null,
+                            JdbcDateConverter.toTimestamp(instance.getGroupJoined()));
+        } catch (DataAccessException e) {
+            throw new LunchatException(e);
+        }
+        return instance.getUser().getId();
+    }
 
-	@Override
-	public void update(Health instance) {
-		validate(instance);
-		try {
-			template.update(UPDATE_QUERY, instance.getLogin(),
-											instance.getLastLogin(),
-											instance.getLoginFail(),
-											instance.getAdmitter(),
-											instance.isActive(),
-											instance.getGroup() != null ? instance.getGroup().getCode() : null,
-											JdbcDateConverter.toTimestamp(instance.getGroupJoined()),
-											instance.getUser().getId());
-		} catch (DataAccessException e) {
-			throw new LunchatException(e);
-		}
-	}
+    @Override
+    public void remove(Health instance) {
+        throw new UnsupportedOperationException("remove not supported.");
+    }
 
-	private void validate(Health health) {
-		if (health.getUser() == null)
-			throw new IllegalArgumentException("health.User object must NOT be null");
-	}
-	
-	private RowMapper<Health> healthRowMapper = new RowMapper<Health>() {
+    @Override
+    public void update(Health instance) {
+        validate(instance);
+        try {
+            template.update(UPDATE_QUERY, instance.getLogin(),
+                            instance.getLastLogin(),
+                            instance.getLoginFail(),
+                            instance.getAdmitter(),
+                            instance.isActive(),
+                            instance.getGroup() != null ? instance.getGroup().getCode() : null,
+                            JdbcDateConverter.toTimestamp(instance.getGroupJoined()),
+                            instance.getUser().getId());
+        } catch (DataAccessException e) {
+            throw new LunchatException(e);
+        }
+    }
 
-		@Override
-		public Health mapRow(ResultSet rs, int rowNum) throws SQLException {
-			// TODO NOTICE!! health and user has cross reference, 
-			// this Health instance has empty property user.
-			User user = new User(rs.getInt("userId"));
-			Health health = user.getHealth()
-//			Health health = new Health(rs.getString("userId"))
-									.setLogin(rs.getInt("login"))
-									.setLoginFail(rs.getInt("loginFail"))
-									.setLastLogin(rs.getTimestamp("lastLogin"))
-									.setAdmitter(rs.getString("admitted"))
-									.setActive(rs.getBoolean("active"))
-									.setGroup(groupDao.find(rs.getInt("groupId")))
-									.setGroupJoined(rs.getTimestamp("groupJoined"));
-			return health;
-		}
-		
-	};
+    private void validate(Health health) {
+        if (health.getUser() == null)
+            throw new IllegalArgumentException("health.User object must NOT be null");
+    }
+
+    private RowMapper<Health> healthRowMapper = new RowMapper<Health>() {
+
+        @Override
+        public Health mapRow(ResultSet rs, int rowNum) throws SQLException {
+            // TODO NOTICE!! health and user has cross reference,
+            // this Health instance has empty property user.
+            User user = new User(rs.getInt("userId"));
+            Health health = user.getHealth()
+                            //			Health health = new Health(rs.getString("userId"))
+                            .setLogin(rs.getInt("login"))
+                            .setLoginFail(rs.getInt("loginFail"))
+                            .setLastLogin(rs.getTimestamp("lastLogin"))
+                            .setAdmitter(rs.getString("admitted"))
+                            .setActive(rs.getBoolean("active"))
+                            .setGroup(groupDao.find(rs.getInt("groupId")))
+                            .setGroupJoined(rs.getTimestamp("groupJoined"));
+            return health;
+        }
+
+    };
 }
