@@ -32,6 +32,12 @@ import jp.lunchat.core.model.OrderLine.OrderLineKey;
 import jp.lunchat.core.model.Product;
 import jp.lunchat.core.model.Shop;
 import jp.lunchat.core.model.User;
+import jp.lunchat.storage.Basket;
+import jp.lunchat.storage.dao.OrderDao;
+import jp.lunchat.storage.dao.OrderLineDao;
+import jp.lunchat.storage.dao.ProductDao;
+import jp.lunchat.storage.dao.ShopDao;
+import jp.lunchat.storage.dao.TransactionException;
 
 import org.komusubi.common.util.Resolver;
 
