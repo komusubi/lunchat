@@ -24,9 +24,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import jp.dip.komusubi.lunch.Configuration;
-import jp.dip.komusubi.lunch.module.dao.ContractDao;
-
 /**
  * 
  * @author jun.ozeki
@@ -53,9 +50,6 @@ public class Shop implements Serializable {
 	}
 
 	public Shop addContracts(Contract contract) {
-		if (contracts == null)
-//			contracts = new HashSet<>();
-			contracts = new ArrayList<>();
 		this.contracts.add(contract);
 		return this;
 	}
@@ -103,11 +97,6 @@ public class Shop implements Serializable {
     }
 
 	public List<Contract> getContracts() {
-		if (contracts == null) {
-			// FIXME should be proxy pattern.
-			ContractDao contractDao = Configuration.getInstance(ContractDao.class);
-			contracts = contractDao.findByShopId(getId());
-		}
 		return contracts;
 	}
 

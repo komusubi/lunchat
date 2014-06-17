@@ -24,8 +24,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import jp.lunchat.core.Configuration;
-
 /**
  * group.
  * @author jun.ozeki
@@ -43,7 +41,7 @@ public class Group implements Serializable {
 	private List<User> users;
 
 	public Group() {
-
+	    
 	}
 	
 	public Group(Integer id) {
@@ -136,11 +134,6 @@ public class Group implements Serializable {
 	}
 
 	public List<Contract> getContracts() {
-		if (contracts == null) {
-			// FIXME refer to module package. should fix proxy pattern.
-			ContractDao contractDao = Configuration.getInstance(ContractDao.class);
-			contracts = contractDao.findByGroupId(getId());
-		}
 		return contracts;
 	}
 
@@ -162,12 +155,6 @@ public class Group implements Serializable {
 	}
 
 	public List<User> getUsers() {
-		if (users == null) {
-			// FIXME should fix proxy pattern.
-			UserDao userDao = Configuration.getInstance(UserDao.class);
-			users = userDao.findByGroupId(getId());
-//			users.addAll(userDao.findByGroupId(getId()));
-		}
 		return users;
 	}
 
